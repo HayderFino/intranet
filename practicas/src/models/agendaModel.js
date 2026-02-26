@@ -8,13 +8,13 @@ const AgendaModel = {
         if (!fs.existsSync(agendaPath)) return [];
         const content = fs.readFileSync(agendaPath, 'utf8');
         const items = [];
-        const regex = /<div class="card" style="[^"]*border-left:[^"]*" data-id="(\d+)">[\s\S]*?<h4>(.*?)<\/h4>[\s\S]*?<p[^>]*>(.*?)<\/p>/g;
+        const regex = /<div [^>]*class="card"[^>]*data-id="(\d+)"[^>]*>[\s\S]*?<h4>([\s\S]*?)<\/h4>[\s\S]*?<p[^>]*>([\s\S]*?)<\/p>/g;
         let match;
         while ((match = regex.exec(content)) !== null) {
             items.push({
                 id: match[1],
-                title: match[2],
-                time: match[3]
+                title: match[2].trim(),
+                time: match[3].trim()
             });
         }
         return items;
@@ -31,9 +31,9 @@ const AgendaModel = {
 
         if (fs.existsSync(agendaPath)) {
             let content = fs.readFileSync(agendaPath, 'utf8');
-            const marker = '<div id="agenda-items-container">';
-            if (content.includes(marker)) {
-                content = content.replace(marker, marker + activityHtml);
+            const markerRegex = /<div [^>]*id="agenda-items-container"[^>]*>/;
+            if (markerRegex.test(content)) {
+                content = content.replace(markerRegex, (match) => match + activityHtml);
                 fs.writeFileSync(agendaPath, content);
             }
         }
