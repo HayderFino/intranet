@@ -1,13 +1,25 @@
 :root {
+    /* Main Branding - Emerald */
+    --admin-primary: #059669;
+    --admin-primary-hover: #065f46;
+    --admin-accent: #0ea5e9;
+
+    /* Layout & Surface */
     --admin-bg: #f8fafc;
-    --admin-sidebar: #1e293b;
-    --admin-primary: #3b82f6;
-    --admin-primary-hover: #2563eb;
-    --admin-text: #334155;
-    --admin-text-light: #64748b;
+    --admin-sidebar: #0f172a;
+    /* Sophisticated Dark Slate */
+    --admin-sidebar-nav: #1e293b;
     --admin-white: #ffffff;
-    --admin-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --admin-surface: #ffffff;
+
+    /* Text */
+    --admin-text: #0f172a;
+    --admin-text-light: #64748b;
+
+    /* Borders & Shadow */
     --admin-border: #e2e8f0;
+    --admin-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --admin-radius: 0.75rem;
 }
 
 * {
@@ -80,7 +92,7 @@ body {
 
 .admin-nav li.active a,
 .admin-nav a:hover {
-    background-color: #334155;
+    background-color: var(--admin-primary);
     color: white;
 }
 
@@ -92,12 +104,18 @@ body {
 .btn-back {
     display: block;
     text-align: center;
-    color: #cbd5e1;
+    color: #94a3b8;
     text-decoration: none;
     font-size: 0.875rem;
     padding: 0.5rem;
-    border: 1px solid #334155;
-    border-radius: 0.4rem;
+    border: 1px solid var(--admin-sidebar-nav);
+    border-radius: var(--admin-radius);
+    transition: all 0.2s;
+}
+
+.btn-back:hover {
+    color: white;
+    background: var(--admin-sidebar-nav);
 }
 
 /* Main Content */
@@ -148,8 +166,9 @@ body {
 .stat-card {
     background-color: var(--admin-white);
     padding: 1.5rem;
-    border-radius: 1rem;
+    border-radius: var(--admin-radius);
     box-shadow: var(--admin-shadow);
+    border: 1px solid var(--admin-border);
 }
 
 .stat-value {
@@ -217,7 +236,7 @@ select:focus,
 textarea:focus {
     outline: none;
     border-color: var(--admin-primary);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
 }
 
 .form-actions {
@@ -250,7 +269,7 @@ button {
 }
 
 .btn-secondary:hover {
-    background-color: #cbd5e1;
+    background-color: #d1d5db;
 }
 
 /* Preview Area */
@@ -267,10 +286,11 @@ button {
 .preview-card {
     max-width: 350px;
     background: white;
-    border-radius: 1rem;
+    border-radius: var(--admin-radius);
     overflow: hidden;
     box-shadow: var(--admin-shadow);
     margin-top: 1rem;
+    border: 1px solid var(--admin-border);
 }
 
 /* Toast */
@@ -307,7 +327,7 @@ button {
 
 .news-manage-card:hover {
     border-color: var(--admin-primary);
-    background-color: #f1f5f9;
+    background-color: var(--admin-bg);
 }
 
 .news-info h4 {
