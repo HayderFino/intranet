@@ -211,19 +211,21 @@ main {
   top: -0.75rem;
   left: 100%;
   margin-left: 0;
-  transform: translateX(10px);
+  transform: none;
+  /* Eliminar el offset inicial para evitar huecos en el hover */
+  backdrop-filter: blur(8px);
+  /* Ligera reducción para mayor fluidez */
 }
 
 .dropdown:nth-last-child(-n+3) .dropdown-submenu .dropdown-content {
   left: auto;
   right: 100%;
-  transform: translateX(-10px);
 }
 
 .dropdown-submenu:hover>.dropdown-content {
   opacity: 1;
   visibility: visible;
-  transform: translateX(0);
+  transform: none;
 }
 
 .dropdown-submenu:hover>a {
