@@ -4,80 +4,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Procesos de Apoyo - SGI - Intranet CAS</title>
+    <title>Control Interno Disciplinario - SGI - Intranet CAS</title>
     <link rel="stylesheet" href="../../styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        .process-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
-            padding: 1rem 0;
+        .category-section {
+            margin-bottom: 3rem;
         }
 
-        .process-card {
-            background: white;
-            border-radius: 15px;
-            padding: 2rem;
-            text-align: center;
-            text-decoration: none;
-            color: inherit;
-            transition: all 0.3s ease;
-            border: 1px solid #e2e8f0;
+        .category-header {
             display: flex;
-            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--primary-light);
+        }
+
+        .category-header h3 {
+            color: var(--primary-dark);
+            font-size: 1.25rem;
+        }
+
+        .category-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            display: flex;
             align-items: center;
             justify-content: center;
-            min-height: 180px;
-            position: relative;
-            overflow: hidden;
+            border-radius: 10px;
         }
 
-        .process-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: var(--primary);
-            opacity: 0.8;
+        .category-icon svg {
+            width: 24px;
+            height: 24px;
         }
 
-        .process-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+        .file-list-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1rem;
+        }
+
+        .file-item {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .file-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
             border-color: var(--primary);
         }
 
-        .process-card h3 {
-            color: var(--primary-dark);
-            font-size: 1.1rem;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-        }
-
-        .process-card p {
-            font-size: 0.85rem;
-            color: var(--text-light);
-            line-height: 1.4;
-        }
-
-        .icon-box {
-            width: 50px;
-            height: 50px;
-            background: var(--primary-light);
-            border-radius: 12px;
+        .file-item .icon {
+            flex-shrink: 0;
+            width: 40px;
+            height: 40px;
+            background: #f8fafc;
+            color: #ef4444;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 1.25rem;
-            color: var(--primary-dark);
+            border-radius: 8px;
         }
 
-        .icon-box svg {
-            width: 28px;
-            height: 28px;
+        .file-name {
+            font-size: 0.85rem;
+            font-weight: 500;
+            line-height: 1.4;
+            color: var(--text-main);
+        }
+
+        .meta-info-bar {
+            background: white;
+            padding: 1rem 1.5rem;
+            border-radius: 15px;
+            border: 1px solid #e2e8f0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-bottom: 2.5rem;
+            font-size: 0.85rem;
+        }
+
+        .meta-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .meta-label {
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .meta-value {
+            color: var(--text-main);
+            font-weight: 600;
         }
     </style>
 </head>
@@ -192,143 +226,140 @@
             <nav class="breadcrumbs">
                 <a href="../../index.html">Inicio</a> <span>/</span>
                 <a href="sgi.html">SGI</a> <span>/</span>
-                Procesos de Apoyo
+                <a href="procesos-apoyo.html">Procesos de Apoyo</a> <span>/</span>
+                Control Interno Disciplinario
             </nav>
 
             <section class="welcome-header">
-                <h1>Procesos de Apoyo</h1>
-                <p>Soporte t&eacute;cnico, log&iacute;stico y financiero para la operaci&oacute;n institucional.</p>
+                <h1>Control Interno Disciplinario</h1>
             </section>
 
-            <div class="process-grid">
-                <!-- Gestión Documental -->
-                <a href="gestion-documental.html" class="process-card">
-                    <div class="icon-box">
+            <div class="meta-info-bar">
+                <div class="meta-item">
+                    <span class="meta-label">Publicado:</span>
+                    <span class="meta-value">10 Diciembre 2015</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Última actualización:</span>
+                    <span class="meta-value">09 Febrero 2026</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Responsable:</span>
+                    <span class="meta-value">Oficina de Control Interno Disciplinario</span>
+                </div>
+            </div>
+
+            <!-- Caracterización -->
+            <section class="category-section">
+                <div class="category-header">
+                    <div class="category-icon">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path
                                 d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                                 stroke-linecap="round" stroke-linejoin="round" />
                         </svg>
                     </div>
-                    <h3>Gestión Documental</h3>
-                    <p>Admisi&oacute;n, organizaci&oacute;n y preservaci&oacute;n de documentos.</p>
-                </a>
+                    <h3>Caracterización</h3>
+                </div>
+                <div class="file-list-grid">
+                    <a href="#" class="file-item">
+                        <div class="icon"><svg viewBox="0 0 24 24" fill="currentColor">
+                                <path
+                                    d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
+                            </svg></div>
+                        <div class="file-name">Caracterizaci&oacute;n proceso</div>
+                    </a>
+                </div>
+            </section>
 
-                <!-- Contratación -->
-                <a href="contratacion.html" class="process-card">
-                    <div class="icon-box">
+            <!-- Formatos -->
+            <section class="category-section">
+                <div class="category-header">
+                    <div class="category-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path
+                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </div>
+                    <h3>Formatos (F-PCD)</h3>
+                </div>
+                <div class="file-list-grid">
+                    <a href="#" class="file-item">
+                        <div class="icon"><svg viewBox="0 0 24 24" fill="currentColor">
+                                <path
+                                    d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
+                            </svg></div>
+                        <div class="file-name">F-PCD-001 Control Tr&aacute;mite Expedientes</div>
+                    </a>
+                    <a href="#" class="file-item">
+                        <div class="icon"><svg viewBox="0 0 24 24" fill="currentColor">
+                                <path
+                                    d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
+                            </svg></div>
+                        <div class="file-name">F-PCD-002 Cronograma Procesos Tramitados</div>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Procedimientos -->
+            <section class="category-section">
+                <div class="category-header">
+                    <div class="category-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path
+                                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </div>
+                    <h3>Procedimientos</h3>
+                </div>
+                <div class="file-list-grid">
+                    <a href="#" class="file-item">
+                        <div class="icon"><svg viewBox="0 0 24 24" fill="currentColor">
+                                <path
+                                    d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
+                            </svg></div>
+                        <div class="file-name">PCD-001 Procedimiento Ordinario</div>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Constancias y Otros -->
+            <section class="category-section">
+                <div class="category-header">
+                    <div class="category-icon">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round"
                                 stroke-linejoin="round" />
                         </svg>
                     </div>
-                    <h3>Contratación</h3>
-                    <p>Gesti&oacute;n contractual y procesos de adquisici&oacute;n.</p>
-                </a>
-
-                <!-- Jurídico -->
-                <a href="juridico.html" class="process-card">
-                    <div class="icon-box">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path
-                                d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"
-                                stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                    </div>
-                    <h3>Jurídico</h3>
-                    <p>Asesor&iacute;a legal y representaci&oacute;n judicial.</p>
-                </a>
-
-                <!-- Bienes y Servicios -->
-                <a href="bienes-servicios.html" class="process-card">
-                    <div class="icon-box">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
-                                stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                    </div>
-                    <h3>Bienes y Servicios</h3>
-                    <p>Administraci&oacute;n de recursos f&iacute;sicos y suministros.</p>
-                </a>
-
-                <!-- Gestión de la Información y Tecnologías -->
-                <a href="gestion-tecnologias.html" class="process-card">
-                    <div class="icon-box">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path
-                                d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                                stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                    </div>
-                    <h3>Gestión de la Información y Tecnologías</h3>
-                    <p>Infraestructura TIC, sistemas y ciberseguridad.</p>
-                </a>
-
-                <!-- Talento Humano -->
-                <a href="talento-humano.html" class="process-card">
-                    <div class="icon-box">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path
-                                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
-                                stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                    </div>
-                    <h3>Talento Humano</h3>
-                    <p>Desarrollo, bienestar y gesti&oacute;n del personal.</p>
-                </a>
-
-                <!-- Control Interno Disciplinario -->
-                <a href="control-disciplinario.html" class="process-card">
-                    <div class="icon-box">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path
-                                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-                                stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                    </div>
-                    <h3>Control Interno Disciplinario</h3>
-                    <p>Vigilancia de la conducta oficial y transparencia.</p>
-                </a>
-
-                <!-- Cobro Coactivo -->
-                <a href="cobro-coactivo.html" class="process-card">
-                    <div class="icon-box">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path
-                                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                                stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                    </div>
-                    <h3>Cobro Coactivo</h3>
-                    <p>Recuperaci&oacute;n de cartera y obligaciones financieras.</p>
-                </a>
-
-                <!-- Gestión Financiera -->
-                <a href="gestion-financiera.html" class="process-card">
-                    <div class="icon-box">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path
-                                d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"
-                                stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                    </div>
-                    <h3>Gestión Financiera</h3>
-                    <p>Presupuesto, contabilidad y tesorer&iacute;a.</p>
-                </a>
-
-                <!-- Gestión Integral -->
-                <a href="gestion-integral.html" class="process-card">
-                    <div class="icon-box">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path
-                                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                                stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                    </div>
-                    <h3>Gestión Integral</h3>
-                    <p>Sistema Integrado de Gesti&oacute;n y mejora continua.</p>
-                </a>
-            </div>
+                    <h3>Constancias y Riesgos</h3>
+                </div>
+                <div class="file-list-grid">
+                    <a href="#" class="file-item">
+                        <div class="icon"><svg viewBox="0 0 24 24" fill="currentColor">
+                                <path
+                                    d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
+                            </svg></div>
+                        <div class="file-name">Constancia Revisi&oacute;n de Expedientes</div>
+                    </a>
+                    <a href="#" class="file-item">
+                        <div class="icon"><svg viewBox="0 0 24 24" fill="currentColor">
+                                <path
+                                    d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
+                            </svg></div>
+                        <div class="file-name">Secretarial de Documentos Recibidos</div>
+                    </a>
+                    <a href="#" class="file-item">
+                        <div class="icon"><svg viewBox="0 0 24 24" fill="currentColor">
+                                <path
+                                    d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
+                            </svg></div>
+                        <div class="file-name">MR-SGI-002 Control Interno Disciplinario</div>
+                    </a>
+                </div>
+            </section>
         </div>
     </main>
     <script src="../../script.js"></script>
