@@ -7,6 +7,139 @@
     <title>Normatividad GIT - Intranet CAS</title>
     <link rel="stylesheet" href="../../styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .norm-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .norm-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid #e2e8f0;
+            display: flex;
+            gap: 1.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .norm-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            border-color: var(--primary-light);
+        }
+
+        .norm-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 5px;
+            background: var(--primary);
+        }
+
+        .norm-icon {
+            flex-shrink: 0;
+            width: 56px;
+            height: 56px;
+            background: #f8fafc;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            border: 1px solid #edf2f7;
+        }
+
+        .norm-icon svg {
+            width: 30px;
+            height: 30px;
+        }
+
+        .norm-info {
+            flex-grow: 1;
+        }
+
+        .norm-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .norm-desc {
+            font-size: 0.9rem;
+            color: var(--text-main);
+            line-height: 1.6;
+            margin-bottom: 1.25rem;
+        }
+
+        .btn-norm-download {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.25rem;
+            background: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .btn-norm-download:hover {
+            background: var(--primary-dark);
+            transform: scale(1.02);
+        }
+
+        .btn-xlsx {
+            background: #166534;
+        }
+
+        .btn-xlsx:hover {
+            background: #14532d;
+        }
+
+        .meta-info-bar {
+            background: white;
+            padding: 1rem 1.5rem;
+            border-radius: 15px;
+            border: 1px solid #e2e8f0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-bottom: 2.5rem;
+            font-size: 0.85rem;
+        }
+
+        .meta-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .meta-label {
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .meta-value {
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .norm-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -72,7 +205,6 @@
                     <div class="dropdown-content">
                         <a href="../../header_menu/sgi/procesos-estrategicos.html">Procesos Estrat&eacute;gicos</a>
                         <a href="../../header_menu/sgi/procesos-misionales.html">Procesos Misionales</a>
-
                         <a href="../../header_menu/sgi/procesos-apoyo.html">Procesos de Apoyo</a>
                         <a href="../../header_menu/sgi/evaluacion.html">Proceso de Evaluaci&oacute;n y Seguimiento</a>
                         <a href="../../header_menu/sgi/politicas.html">Pol&iacute;ticas</a>
@@ -89,22 +221,27 @@
                         <a href="../../header_menu/git/normatividad.html">Normatividad GIT</a>
                         <a href="../../header_menu/git/gobierno-digital.html">Gobierno Digital</a>
                         <div class="dropdown-submenu">
-                            <a href="../../header_menu/git/manuales-usuario.html">Manuales de Usuario <span class="submenu-arrow">&#9656;</span></a>
+                            <a href="../../header_menu/git/manuales-usuario.html">Manuales de Usuario <span
+                                    class="submenu-arrow">&#9656;</span></a>
                             <div class="dropdown-content">
                                 <a href="../../header_menu/git/manuales_usuario/cita.html">CITA</a>
                                 <a href="../../header_menu/git/manuales_usuario/sirh.html">SIRH</a>
                                 <a href="../../header_menu/git/manuales_usuario/snif.html">SNIF</a>
-                                <a href="../../header_menu/git/manuales_usuario/revision-red.html">Revisi&oacute;n de red primer nivel</a>
+                                <a href="../../header_menu/git/manuales_usuario/revision-red.html">Revisi&oacute;n de
+                                    red
+                                    primer nivel</a>
                             </div>
                         </div>
                         <a href="../../header_menu/git/boletines.html">Boletines de Seguridad</a>
-                        <a href="../../header_menu/git/responsables.html">Responsables de la informaci&oacute;n en pagina WEB</a>
+                        <a href="../../header_menu/git/responsables.html">Responsables de la informaci&oacute;n en
+                            pagina
+                            WEB</a>
                         <a href="../../header_menu/git/proteccion-datos.html">Proteccion de datos personales</a>
                     </div>
                 </div>
 
                 <a href="../../meci.html">MECI</a>
-                <a href="#" class="btn-login">Ingresar</a>
+                <a href="../../administrador/index.html" class="btn-login">Ingresar</a>
                 <div class="search-bar">
                     <input type="text" placeholder="Buscar...">
                 </div>
@@ -112,66 +249,84 @@
         </header>
 
         <div class="main-scroll-area">
-            <!-- Contenido personalizado -->
             <nav class="breadcrumbs">
-                <a href='../../index.html'>Inicio</a> <span>/</span> <a href='#'>GIT</a> <span>/</span> Normatividad GIT
+                <a href="../../index.html">Inicio</a> <span>/</span>
+                <a href="#">GIT</a> <span>/</span>
+                Normatividad GIT
             </nav>
+
             <section class="welcome-header">
                 <h1>Normatividad GIT</h1>
                 <p>Marco legal y pol&iacute;ticas de seguridad de la informaci&oacute;n.</p>
             </section>
 
-            <div class="card info-card">
-                <div
-                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
-                    <h3 style="color: var(--primary-dark); margin: 0;">Normatividad GIT</h3>
-                    <div
-                        style="font-size: 0.82rem; color: #666; background: #fff; padding: 0.6rem 1rem; border-radius: 8px; border: 1px solid #e2e8f0; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
-                        <span>Publicado: 15 Diciembre 2015</span> | <span>Actualizado: 17 Julio 2024</span>
-                    </div>
+            <div class="meta-info-bar">
+                <div class="meta-item">
+                    <span class="meta-label">Publicado:</span>
+                    <span class="meta-value">15 Diciembre 2015</span>
                 </div>
-
-                <p style="text-align: justify; line-height: 1.8; margin-bottom: 2rem;">
-                    Para consulta de nuestros usuarios, dejamos a disposici&oacute;n la normatividad interna y externa
-                    que aplica para el desarrollo de nuestras actividades como autoridad ambiental en el Departamento
-                    del Santander.
-                </p>
-
-                <div class="pdf-grid">
-                    <!-- Normograma -->
-                    <div class="pdf-folder-card">
-                        <div class="file-icon">
-                            <svg viewBox="0 0 24 24" width="32" height="32" fill="currentColor">
-                                <path
-                                    d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
-                            </svg>
-                        </div>
-                        <h4>Normograma CAS</h4>
-                        <p style="font-size: 0.75rem; color: #666; margin-bottom: 0.5rem;">(A 30 de Septiembre de 2023)
-                        </p>
-                        <a href="../../data/normativa GIT/Normograma-Corporacion-Autonoma-Regional-de-Santander-CAS-A-30-de-Septiembre-de-2023-Tercer-Trimestre-1.xlsx"
-                            class="btn-pdf-download" style="background-color: #2e7d32;">Descargar XLSX</a>
-                    </div>
-
-                    <!-- Resolucion -->
-                    <div class="pdf-folder-card">
-                        <div class="file-icon">
-                            <svg viewBox="0 0 24 24" width="32" height="32" fill="currentColor">
-                                <path
-                                    d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
-                            </svg>
-                        </div>
-                        <h4>Resoluci&oacute;n DGL N&deg; 0941 de 2015</h4>
-                        <p style="font-size: 0.75rem; color: #666; margin-bottom: 0.5rem; line-height: 1.3;">Reglamenta
-                            la administraci&oacute;n, implantaci&oacute;n, operatividad, uso y aplicabilidad del Centro
-                            de Informaci&oacute;n de Tr&aacute;mites Ambientales -CITA-.</p>
-                        <a href="../../data/normativa GIT/resolucion-0941-2015.pdf" target="_blank"
-                            class="btn-pdf-download">Ver PDF</a>
-                    </div>
+                <div class="meta-item">
+                    <span class="meta-label">Última actualización:</span>
+                    <span class="meta-value">17 Julio 2024</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Categor&iacute;a:</span>
+                    <span class="meta-value">Marco Legal TIC</span>
                 </div>
             </div>
-        </div>
 
+            <div class="norm-container">
+                <!-- Normograma -->
+                <article class="norm-card">
+                    <div class="norm-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5l5 5v11a2 2 0 01-2 2z"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </div>
+                    <div class="norm-info">
+                        <h4 class="norm-title">Normograma CAS</h4>
+                        <p class="norm-desc">Base normativa actualizada a 30 de Septiembre de 2023 (Tercer Trimestre).
+                            Detalle de la legislaci&oacute;n aplicada a la Corporaci&oacute;n.</p>
+                        <a href="../../data/git/normativa GIT/Normograma-Corporacion-Autonoma-Regional-de-Santander-CAS-A-30-de-Septiembre-de-2023-Tercer-Trimestre-1.xlsx"
+                            class="btn-norm-download btn-xlsx">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <path
+                                    d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5l5 5v11a2 2 0 01-2 2z"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                            Descargar XLSX
+                        </a>
+                    </div>
+                </article>
+
+                <!-- Resolución -->
+                <article class="norm-card">
+                    <div class="norm-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path
+                                d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-1.24-11.571c0-3.517 1.009-6.799 2.753-9.571m0 0c1.744 2.772 2.753 6.054 2.753 9.571m1.24 11.571c0-3.517-1.009-6.799-2.753-9.571m0 0a15.3 15.3 0 01-2.753-9.571m0 0A15.3 15.3 0 0110.495 2m0 0A15.29 15.29 0 019 11c0 3.517 1.009 6.799 2.753 9.571m1.24-11.571c0-3.517-1.009-6.799-2.753-9.571"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </div>
+                    <div class="norm-info">
+                        <h4 class="norm-title">Resoluci&oacute;n DGL N&deg; 0941 de 2015</h4>
+                        <p class="norm-desc">Reglamenta la administraci&oacute;n, implantaci&oacute;n, operatividad y
+                            uso del Centro de Informaci&oacute;n de Tr&aacute;mites Ambientales -CITA-.</p>
+                        <a href="../../data/git/normativa GIT/resolucion-0941-2015.pdf" target="_blank"
+                            class="btn-norm-download">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path
+                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                            Ver PDF
+                        </a>
+                    </div>
+                </article>
+            </div>
+        </div>
     </main>
     <script src="../../script.js"></script>
 </body>
