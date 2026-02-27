@@ -20,12 +20,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const agendaItemsList = document.getElementById('agendaItemsList');
     const imageInput = document.getElementById('imageInput');
 
+    const sgiSection = document.getElementById('sgiSection');
+    const sgiForm = document.getElementById('sgiForm');
+    const sgiItemsList = document.getElementById('sgiItemsList');
+    const navSgi = document.getElementById('nav-sgi');
+
     function setActiveNav(navElement) {
-        [navDashboard, navNewNews, navListNews, navAgenda].forEach(el => el.classList.remove('active'));
+        [navDashboard, navNewNews, navListNews, navAgenda, navSgi].forEach(el => el.classList.remove('active'));
         navElement.classList.add('active');
     }
 
-    const sections = [newsFormSection, newsListSection, agendaSection, previewArea];
+    const sections = [newsFormSection, newsListSection, agendaSection, sgiSection, previewArea];
     function hideAllSections() {
         sections.forEach(sec => sec.classList.add('hidden'));
     }
@@ -58,6 +63,14 @@ document.addEventListener('DOMContentLoaded', () => {
         hideAllSections();
         agendaSection.classList.remove('hidden');
         loadAgendaList();
+    });
+
+    navSgi.addEventListener('click', (e) => {
+        e.preventDefault();
+        setActiveNav(navSgi);
+        hideAllSections();
+        sgiSection.classList.remove('hidden');
+        loadSgiList();
     });
 
     refreshBtn.addEventListener('click', loadNewsList);
@@ -96,31 +109,33 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    agendaForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const title = document.getElementById('agendaTitle').value;
-        const rawTime = document.getElementById('agendaTime').value;
+    if (agendaForm) {
+        agendaForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const title = document.getElementById('agendaTitle').value;
+            const rawTime = document.getElementById('agendaTime').value;
 
-        // Formatear fecha para que sea más legible
-        const dateObj = new Date(rawTime);
-        const options = { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' };
-        const time = dateObj.toLocaleDateString('es-ES', options);
+            // Formatear fecha para que sea más legible
+            const dateObj = new Date(rawTime);
+            const options = { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' };
+            const time = dateObj.toLocaleDateString('es-ES', options);
 
-        try {
-            const res = await fetch('/api/agenda', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ title, time })
-            });
-            if (res.ok) {
-                showToast('Actividad agregada');
-                agendaForm.reset();
-                loadAgendaList();
+            try {
+                const res = await fetch('/api/agenda', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ title, time })
+                });
+                if (res.ok) {
+                    showToast('Actividad agregada');
+                    agendaForm.reset();
+                    loadAgendaList();
+                }
+            } catch (error) {
+                showToast('Error al guardar', 'error');
             }
-        } catch (error) {
-            showToast('Error al guardar', 'error');
-        }
-    });
+        });
+    }
 
     async function deleteAgenda(id) {
         if (!confirm('¿Eliminar actividad?')) return;
@@ -277,6 +292,99 @@ document.addEventListener('DOMContentLoaded', () => {
             showToast('Error: ' + error.message, 'error');
         }
     });
+
+    // --- SGI Planeación Logic ---
+    async function loadSgiList() {
+        sgiItemsList.innerHTML = '<p style="padding: 1rem;">Cargando documentos SGI...</p>';
+        try {
+            const res = await fetch('/api/sgi/planeacion');
+            const data = await res.json();
+
+            if (data.length === 0) {
+                sgiItemsList.innerHTML = '<p style="padding: 1rem; color: #64748b;">No hay documentos gestionables. Asegúrate de que los items en HTML tengan data-id.</p>';
+                return;
+            }
+
+            sgiItemsList.innerHTML = '';
+            data.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'news-manage-card';
+                card.innerHTML = `
+                    <div class="news-info">
+                        <span class="category-tag" style="background: #e2e8f0; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem;">${item.category}</span>
+                        <h4>${item.name}</h4>
+                        <p style="font-size: 0.8rem; color: #64748b;">URL: ${item.href}</p>
+                    </div>
+                    <button class="btn-delete" data-id="${item.id}">Eliminar</button>
+                `;
+                sgiItemsList.appendChild(card);
+            });
+
+            sgiItemsList.querySelectorAll('.btn-delete').forEach(btn => {
+                btn.addEventListener('click', () => deleteSgiItem(btn.dataset.id));
+            });
+        } catch (error) {
+            showToast('Error al cargar items SGI', 'error');
+        }
+    }
+
+    sgiForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const name = document.getElementById('sgiTitle').value;
+        const category = document.getElementById('sgiCategory').value;
+        const fileInput = document.getElementById('sgiFile');
+        const file = fileInput.files[0];
+
+        if (!file) {
+            showToast('Selecciona un archivo', 'error');
+            return;
+        }
+
+        showToast('Subiendo archivo...', 'info');
+
+        try {
+            // 1. Upload File
+            const formData = new FormData();
+            formData.append('category', category); // Enviar categoría para crear subcarpeta
+            formData.append('file', file);
+            const uploadRes = await fetch('/api/sgi/upload', {
+                method: 'POST',
+                body: formData
+            });
+            const { fileUrl } = await uploadRes.json();
+
+            // 2. Create SGI Item
+            const res = await fetch('/api/sgi/planeacion', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, category, fileUrl })
+            });
+
+            if (res.ok) {
+                showToast('Documento guardado');
+                sgiForm.reset();
+                loadSgiList();
+            } else {
+                const err = await res.json();
+                showToast(err.message, 'error');
+            }
+        } catch (error) {
+            showToast('Error al guardar documento', 'error');
+        }
+    });
+
+    async function deleteSgiItem(id) {
+        if (!confirm('¿Eliminar este documento del portal?')) return;
+        try {
+            const res = await fetch(`/api/sgi/planeacion/${id}`, { method: 'DELETE' });
+            if (res.ok) {
+                showToast('Documento eliminado');
+                loadSgiList();
+            }
+        } catch (error) {
+            showToast('Error al eliminar', 'error');
+        }
+    }
 
     function showToast(message, type = 'success') {
         toast.innerHTML = message;

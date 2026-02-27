@@ -18,6 +18,7 @@ app.use('/data', express.static(path.join(__dirname, 'data')));
 // API Routes
 app.use('/api/news', newsRoutes);
 app.use('/api/agenda', require('./src/routes/agendaRoutes'));
+app.use('/api/sgi', require('./src/routes/sgiRoutes'));
 
 app.listen(PORT, () => {
     console.log(`Servidor CAS corriendo en http://localhost:${PORT}`);
