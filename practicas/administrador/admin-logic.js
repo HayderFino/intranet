@@ -294,14 +294,20 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // --- SGI Planeación Logic ---
+    let loadedSgiItems = [];
+    const sgiEditId = document.getElementById('sgiEditId');
+    const sgiSaveBtn = document.getElementById('sgiSaveBtn');
+    const sgiCancelEditBtn = document.getElementById('sgiCancelEditBtn');
+
     async function loadSgiList() {
         sgiItemsList.innerHTML = '<p style="padding: 1rem;">Cargando documentos SGI...</p>';
         try {
             const res = await fetch('/api/sgi/planeacion');
             const data = await res.json();
+            loadedSgiItems = data;
 
             if (data.length === 0) {
-                sgiItemsList.innerHTML = '<p style="padding: 1rem; color: #64748b;">No hay documentos gestionables. Asegúrate de que los items en HTML tengan data-id.</p>';
+                sgiItemsList.innerHTML = '<p style="padding: 1rem; color: #64748b;">No hay documentos gestionables.</p>';
                 return;
             }
 
@@ -315,7 +321,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         <h4>${item.name}</h4>
                         <p style="font-size: 0.8rem; color: #64748b;">URL: ${item.href}</p>
                     </div>
-                    <button class="btn-delete" data-id="${item.id}">Eliminar</button>
+                    <div class="card-actions" style="display: flex; gap: 0.5rem;">
+                        <button class="btn-secondary btn-edit" data-id="${item.id}" style="padding: 5px 10px; font-size: 0.8rem;">Editar</button>
+                        <button class="btn-delete" data-id="${item.id}" style="padding: 5px 10px; font-size: 0.8rem;">Eliminar</button>
+                    </div>
                 `;
                 sgiItemsList.appendChild(card);
             });
@@ -323,53 +332,90 @@ document.addEventListener('DOMContentLoaded', () => {
             sgiItemsList.querySelectorAll('.btn-delete').forEach(btn => {
                 btn.addEventListener('click', () => deleteSgiItem(btn.dataset.id));
             });
+
+            sgiItemsList.querySelectorAll('.btn-edit').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const item = loadedSgiItems.find(i => i.id === btn.dataset.id);
+                    if (item) startSgiEdit(item);
+                });
+            });
         } catch (error) {
             showToast('Error al cargar items SGI', 'error');
         }
     }
 
+    function startSgiEdit(item) {
+        document.getElementById('sgiTitle').value = item.name;
+        document.getElementById('sgiCategory').value = item.category;
+        sgiEditId.value = item.id;
+        sgiSaveBtn.innerText = 'Actualizar Documento';
+        sgiCancelEditBtn.classList.remove('hidden');
+        document.getElementById('sgiFile').required = false;
+
+        sgiForm.setAttribute('data-current-url', item.href);
+        sgiSection.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    sgiCancelEditBtn.addEventListener('click', () => {
+        sgiForm.reset();
+        sgiEditId.value = '';
+        sgiSaveBtn.innerText = 'Guardar Documento';
+        sgiCancelEditBtn.classList.add('hidden');
+        document.getElementById('sgiFile').required = true;
+    });
+
     sgiForm.addEventListener('submit', async (e) => {
         e.preventDefault();
+        const id = sgiEditId.value;
         const name = document.getElementById('sgiTitle').value;
         const category = document.getElementById('sgiCategory').value;
         const fileInput = document.getElementById('sgiFile');
         const file = fileInput.files[0];
+        let fileUrl = sgiForm.getAttribute('data-current-url');
 
-        if (!file) {
+        if (!id && !file) {
             showToast('Selecciona un archivo', 'error');
             return;
         }
 
-        showToast('Subiendo archivo...', 'info');
+        showToast(id ? 'Actualizando documento...' : 'Subiendo archivo...', 'info');
 
         try {
-            // 1. Upload File
-            const formData = new FormData();
-            formData.append('category', category); // Enviar categoría para crear subcarpeta
-            formData.append('file', file);
-            const uploadRes = await fetch('/api/sgi/upload', {
-                method: 'POST',
-                body: formData
-            });
-            const { fileUrl } = await uploadRes.json();
+            if (file) {
+                const formData = new FormData();
+                formData.append('category', category);
+                formData.append('file', file);
+                const uploadRes = await fetch('/api/sgi/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                const uploadData = await uploadRes.json();
+                fileUrl = uploadData.fileUrl;
+            }
 
-            // 2. Create SGI Item
-            const res = await fetch('/api/sgi/planeacion', {
-                method: 'POST',
+            const method = id ? 'PUT' : 'POST';
+            const url = id ? `/api/sgi/planeacion/${id}` : '/api/sgi/planeacion';
+
+            const res = await fetch(url, {
+                method: method,
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name, category, fileUrl })
             });
 
             if (res.ok) {
-                showToast('Documento guardado');
+                showToast(id ? 'Documento actualizado' : 'Documento guardado');
                 sgiForm.reset();
+                sgiEditId.value = '';
+                sgiSaveBtn.innerText = 'Guardar Documento';
+                sgiCancelEditBtn.classList.add('hidden');
+                document.getElementById('sgiFile').required = true;
                 loadSgiList();
             } else {
                 const err = await res.json();
                 showToast(err.message, 'error');
             }
         } catch (error) {
-            showToast('Error al guardar documento', 'error');
+            showToast('Error al procesar el documento', 'error');
         }
     });
 
