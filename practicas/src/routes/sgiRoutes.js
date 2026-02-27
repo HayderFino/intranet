@@ -5,18 +5,34 @@ const path = require('path');
 const fs = require('fs');
 const sgiController = require('../controllers/sgiController');
 
-// Configuración de Multer para archivos SGI (PDFs, etc)
+const DATA_CONFIG = {
+    'planeacion': 'data/sgi/Procesos Estratégicos/Planeación Estratégica',
+    'mejora': 'data/sgi/Procesos Estratégicos/mejora continua'
+};
+
+// Configuración de Multer dinámico
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        // Obtenemos la categoría desde el body para determinar la subcarpeta
-        const category = req.body.category || 'Varios';
-        const destPath = path.join(__dirname, '../../data/sgi/Procesos Estratégicos/Planeación Estratégica', category);
+        try {
+            console.log('[Multer] Iniciando destino...');
+            const section = req.body.section || 'planeacion';
+            const category = req.body.category || 'Varios';
 
-        // Creamos la carpeta si no existe
-        if (!fs.existsSync(destPath)) {
-            fs.mkdirSync(destPath, { recursive: true });
+            const relativeBase = DATA_CONFIG[section] || DATA_CONFIG['planeacion'];
+            const destPath = path.join(process.cwd(), relativeBase, category);
+
+            console.log(`[Multer] Body:`, req.body);
+            console.log(`[Multer] Ruta absoluta calculada: ${destPath}`);
+
+            if (!fs.existsSync(destPath)) {
+                console.log(`[Multer] Creando directorio faltante...`);
+                fs.mkdirSync(destPath, { recursive: true });
+            }
+            cb(null, destPath);
+        } catch (err) {
+            console.error('[Multer Error Grave]', err);
+            cb(err);
         }
-        cb(null, destPath);
     },
     filename: (req, file, cb) => {
         cb(null, Date.now() + '-' + file.originalname);
@@ -26,10 +42,10 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // Rutas API
-router.get('/planeacion', sgiController.getPlaneacionItems);
-router.post('/planeacion', sgiController.createPlaneacionItem);
-router.put('/planeacion/:id', sgiController.updatePlaneacionItem);
-router.delete('/planeacion/:id', sgiController.deletePlaneacionItem);
 router.post('/upload', upload.single('file'), sgiController.uploadFile);
+router.get('/:section', sgiController.getItems);
+router.post('/:section', sgiController.createItem);
+router.put('/:section/:id', sgiController.updateItem);
+router.delete('/:section/:id', sgiController.deleteItem);
 
 module.exports = router;

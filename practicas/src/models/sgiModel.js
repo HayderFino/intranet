@@ -1,22 +1,32 @@
 const fs = require('fs');
 const path = require('path');
 
-const planeacionPath = path.join(__dirname, '../../header_menu/sgi/planeacion-estrategica.html');
+const CONFIG = {
+    'planeacion': {
+        htmlPath: path.join(__dirname, '../../header_menu/sgi/planeacion-estrategica.html'),
+        dataPath: '../../data/sgi/Procesos Estratégicos/Planeación Estratégica'
+    },
+    'mejora': {
+        htmlPath: path.join(__dirname, '../../header_menu/sgi/mejora-continua.html'),
+        dataPath: '../../data/sgi/Procesos Estratégicos/mejora continua'
+    }
+};
 
 const SgiModel = {
-    getAll: () => {
-        if (!fs.existsSync(planeacionPath)) return [];
-        const content = fs.readFileSync(planeacionPath, 'utf8');
+    getAll: (section = 'planeacion') => {
+        const config = CONFIG[section];
+        if (!config || !fs.existsSync(config.htmlPath)) return [];
+
+        const content = fs.readFileSync(config.htmlPath, 'utf8');
         const items = [];
 
-        // Regex mejorado: Busca el h3 y captura todo hasta el cierre de la sección que contiene el grid
         const categoryRegex = /<section class="category-section">[\s\S]*?<h3>(.*?)<\/h3>[\s\S]*?<div class="file-list-grid">([\s\S]*?)<\/div>\s*<\/section>/g;
 
         let catMatch;
         while ((catMatch = categoryRegex.exec(content)) !== null) {
+            // Mapeo inverso para mostrar nombres limpios en el admin
             const reverseCategoryMap = {
-                'Caracterizaci&oacute;n': 'Caracterización',
-                'Mejora Continua': 'Mejora Continua'
+                'Caracterizaci&oacute;n': 'Caracterización'
             };
             const categoryName = reverseCategoryMap[catMatch[1].trim()] || catMatch[1].trim();
             const gridContent = catMatch[2];
@@ -42,13 +52,13 @@ const SgiModel = {
         return items;
     },
 
-    create: (name, category, fileUrl) => {
+    create: (section, name, category, fileUrl) => {
+        const config = CONFIG[section];
         const id = Date.now().toString();
-        if (!fs.existsSync(planeacionPath)) return null;
+        if (!config || !fs.existsSync(config.htmlPath)) return null;
 
-        let content = fs.readFileSync(planeacionPath, 'utf8');
+        let content = fs.readFileSync(config.htmlPath, 'utf8');
 
-        // El HTML que inyectaremos (siguiendo el estilo original)
         const newItemHtml = `
                     <a href="${fileUrl}" target="_blank" class="file-item" data-id="${id}">
                         <div class="icon"><svg viewBox="0 0 24 24" fill="currentColor">
@@ -57,31 +67,31 @@ const SgiModel = {
                         <div class="file-name">${name}</div>
                     </a>`;
 
-        // Mapear categorías con entidades HTML si es necesario para la búsqueda en el archivo
+        // Mapeo para buscar en el HTML (con entidades)
         const categoryMap = {
-            'Caracterización': 'Caracterizaci&oacute;n',
-            'mejora contina': 'Mejora Continua'
+            'Caracterización': 'Caracterizaci&oacute;n'
         };
         const searchCategory = categoryMap[category] || category;
 
-        // Buscar la categoría para insertar el item
+        // Búsqueda insensible a mayúsculas para mayor flexibilidad
         const categoryRegex = new RegExp(`(<h3[^>]*>${searchCategory}<\\/h3>[\\s\\S]*?<div [^>]*class="file-list-grid"[^>]*>)`, 'i');
 
         if (categoryRegex.test(content)) {
             content = content.replace(categoryRegex, (match) => match + newItemHtml);
-            fs.writeFileSync(planeacionPath, content, 'utf8');
+            fs.writeFileSync(config.htmlPath, content, 'utf8');
             return id;
         } else {
-            // Si la categoría no existe, podríamos crearla, pero por ahora asumimos que existen.
+            console.error(`Categoría no encontrada en HTML: ${searchCategory}`);
             return null;
         }
     },
 
-    delete: (id) => {
-        if (!fs.existsSync(planeacionPath)) return false;
-        let content = fs.readFileSync(planeacionPath, 'utf8');
+    delete: (section, id) => {
+        const config = CONFIG[section];
+        if (!config || !fs.existsSync(config.htmlPath)) return false;
 
-        // Regex para encontrar el item por ID
+        let content = fs.readFileSync(config.htmlPath, 'utf8');
+
         const itemRegex = new RegExp(`<a [^>]*class="file-item"[^>]*data-id="${id}"[^>]*>[\\s\\S]*?<\\/a>`, 'g');
         const match = itemRegex.exec(content);
 
@@ -89,40 +99,30 @@ const SgiModel = {
             const itemHtml = match[0];
             const hrefMatch = /href="([^"]*)"/.exec(itemHtml);
 
-            // Si tiene un href válido (y no es un placeholder como "#")
             if (hrefMatch && hrefMatch[1] && hrefMatch[1] !== '#') {
                 const relativePath = hrefMatch[1];
-                // Convertir ../../data/... a una ruta absoluta del sistema
-                // El href es relativo a header_menu/sgi/
-                const absolutePath = path.join(__dirname, '../../header_menu/sgi/', relativePath);
+                const absolutePath = path.resolve(path.dirname(config.htmlPath), relativePath);
 
                 try {
                     if (fs.existsSync(absolutePath)) {
                         fs.unlinkSync(absolutePath);
-                        console.log(`Archivo eliminado físicamente: ${absolutePath}`);
                     }
                 } catch (err) {
                     console.error(`Error al eliminar archivo físico: ${err.message}`);
-                    // Continuamos con el borrado del HTML aunque falle el archivo físico
                 }
             }
 
-            // Eliminar del HTML
             content = content.replace(itemRegex, '');
-            fs.writeFileSync(planeacionPath, content, 'utf8');
+            fs.writeFileSync(config.htmlPath, content, 'utf8');
             return true;
         }
         return false;
     },
 
-    update: (id, name, category, fileUrl) => {
-        // Para editar, borramos y creamos de nuevo en la categoría correcta 
-        // o simplemente reemplazamos si es la misma.
-        // Implementación simplificada: Borrar y Crear.
-
-        const deleted = SgiModel.delete(id);
+    update: (section, id, name, category, fileUrl) => {
+        const deleted = SgiModel.delete(section, id);
         if (deleted) {
-            return SgiModel.create(name, category, fileUrl);
+            return SgiModel.create(section, name, category, fileUrl);
         }
         return null;
     }

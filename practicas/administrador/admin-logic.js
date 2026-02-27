@@ -1,313 +1,97 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const newsForm = document.getElementById('newsForm');
-    const previewBtn = document.getElementById('previewBtn');
-    const previewArea = document.getElementById('previewArea');
-    const previewCard = document.getElementById('previewCard');
+    // --- UI Elements ---
     const toast = document.getElementById('toast');
-    const newsFormSection = document.getElementById('newsFormSection');
-    const newsListSection = document.getElementById('newsListSection');
-    const newsItemsList = document.getElementById('newsItemsList');
-    const refreshBtn = document.getElementById('refreshBtn');
+    const sections = {
+        newsForm: document.getElementById('newsFormSection'),
+        newsList: document.getElementById('newsListSection'),
+        agenda: document.getElementById('agendaSection'),
+        sgi: document.getElementById('sgiSection'),
+        preview: document.getElementById('previewArea')
+    };
 
-    // Sidebar Navigation
-    const navDashboard = document.getElementById('nav-dashboard');
-    const navNewNews = document.getElementById('nav-new-news');
-    const navListNews = document.getElementById('nav-list-news');
-    const navAgenda = document.getElementById('nav-agenda');
+    const navItems = {
+        dashboard: document.getElementById('nav-dashboard'),
+        newNews: document.getElementById('nav-new-news'),
+        listNews: document.getElementById('nav-list-news'),
+        agenda: document.getElementById('nav-agenda'),
+        sgi: document.getElementById('nav-sgi'),
+        mejora: document.getElementById('nav-mejora')
+    };
 
-    const agendaSection = document.getElementById('agendaSection');
-    const agendaForm = document.getElementById('agendaForm');
-    const agendaItemsList = document.getElementById('agendaItemsList');
-    const imageInput = document.getElementById('imageInput');
+    // --- Navigation Logic ---
+    function hideAll() {
+        Object.values(sections).forEach(sec => sec.classList.add('hidden'));
+        Object.values(navItems).forEach(nav => nav.classList.remove('active'));
+    }
 
-    const sgiSection = document.getElementById('sgiSection');
+    navItems.dashboard.onclick = () => { hideAll(); sections.newsForm.classList.remove('hidden'); navItems.dashboard.classList.add('active'); };
+    navItems.newNews.onclick = () => { hideAll(); sections.newsForm.classList.remove('hidden'); navItems.newNews.classList.add('active'); };
+    navItems.listNews.onclick = () => { hideAll(); sections.newsList.classList.remove('hidden'); navItems.listNews.classList.add('active'); loadNewsList(); };
+    navItems.agenda.onclick = () => { hideAll(); sections.agenda.classList.remove('hidden'); navItems.agenda.classList.add('active'); loadAgendaList(); };
+
+    navItems.sgi.onclick = () => {
+        hideAll();
+        sections.sgi.classList.remove('hidden');
+        navItems.sgi.classList.add('active');
+        switchSgiSection('planeacion');
+    };
+
+    navItems.mejora.onclick = () => {
+        hideAll();
+        sections.sgi.classList.remove('hidden');
+        navItems.mejora.classList.add('active');
+        switchSgiSection('mejora');
+    };
+
+    // --- SGI Logic (Planeación & Mejora) ---
     const sgiForm = document.getElementById('sgiForm');
     const sgiItemsList = document.getElementById('sgiItemsList');
-    const navSgi = document.getElementById('nav-sgi');
-
-    function setActiveNav(navElement) {
-        [navDashboard, navNewNews, navListNews, navAgenda, navSgi].forEach(el => el.classList.remove('active'));
-        navElement.classList.add('active');
-    }
-
-    const sections = [newsFormSection, newsListSection, agendaSection, sgiSection, previewArea];
-    function hideAllSections() {
-        sections.forEach(sec => sec.classList.add('hidden'));
-    }
-
-    navDashboard.addEventListener('click', (e) => {
-        e.preventDefault();
-        setActiveNav(navDashboard);
-        hideAllSections();
-        newsFormSection.classList.remove('hidden');
-    });
-
-    navNewNews.addEventListener('click', (e) => {
-        e.preventDefault();
-        setActiveNav(navNewNews);
-        hideAllSections();
-        newsFormSection.classList.remove('hidden');
-    });
-
-    navListNews.addEventListener('click', (e) => {
-        e.preventDefault();
-        setActiveNav(navListNews);
-        hideAllSections();
-        newsListSection.classList.remove('hidden');
-        loadNewsList();
-    });
-
-    navAgenda.addEventListener('click', (e) => {
-        e.preventDefault();
-        setActiveNav(navAgenda);
-        hideAllSections();
-        agendaSection.classList.remove('hidden');
-        loadAgendaList();
-    });
-
-    navSgi.addEventListener('click', (e) => {
-        e.preventDefault();
-        setActiveNav(navSgi);
-        hideAllSections();
-        sgiSection.classList.remove('hidden');
-        loadSgiList();
-    });
-
-    refreshBtn.addEventListener('click', loadNewsList);
-
-    // Load Agenda
-    async function loadAgendaList() {
-        agendaItemsList.innerHTML = '<p style="padding: 1rem;">Cargando agenda...</p>';
-        try {
-            const res = await fetch('/api/agenda');
-            const data = await res.json();
-
-            if (data.length === 0) {
-                agendaItemsList.innerHTML = '<p style="padding: 1rem; color: #64748b;">No hay actividades dinámicas en la agenda.</p>';
-                return;
-            }
-
-            agendaItemsList.innerHTML = '';
-            data.forEach(item => {
-                const card = document.createElement('div');
-                card.className = 'news-manage-card';
-                card.innerHTML = `
-                    <div class="news-info">
-                        <h4>${item.title}</h4>
-                        <p>${item.time}</p>
-                    </div>
-                    <button class="btn-delete" data-id="${item.id}">Eliminar</button>
-                `;
-                agendaItemsList.appendChild(card);
-            });
-
-            agendaItemsList.querySelectorAll('.btn-delete').forEach(btn => {
-                btn.addEventListener('click', () => deleteAgenda(btn.dataset.id));
-            });
-        } catch (error) {
-            showToast('Error al cargar agenda', 'error');
-        }
-    }
-
-    if (agendaForm) {
-        agendaForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const title = document.getElementById('agendaTitle').value;
-            const rawTime = document.getElementById('agendaTime').value;
-
-            // Formatear fecha para que sea más legible
-            const dateObj = new Date(rawTime);
-            const options = { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' };
-            const time = dateObj.toLocaleDateString('es-ES', options);
-
-            try {
-                const res = await fetch('/api/agenda', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ title, time })
-                });
-                if (res.ok) {
-                    showToast('Actividad agregada');
-                    agendaForm.reset();
-                    loadAgendaList();
-                }
-            } catch (error) {
-                showToast('Error al guardar', 'error');
-            }
-        });
-    }
-
-    async function deleteAgenda(id) {
-        if (!confirm('¿Eliminar actividad?')) return;
-        try {
-            await fetch(`/api/agenda/${id}`, { method: 'DELETE' });
-            loadAgendaList();
-            showToast('Actividad eliminada');
-        } catch (error) {
-            showToast('Error al eliminar', 'error');
-        }
-    }
-
-    // Fetch and render news
-    async function loadNewsList() {
-        newsItemsList.innerHTML = '<p style="padding: 1rem;">Cargando noticias...</p>';
-        try {
-            const res = await fetch('/api/news');
-            if (!res.ok) {
-                const text = await res.text();
-                throw new Error(`Error ${res.status}: El servidor no reconoci&oacute; la ruta. Por favor reinicia el servidor node.`);
-            }
-            const news = await res.json();
-
-            if (news.length === 0) {
-                newsItemsList.innerHTML = '<p style="padding: 1rem; color: #64748b;">No hay noticias automatizadas para gestionar.</p>';
-                return;
-            }
-
-            newsItemsList.innerHTML = '';
-            news.forEach(item => {
-                const card = document.createElement('div');
-                card.className = 'news-manage-card';
-                card.innerHTML = `
-                    <img src="../${item.imageUrl}" alt="${item.title}" style="width: 80px; height: 60px; object-fit: cover; border-radius: 4px;">
-                    <div class="news-info">
-                        <h4>${item.title}</h4>
-                        <p style="font-size: 0.85rem; color: #64748b; line-height: 1.2;">
-                            ${item.description.substring(0, 100)}${item.description.length > 100 ? '...' : ''}
-                        </p>
-                    </div>
-                    <button class="btn-delete" data-id="${item.id}">Eliminar</button>
-                `;
-                newsItemsList.appendChild(card);
-            });
-
-            // Add delete event listeners
-            newsItemsList.querySelectorAll('.btn-delete').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const id = e.target.getAttribute('data-id');
-                    if (confirm('\u00BFESt\u00E1s seguro de que deseas eliminar esta noticia?')) {
-                        deleteNews(id);
-                    }
-                });
-            });
-
-        } catch (error) {
-            console.error(error);
-            showToast('Error al cargar noticias', 'error');
-        }
-    }
-
-    // Delete News
-    async function deleteNews(id) {
-        showToast('Eliminando...', 'info');
-        try {
-            const res = await fetch(`/api/news/${id}`, { method: 'DELETE' });
-            if (!res.ok) throw new Error('Error al eliminar');
-
-            showToast('Noticia eliminada con éxito');
-            loadNewsList();
-        } catch (error) {
-            console.error(error);
-            showToast('Error: ' + error.message, 'error');
-        }
-    }
-
-    // Handle Preview
-    previewBtn.addEventListener('click', () => {
-        const title = document.getElementById('title').value;
-        const description = document.getElementById('description').value;
-        const file = imageInput.files[0];
-
-        if (!title || !description) {
-            showToast('Por favor completa el t&iacute;tulo y la descripci&oacute;n', 'error');
-            return;
-        }
-
-        let previewImg = '../data/imagenes/placeholder.jpeg';
-        if (file) {
-            previewImg = URL.createObjectURL(file);
-        }
-
-        previewArea.classList.remove('hidden');
-        previewCard.innerHTML = `
-            <img src="${previewImg}" alt="Preview" style="width: 100%; height: 200px; object-fit: cover;">
-            <div style="padding: 1.5rem;">
-                <h4 style="margin-bottom: 0.5rem; font-size: 1.1rem;">${title}</h4>
-                <p style="font-size: 0.9rem; color: #64748b;">${description}</p>
-            </div>
-        `;
-
-        previewArea.scrollIntoView({ behavior: 'smooth' });
-    });
-
-    // Handle Submit
-    newsForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        const title = document.getElementById('title').value;
-        const category = document.getElementById('category').value;
-        const description = document.getElementById('description').value;
-        const file = imageInput.files[0];
-
-        if (!file) {
-            showToast('Por favor selecciona una imagen', 'error');
-            return;
-        }
-
-        showToast('Subiendo y publicando...', 'info');
-
-        try {
-            // 1. Subir Imagen
-            const formData = new FormData();
-            formData.append('image', file);
-
-            const uploadRes = await fetch('/api/news/upload', {
-                method: 'POST',
-                body: formData
-            });
-
-            if (!uploadRes.ok) throw new Error('Error al subir la imagen');
-            const { imageUrl } = await uploadRes.json();
-
-            // 2. Publicar Noticia
-            const newsRes = await fetch('/api/news', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    title,
-                    category,
-                    description,
-                    imageUrl
-                })
-            });
-
-            if (!newsRes.ok) throw new Error('Error al publicar la noticia');
-
-            showToast('¡Noticia publicada con éxito!');
-            newsForm.reset();
-            previewArea.classList.add('hidden');
-
-        } catch (error) {
-            console.error(error);
-            showToast('Error: ' + error.message, 'error');
-        }
-    });
-
-    // --- SGI Planeación Logic ---
-    let loadedSgiItems = [];
     const sgiEditId = document.getElementById('sgiEditId');
+    const sgiCurrentSection = document.getElementById('sgiCurrentSection');
+    const sgiCategory = document.getElementById('sgiCategory');
     const sgiSaveBtn = document.getElementById('sgiSaveBtn');
     const sgiCancelEditBtn = document.getElementById('sgiCancelEditBtn');
+    const sgiSubtitle = document.getElementById('sgiSubtitle');
+    const sgiTabButtons = document.querySelectorAll('.tab-btn');
+
+    let loadedSgiItems = [];
+
+    const SGI_CATEGORIES = {
+        'planeacion': ['Anexos', 'Caracterización', 'Formatos', 'Instructivo', 'Manuales', 'Mapa de riesgos', 'Procedimientos', 'Registros', 'Mejora Continua'],
+        'mejora': ['Caracterización', 'Formatos', 'Instructivos', 'Mapa de Riesgos', 'Procedimientos']
+    };
+
+    function switchSgiSection(section) {
+        sgiCurrentSection.value = section;
+        sgiSubtitle.innerText = `Administra los documentos de ${section === 'planeacion' ? 'Planeación Estratégica' : 'Mejora Continua'}.`;
+
+        // Update Tabs UI
+        sgiTabButtons.forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.target === section);
+        });
+
+        // Update Categories Select
+        sgiCategory.innerHTML = SGI_CATEGORIES[section].map(cat => `<option value="${cat}">${cat}</option>`).join('');
+
+        // Reset Form
+        cancelSgiEdit();
+        loadSgiList();
+    }
+
+    sgiTabButtons.forEach(btn => {
+        btn.onclick = () => switchSgiSection(btn.dataset.target);
+    });
 
     async function loadSgiList() {
-        sgiItemsList.innerHTML = '<p style="padding: 1rem;">Cargando documentos SGI...</p>';
+        const section = sgiCurrentSection.value;
+        sgiItemsList.innerHTML = '<p style="padding: 1rem;">Cargando documentos...</p>';
         try {
-            const res = await fetch('/api/sgi/planeacion');
+            const res = await fetch(`/api/sgi/${section}`);
             const data = await res.json();
             loadedSgiItems = data;
 
             if (data.length === 0) {
-                sgiItemsList.innerHTML = '<p style="padding: 1rem; color: #64748b;">No hay documentos gestionables.</p>';
+                sgiItemsList.innerHTML = '<p style="padding: 1rem; color: #64748b;">No hay documentos en esta sección.</p>';
                 return;
             }
 
@@ -319,9 +103,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="news-info">
                         <span class="category-tag" style="background: #e2e8f0; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem;">${item.category}</span>
                         <h4>${item.name}</h4>
-                        <p style="font-size: 0.8rem; color: #64748b;">URL: ${item.href}</p>
+                        <p style="font-size: 0.8rem; color: #64748b; word-break: break-all;">${item.href}</p>
                     </div>
-                    <div class="card-actions" style="display: flex; gap: 0.5rem;">
+                    <div class="card-actions" style="display: flex; gap: 0.5rem; flex-shrink: 0;">
                         <button class="btn-secondary btn-edit" data-id="${item.id}" style="padding: 5px 10px; font-size: 0.8rem;">Editar</button>
                         <button class="btn-delete" data-id="${item.id}" style="padding: 5px 10px; font-size: 0.8rem;">Eliminar</button>
                     </div>
@@ -330,71 +114,76 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             sgiItemsList.querySelectorAll('.btn-delete').forEach(btn => {
-                btn.addEventListener('click', () => deleteSgiItem(btn.dataset.id));
+                btn.onclick = () => deleteSgiItem(btn.dataset.id);
             });
 
             sgiItemsList.querySelectorAll('.btn-edit').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const item = loadedSgiItems.find(i => i.id === btn.dataset.id);
-                    if (item) startSgiEdit(item);
-                });
+                btn.onclick = () => startSgiEdit(loadedSgiItems.find(i => i.id === btn.dataset.id));
             });
         } catch (error) {
-            showToast('Error al cargar items SGI', 'error');
+            showToast('Error al cargar items', 'error');
         }
     }
 
     function startSgiEdit(item) {
+        if (!item) return;
         document.getElementById('sgiTitle').value = item.name;
-        document.getElementById('sgiCategory').value = item.category;
+        sgiCategory.value = item.category;
         sgiEditId.value = item.id;
         sgiSaveBtn.innerText = 'Actualizar Documento';
         sgiCancelEditBtn.classList.remove('hidden');
         document.getElementById('sgiFile').required = false;
-
         sgiForm.setAttribute('data-current-url', item.href);
-        sgiSection.scrollIntoView({ behavior: 'smooth' });
+        sgiForm.scrollIntoView({ behavior: 'smooth' });
     }
 
-    sgiCancelEditBtn.addEventListener('click', () => {
+    function cancelSgiEdit() {
         sgiForm.reset();
         sgiEditId.value = '';
         sgiSaveBtn.innerText = 'Guardar Documento';
         sgiCancelEditBtn.classList.add('hidden');
         document.getElementById('sgiFile').required = true;
-    });
+    }
 
-    sgiForm.addEventListener('submit', async (e) => {
+    sgiCancelEditBtn.onclick = cancelSgiEdit;
+
+    sgiForm.onsubmit = async (e) => {
         e.preventDefault();
+        const section = sgiCurrentSection.value;
         const id = sgiEditId.value;
         const name = document.getElementById('sgiTitle').value;
-        const category = document.getElementById('sgiCategory').value;
+        const category = sgiCategory.value;
         const fileInput = document.getElementById('sgiFile');
         const file = fileInput.files[0];
         let fileUrl = sgiForm.getAttribute('data-current-url');
 
-        if (!id && !file) {
-            showToast('Selecciona un archivo', 'error');
-            return;
-        }
+        if (!id && !file) return showToast('Selecciona un archivo', 'error');
 
-        showToast(id ? 'Actualizando documento...' : 'Subiendo archivo...', 'info');
+        showToast(id ? 'Actualizando...' : 'Subiendo...', 'info');
 
         try {
             if (file) {
-                const formData = new FormData();
-                formData.append('category', category);
-                formData.append('file', file);
-                const uploadRes = await fetch('/api/sgi/upload', {
-                    method: 'POST',
-                    body: formData
-                });
-                const uploadData = await uploadRes.json();
-                fileUrl = uploadData.fileUrl;
+                const fd = new FormData();
+                fd.append('section', section);
+                fd.append('category', category);
+                fd.append('file', file);
+
+                const upRes = await fetch('/api/sgi/upload', { method: 'POST', body: fd });
+                if (!upRes.ok) {
+                    const errorText = await upRes.text();
+                    let errorMessage = 'Error al subir el archivo al servidor.';
+                    try {
+                        const errorJson = JSON.parse(errorText);
+                        errorMessage = errorJson.message || errorMessage;
+                    } catch (e) { }
+                    throw new Error(errorMessage);
+                }
+                const upData = await upRes.json();
+                fileUrl = upData.fileUrl;
             }
 
             const method = id ? 'PUT' : 'POST';
-            const url = id ? `/api/sgi/planeacion/${id}` : '/api/sgi/planeacion';
+            const url = id ? `/api/sgi/${section}/${id}` : `/api/sgi/${section}`;
 
             const res = await fetch(url, {
                 method: method,
@@ -403,42 +192,119 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (res.ok) {
-                showToast(id ? 'Documento actualizado' : 'Documento guardado');
-                sgiForm.reset();
-                sgiEditId.value = '';
-                sgiSaveBtn.innerText = 'Guardar Documento';
-                sgiCancelEditBtn.classList.add('hidden');
-                document.getElementById('sgiFile').required = true;
+                showToast(id ? 'Actualizado' : 'Guardado');
+                cancelSgiEdit();
                 loadSgiList();
             } else {
                 const err = await res.json();
                 showToast(err.message, 'error');
             }
         } catch (error) {
-            showToast('Error al procesar el documento', 'error');
+            showToast('Error en el proceso', 'error');
         }
-    });
+    };
 
     async function deleteSgiItem(id) {
-        if (!confirm('¿Eliminar este documento del portal?')) return;
+        if (!confirm('¿Eliminar documento?')) return;
+        const section = sgiCurrentSection.value;
         try {
-            const res = await fetch(`/api/sgi/planeacion/${id}`, { method: 'DELETE' });
+            const res = await fetch(`/api/sgi/${section}/${id}`, { method: 'DELETE' });
             if (res.ok) {
-                showToast('Documento eliminado');
+                showToast('Eliminado');
                 loadSgiList();
             }
-        } catch (error) {
-            showToast('Error al eliminar', 'error');
-        }
+        } catch (e) { showToast('Error al eliminar', 'error'); }
     }
 
+    // --- News Logic ---
+    async function loadNewsList() {
+        const newsItemsList = document.getElementById('newsItemsList');
+        newsItemsList.innerHTML = '<p>Cargando noticias...</p>';
+        try {
+            const res = await fetch('/api/news');
+            const news = await res.json();
+            newsItemsList.innerHTML = news.length ? '' : '<p>No hay noticias.</p>';
+            news.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'news-manage-card';
+                card.innerHTML = `
+                    <img src="../${item.imageUrl}" style="width: 60px; height: 60px; object-fit: cover;">
+                    <div class="news-info"><h4>${item.title}</h4></div>
+                    <button class="btn-delete" onclick="deleteNews('${item.id}')">Eliminar</button>
+                `;
+                newsItemsList.appendChild(card);
+            });
+        } catch (e) { showToast('Error al cargar noticias', 'error'); }
+    }
+
+    window.deleteNews = async (id) => {
+        if (!confirm('¿Eliminar noticia?')) return;
+        await fetch(`/api/news/${id}`, { method: 'DELETE' });
+        loadNewsList();
+        showToast('Eliminada');
+    };
+
+    document.getElementById('newsForm').onsubmit = async (e) => {
+        e.preventDefault();
+        const fd = new FormData();
+        fd.append('image', document.getElementById('imageInput').files[0]);
+        const upRes = await fetch('/api/news/upload', { method: 'POST', body: fd });
+        const { imageUrl } = await upRes.json();
+
+        await fetch('/api/news', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                title: document.getElementById('title').value,
+                category: document.getElementById('category').value,
+                description: document.getElementById('description').value,
+                imageUrl
+            })
+        });
+        showToast('Noticia publicada');
+        document.getElementById('newsForm').reset();
+    };
+
+    // --- Agenda Logic ---
+    async function loadAgendaList() {
+        const list = document.getElementById('agendaItemsList');
+        list.innerHTML = 'Cargando...';
+        const res = await fetch('/api/agenda');
+        const data = await res.json();
+        list.innerHTML = '';
+        data.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'news-manage-card';
+            card.innerHTML = `<div><h4>${item.title}</h4><p>${item.time}</p></div><button class="btn-delete" onclick="deleteAgenda('${item.id}')">Eliminar</button>`;
+            list.appendChild(card);
+        });
+    }
+
+    window.deleteAgenda = async (id) => {
+        await fetch(`/api/agenda/${id}`, { method: 'DELETE' });
+        loadAgendaList();
+    };
+
+    if (document.getElementById('agendaForm')) {
+        document.getElementById('agendaForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const rawTime = document.getElementById('agendaTime').value;
+            const time = new Date(rawTime).toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' });
+            await fetch('/api/agenda', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ title: document.getElementById('agendaTitle').value, time })
+            });
+            loadAgendaList();
+            document.getElementById('agendaForm').reset();
+        };
+    }
+
+    // --- Helper ---
     function showToast(message, type = 'success') {
         toast.innerHTML = message;
         toast.style.backgroundColor = type === 'success' ? '#10b981' : (type === 'error' ? '#ef4444' : '#3b82f6');
         toast.classList.remove('hidden');
-
-        setTimeout(() => {
-            toast.classList.add('hidden');
-        }, 3000);
+        setTimeout(() => toast.classList.add('hidden'), 3000);
     }
 });

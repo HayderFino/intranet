@@ -35,7 +35,11 @@
                     <li id="nav-sgi"><a href="#"><svg viewBox="0 0 24 24">
                                 <path
                                     d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
-                            </svg> Planeaci&oacute;n Estrat&eacute;gica</a></li>
+                            </svg> Planeaci&oacute;n</a></li>
+                    <li id="nav-mejora"><a href="#"><svg viewBox="0 0 24 24">
+                                <path
+                                    d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 12c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 3.74C4.46 4.97 4 6.43 4 8c0 4.42 3.58 8 8 8v3l4-4-4-4v3z" />
+                            </svg> Mejora Continua</a></li>
                 </ul>
             </nav>
             <div class="admin-footer">
@@ -141,48 +145,51 @@
 
                 <!-- SGI Section -->
                 <div id="sgiSection" class="admin-form-container hidden">
-                    <h2>Gesti&oacute;n de Planeaci&oacute;n Estrat&eacute;gica</h2>
-                    <p style="color: #64748b; margin-bottom: 1.5rem;">Administra los documentos de SGI / Procesos
-                        Estrat&eacute;gicos / Planeaci&oacute;n Estrat&eacute;gica.</p>
+                    <h2>Gesti&oacute;n de SGI</h2>
+                    <div class="tabs"
+                        style="margin-bottom: 2rem; display: flex; gap: 1rem; border-bottom: 1px solid #eee; padding-bottom: 1rem;">
+                        <button class="tab-btn active" data-target="planeacion">Planeaci&oacute;n
+                            Estrat&eacute;gica</button>
+                        <button class="tab-btn" data-target="mejora">Mejora Continua</button>
+                    </div>
 
-                    <form id="sgiForm" class="news-form"
-                        style="margin-bottom: 2rem; border-bottom: 1px solid #eee; padding-bottom: 2rem;">
-                        <input type="hidden" id="sgiEditId">
-                        <div class="form-group">
-                            <label for="sgiTitle">Nombre del Documento</label>
-                            <input type="text" id="sgiTitle" placeholder="Ej: Mapa de Procesos" required>
-                        </div>
+                    <div id="sgiManagementForm">
+                        <p id="sgiSubtitle" style="color: #64748b; margin-bottom: 1.5rem;">Administra los documentos de
+                            Planeación Estratégica.</p>
 
-                        <div class="form-row">
+                        <form id="sgiForm" class="news-form"
+                            style="margin-bottom: 2rem; border-bottom: 1px solid #eee; padding-bottom: 2rem;">
+                            <input type="hidden" id="sgiEditId">
+                            <input type="hidden" id="sgiCurrentSection" value="planeacion">
+
                             <div class="form-group">
-                                <label for="sgiCategory">Categor&iacute;a</label>
-                                <select id="sgiCategory" required>
-                                    <option value="Anexos">Anexos</option>
-                                    <option value="Caracterización">Caracterizaci&oacute;n</option>
-                                    <option value="Formatos">Formatos</option>
-                                    <option value="Instructivo">Instructivo</option>
-                                    <option value="Manuales">Manuales</option>
-                                    <option value="Mapa de riesgos">Mapa de riesgos</option>
-                                    <option value="Procedimientos">Procedimientos</option>
-                                    <option value="Registros">Registros</option>
-                                    <option value="mejora contina">Mejora Continua</option>
-                                </select>
+                                <label for="sgiTitle">Nombre del Documento</label>
+                                <input type="text" id="sgiTitle" placeholder="Ej: Mapa de Procesos" required>
                             </div>
-                            <div class="form-group">
-                                <label for="sgiFile">Subir Archivo (PDF, etc)</label>
-                                <input type="file" id="sgiFile" accept=".pdf,.doc,.docx,.xls,.xlsx" required>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="sgiCategory">Categor&iacute;a</label>
+                                    <select id="sgiCategory" required>
+                                        <!-- Options injected by JS based on section -->
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="sgiFile">Subir Archivo (PDF, etc)</label>
+                                    <input type="file" id="sgiFile" accept=".pdf,.doc,.docx,.xls,.xlsx" required>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="form-actions">
-                            <button type="submit" class="btn-primary" id="sgiSaveBtn">Guardar Documento</button>
-                            <button type="button" class="btn-secondary hidden" id="sgiCancelEditBtn">Cancelar
-                                Edici&oacute;n</button>
-                        </div>
-                    </form>
+                            <div class="form-actions">
+                                <button type="submit" class="btn-primary" id="sgiSaveBtn">Guardar Documento</button>
+                                <button type="button" class="btn-secondary hidden" id="sgiCancelEditBtn">Cancelar
+                                    Edici&oacute;n</button>
+                            </div>
+                        </form>
 
-                    <div id="sgiItemsList" class="news-management-list">
-                        <!-- Items inyectados por JS -->
+                        <div id="sgiItemsList" class="news-management-list">
+                            <!-- Items inyectados por JS -->
+                        </div>
                     </div>
                 </div>
 
