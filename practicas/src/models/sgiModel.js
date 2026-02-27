@@ -22,15 +22,22 @@ const SgiModel = {
             const categoryName = reverseCategoryMap[catMatch[1].trim()] || catMatch[1].trim();
             const gridContent = catMatch[2];
 
-            const itemRegex = /<a [^>]*href="([^"]*)"[^>]*class="file-item"[^>]*data-id="([^"]*)"[^>]*>[\s\S]*?<div class="file-name">([\s\S]*?)<\/div>[\s\S]*?<\/a>/g;
+            const itemRegex = /<a [^>]*class="file-item"[^>]*>[\s\S]*?<\/a>/g;
             let itemMatch;
             while ((itemMatch = itemRegex.exec(gridContent)) !== null) {
-                items.push({
-                    id: itemMatch[2],
-                    href: itemMatch[1],
-                    name: itemMatch[3].trim(),
-                    category: categoryName
-                });
+                const tag = itemMatch[0];
+                const hrefMatch = /href="([^"]*)"/.exec(tag);
+                const idMatch = /data-id="([^"]*)"/.exec(tag);
+                const nameMatch = /<div class="file-name">([\s\S]*?)<\/div>/.exec(tag);
+
+                if (idMatch) {
+                    items.push({
+                        id: idMatch[1],
+                        href: hrefMatch ? hrefMatch[1] : '#',
+                        name: nameMatch ? nameMatch[1].trim() : 'Sin nombre',
+                        category: categoryName
+                    });
+                }
             }
         }
         return items;

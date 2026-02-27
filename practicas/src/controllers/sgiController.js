@@ -55,6 +55,23 @@ const SgiController = {
         const category = req.body.category || 'Varios';
         const fileUrl = `../../data/sgi/Procesos Estratégicos/Planeación Estratégica/${category}/${req.file.filename}`;
         res.status(200).json({ fileUrl });
+    },
+
+    updatePlaneacionItem: (req, res) => {
+        const id = req.params.id;
+        const { name, category, fileUrl } = req.body;
+
+        try {
+            const newId = SgiModel.update(id, name, category, fileUrl);
+            if (newId) {
+                res.status(200).json({ message: 'Documento actualizado.', id: newId });
+            } else {
+                res.status(404).json({ message: 'No se pudo actualizar el documento.' });
+            }
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ message: 'Error al actualizar.' });
+        }
     }
 };
 

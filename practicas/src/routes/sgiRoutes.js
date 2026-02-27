@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs');
 const sgiController = require('../controllers/sgiController');
 
 // Configuración de Multer para archivos SGI (PDFs, etc)
@@ -27,6 +28,7 @@ const upload = multer({ storage: storage });
 // Rutas API
 router.get('/planeacion', sgiController.getPlaneacionItems);
 router.post('/planeacion', sgiController.createPlaneacionItem);
+router.put('/planeacion/:id', sgiController.updatePlaneacionItem);
 router.delete('/planeacion/:id', sgiController.deletePlaneacionItem);
 router.post('/upload', upload.single('file'), sgiController.uploadFile);
 

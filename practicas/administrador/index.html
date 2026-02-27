@@ -147,6 +147,7 @@
 
                     <form id="sgiForm" class="news-form"
                         style="margin-bottom: 2rem; border-bottom: 1px solid #eee; padding-bottom: 2rem;">
+                        <input type="hidden" id="sgiEditId">
                         <div class="form-group">
                             <label for="sgiTitle">Nombre del Documento</label>
                             <input type="text" id="sgiTitle" placeholder="Ej: Mapa de Procesos" required>
@@ -174,7 +175,9 @@
                         </div>
 
                         <div class="form-actions">
-                            <button type="submit" class="btn-primary">Guardar Documento</button>
+                            <button type="submit" class="btn-primary" id="sgiSaveBtn">Guardar Documento</button>
+                            <button type="button" class="btn-secondary hidden" id="sgiCancelEditBtn">Cancelar
+                                Edici&oacute;n</button>
                         </div>
                     </form>
 
