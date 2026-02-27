@@ -9,9 +9,8 @@ const SgiModel = {
         const content = fs.readFileSync(planeacionPath, 'utf8');
         const items = [];
 
-        // Regex para capturar items con su categoría
-        // Buscamos secciones de categoría y luego sus items
-        const categoryRegex = /<section class="category-section">[\s\S]*?<h3>(.*?)<\/h3>[\s\S]*?<div class="file-list-grid">([\s\S]*?)<\/div>[\s\S]*?<\/section>/g;
+        // Regex mejorado: Busca el h3 y captura todo hasta el cierre de la sección que contiene el grid
+        const categoryRegex = /<section class="category-section">[\s\S]*?<h3>(.*?)<\/h3>[\s\S]*?<div class="file-list-grid">([\s\S]*?)<\/div>\s*<\/section>/g;
 
         let catMatch;
         while ((catMatch = categoryRegex.exec(content)) !== null) {
@@ -82,10 +81,33 @@ const SgiModel = {
         if (!fs.existsSync(planeacionPath)) return false;
         let content = fs.readFileSync(planeacionPath, 'utf8');
 
-        // Regex para encontrar el item por ID y eliminarlo
-        const itemRegex = new RegExp(`<a [^>]*class="file-item" [^>]*data-id="${id}"[^>]*>[\\s\\S]*?<\\/a>`, 'g');
+        // Regex para encontrar el item por ID
+        const itemRegex = new RegExp(`<a [^>]*class="file-item"[^>]*data-id="${id}"[^>]*>[\\s\\S]*?<\\/a>`, 'g');
+        const match = itemRegex.exec(content);
 
-        if (itemRegex.test(content)) {
+        if (match) {
+            const itemHtml = match[0];
+            const hrefMatch = /href="([^"]*)"/.exec(itemHtml);
+
+            // Si tiene un href válido (y no es un placeholder como "#")
+            if (hrefMatch && hrefMatch[1] && hrefMatch[1] !== '#') {
+                const relativePath = hrefMatch[1];
+                // Convertir ../../data/... a una ruta absoluta del sistema
+                // El href es relativo a header_menu/sgi/
+                const absolutePath = path.join(__dirname, '../../header_menu/sgi/', relativePath);
+
+                try {
+                    if (fs.existsSync(absolutePath)) {
+                        fs.unlinkSync(absolutePath);
+                        console.log(`Archivo eliminado físicamente: ${absolutePath}`);
+                    }
+                } catch (err) {
+                    console.error(`Error al eliminar archivo físico: ${err.message}`);
+                    // Continuamos con el borrado del HTML aunque falle el archivo físico
+                }
+            }
+
+            // Eliminar del HTML
             content = content.replace(itemRegex, '');
             fs.writeFileSync(planeacionPath, content, 'utf8');
             return true;
