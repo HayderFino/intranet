@@ -52,6 +52,18 @@
                                 <path
                                     d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-1 14H5V8h14v10zM7 10h10v2H7zm0 4h7v2H7z" />
                             </svg> Boletines GIT</a></li>
+                    <li id="nav-admin-recursos"><a href="#"><svg viewBox="0 0 24 24">
+                                <path
+                                    d="M17 8C8 10 5.9 16.17 3.82 19.42L5.71 21l1-1.29C7.63 18.57 9 17 12 17c4 0 5.5-2.5 7-5 1.14-1.9 2-4 2-6 0-.88-.16-1.72-.42-2.5C19.79 4.5 18.5 5 17 5s-3 .82-3 2c0 1.1.9 2 2 2z" />
+                            </svg> Admin. Recursos</a></li>
+                    <li id="nav-planeacion-ambiental"><a href="#"><svg viewBox="0 0 24 24">
+                                <path
+                                    d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z" />
+                            </svg> Planeación Ambiental</a></li>
+                    <li id="nav-vigilancia-control"><a href="#"><svg viewBox="0 0 24 24">
+                                <path
+                                    d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z" />
+                            </svg> Vigilancia y Control</a></li>
                 </ul>
             </nav>
             <div class="admin-footer">
@@ -387,6 +399,118 @@
                         <div id="boletinesItemsList" class="news-management-list">
                             <!-- Items inyectados por JS -->
                         </div>
+                    </div>
+                </div>
+
+                <!-- PROCESOS MISIONALES SGI - Template genérico reutilizable  -->
+                <!-- Admin Recursos Naturales -->
+                <div id="adminRecursosSection" class="admin-form-container hidden">
+                    <h2>Administración de Recursos Naturales Renovables</h2>
+                    <div id="adminRecursosForm">
+                        <form id="sgiMisional1Form" class="news-form"
+                            style="margin-bottom: 2rem; border-bottom: 1px solid #eee; padding-bottom: 2rem;"
+                            data-section="admin-recursos">
+                            <input type="hidden" id="sgiMisional1EditId">
+                            <div class="form-group">
+                                <label for="sgiMisional1Name">Nombre del Documento</label>
+                                <input type="text" id="sgiMisional1Name" placeholder="Ej: PAO-001 Prospección" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="sgiMisional1Category">Categoría</label>
+                                <select id="sgiMisional1Category">
+                                    <option value="Caracterización">Caracterización</option>
+                                    <option value="Formato Único Nacional">Formato Único Nacional</option>
+                                    <option value="Procedimientos">Procedimientos</option>
+                                    <option value="Formatos">Formatos</option>
+                                    <option value="Instructivos">Instructivos</option>
+                                    <option value="Anexos y Folletos">Anexos y Folletos</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="sgiMisional1File">Archivo</label>
+                                <input type="file" id="sgiMisional1File" accept=".pdf,.doc,.docx">
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn-primary" id="sgiMisional1SaveBtn">Guardar</button>
+                                <button type="button" class="btn-secondary hidden"
+                                    id="sgiMisional1CancelBtn">Cancelar</button>
+                            </div>
+                        </form>
+                        <div id="adminRecursosItemsList" class="news-management-list"></div>
+                    </div>
+                </div>
+
+                <!-- Planeación Ambiental -->
+                <div id="planeacionAmbientalSection" class="admin-form-container hidden">
+                    <h2>Planeación y Ordenamiento Ambiental</h2>
+                    <div id="planeacionAmbientalForm">
+                        <form id="sgiMisional2Form" class="news-form"
+                            style="margin-bottom: 2rem; border-bottom: 1px solid #eee; padding-bottom: 2rem;"
+                            data-section="planeacion-ambiental">
+                            <input type="hidden" id="sgiMisional2EditId">
+                            <div class="form-group">
+                                <label for="sgiMisional2Name">Nombre del Documento</label>
+                                <input type="text" id="sgiMisional2Name" placeholder="Ej: PPL-001 Gestión de Proyectos"
+                                    required>
+                            </div>
+                            <div class="form-group">
+                                <label for="sgiMisional2Category">Categoría</label>
+                                <select id="sgiMisional2Category">
+                                    <option value="Caracterización">Caracterización</option>
+                                    <option value="Procedimientos">Procedimientos</option>
+                                    <option value="Formatos">Formatos</option>
+                                    <option value="Guías y Gestión de Riesgos">Guías y Gestión de Riesgos</option>
+                                    <option value="Anexos">Anexos</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="sgiMisional2File">Archivo</label>
+                                <input type="file" id="sgiMisional2File" accept=".pdf,.doc,.docx">
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn-primary" id="sgiMisional2SaveBtn">Guardar</button>
+                                <button type="button" class="btn-secondary hidden"
+                                    id="sgiMisional2CancelBtn">Cancelar</button>
+                            </div>
+                        </form>
+                        <div id="planeacionAmbientalItemsList" class="news-management-list"></div>
+                    </div>
+                </div>
+
+                <!-- Vigilancia, Seguimiento y Control -->
+                <div id="vigilanciaControlSection" class="admin-form-container hidden">
+                    <h2>Vigilancia, Seguimiento y Control Ambiental</h2>
+                    <div id="vigilanciaControlForm">
+                        <form id="sgiMisional3Form" class="news-form"
+                            style="margin-bottom: 2rem; border-bottom: 1px solid #eee; padding-bottom: 2rem;"
+                            data-section="vigilancia-control">
+                            <input type="hidden" id="sgiMisional3EditId">
+                            <div class="form-group">
+                                <label for="sgiMisional3Name">Nombre del Documento</label>
+                                <input type="text" id="sgiMisional3Name" placeholder="Ej: PVS-001 Control y Vigilancia"
+                                    required>
+                            </div>
+                            <div class="form-group">
+                                <label for="sgiMisional3Category">Categoría</label>
+                                <select id="sgiMisional3Category">
+                                    <option value="Caracterización">Caracterización</option>
+                                    <option value="Formato Único Nacional">Formato Único Nacional</option>
+                                    <option value="Formatos">Formatos</option>
+                                    <option value="Procedimientos">Procedimientos</option>
+                                    <option value="Gestión de Riesgos y Anexos">Gestión de Riesgos y Anexos</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="sgiMisional3File">Archivo</label>
+                                <input type="file" id="sgiMisional3File" accept=".pdf,.doc,.docx">
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn-primary" id="sgiMisional3SaveBtn">Guardar</button>
+                                <button type="button" class="btn-secondary hidden"
+                                    id="sgiMisional3CancelBtn">Cancelar</button>
+                            </div>
+                        </form>
+                        <div id="vigilanciaControlItemsList" class="news-management-list"></div>
                     </div>
                 </div>
 

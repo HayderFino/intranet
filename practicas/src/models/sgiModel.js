@@ -9,6 +9,18 @@ const CONFIG = {
     'mejora': {
         htmlPath: path.join(__dirname, '../../header_menu/sgi/mejora-continua.html'),
         dataPath: '../../data/menu header/sgi/Procesos Estratégicos/mejora continua'
+    },
+    'admin-recursos': {
+        htmlPath: path.join(__dirname, '../../header_menu/sgi/admin-recursos.html'),
+        dataPath: '../../data/menu header/sgi/procesos misionales/Administración de la Oferta de Recursos Naturales Renovables disponibles, Educación Ambiental y Participación Ciudadana'
+    },
+    'planeacion-ambiental': {
+        htmlPath: path.join(__dirname, '../../header_menu/sgi/planeacion-ambiental.html'),
+        dataPath: '../../data/menu header/sgi/procesos misionales/Planeación y Ordenamiento Ambiental'
+    },
+    'vigilancia-control': {
+        htmlPath: path.join(__dirname, '../../header_menu/sgi/vigilancia-control.html'),
+        dataPath: '../../data/menu header/sgi/procesos misionales/Vigilancia, Seguimiento y Control Ambiental'
     }
 };
 

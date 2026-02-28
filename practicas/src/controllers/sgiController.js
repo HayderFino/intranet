@@ -3,8 +3,13 @@ const path = require('path');
 const fs = require('fs');
 
 const DATA_CONFIG = {
+    // Procesos Estratégicos (relativo desde los HTML en header_menu/sgi/)
     'planeacion': '../../data/menu header/sgi/Procesos Estratégicos/Planeación Estratégica',
-    'mejora': '../../data/menu header/sgi/Procesos Estratégicos/mejora continua'
+    'mejora': '../../data/menu header/sgi/Procesos Estratégicos/mejora continua',
+    // Procesos Misionales
+    'admin-recursos': '../../data/menu header/sgi/procesos misionales/Administración de la Oferta de Recursos Naturales Renovables disponibles, Educación Ambiental y Participación Ciudadana',
+    'planeacion-ambiental': '../../data/menu header/sgi/procesos misionales/Planeación y Ordenamiento Ambiental',
+    'vigilancia-control': '../../data/menu header/sgi/procesos misionales/Vigilancia, Seguimiento y Control Ambiental'
 };
 
 const SgiController = {
@@ -81,8 +86,10 @@ const SgiController = {
         const category = (req.body && req.body.category) || 'Varios';
         const baseDir = DATA_CONFIG[section] || DATA_CONFIG['planeacion'];
 
+        // fileUrl relativa desde los HTML en header_menu/sgi/
         const fileUrl = `${baseDir}/${category}/${req.file.filename}`;
-        console.log(`[Upload Success] URL generada: ${fileUrl}`);
+        console.log(`[Upload Success] section="${section}" category="${category}"`);
+        console.log(`[Upload Success] fileUrl="${fileUrl}"`);
         res.status(200).json({ fileUrl });
     }
 };

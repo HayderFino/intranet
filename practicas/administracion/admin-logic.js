@@ -10,7 +10,11 @@ document.addEventListener('DOMContentLoaded', () => {
         agenda: document.getElementById('agendaSection'),
         sgi: document.getElementById('sgiSection'),
         dashboard: document.getElementById('dashboardSection'),
-        preview: document.getElementById('previewArea')
+        preview: document.getElementById('previewArea'),
+        // Procesos misionales
+        adminRecursos: document.getElementById('adminRecursosSection'),
+        planeacionAmbiental: document.getElementById('planeacionAmbientalSection'),
+        vigilanciaControl: document.getElementById('vigilanciaControlSection')
     };
 
     const navItems = {
@@ -19,7 +23,11 @@ document.addEventListener('DOMContentLoaded', () => {
         listNews: document.getElementById('nav-list-news'),
         agenda: document.getElementById('nav-agenda'),
         sgi: document.getElementById('nav-sgi'),
-        mejora: document.getElementById('nav-mejora')
+        mejora: document.getElementById('nav-mejora'),
+        // Procesos misionales
+        adminRecursos: document.getElementById('nav-admin-recursos'),
+        planeacionAmbiental: document.getElementById('nav-planeacion-ambiental'),
+        vigilanciaControl: document.getElementById('nav-vigilancia-control')
     };
 
     // --- Navigation Logic ---
@@ -76,6 +84,218 @@ document.addEventListener('DOMContentLoaded', () => {
         navItems.boletines.classList.add('active');
         loadBoletinesList();
     };
+
+    // --- Procesos Misionales SGI (genérico) ---
+    // Config para las 3 secciones misionales
+    const misionalConfig = [
+        {
+            navId: 'nav-admin-recursos', sectionEl: 'adminRecursosSection',
+            formId: 'sgiMisional1Form', editId: 'sgiMisional1EditId',
+            nameId: 'sgiMisional1Name', catId: 'sgiMisional1Category',
+            fileId: 'sgiMisional1File', listId: 'adminRecursosItemsList',
+            saveBtn: 'sgiMisional1SaveBtn', cancelBtn: 'sgiMisional1CancelBtn',
+            apiSection: 'admin-recursos'
+        },
+        {
+            navId: 'nav-planeacion-ambiental', sectionEl: 'planeacionAmbientalSection',
+            formId: 'sgiMisional2Form', editId: 'sgiMisional2EditId',
+            nameId: 'sgiMisional2Name', catId: 'sgiMisional2Category',
+            fileId: 'sgiMisional2File', listId: 'planeacionAmbientalItemsList',
+            saveBtn: 'sgiMisional2SaveBtn', cancelBtn: 'sgiMisional2CancelBtn',
+            apiSection: 'planeacion-ambiental'
+        },
+        {
+            navId: 'nav-vigilancia-control', sectionEl: 'vigilanciaControlSection',
+            formId: 'sgiMisional3Form', editId: 'sgiMisional3EditId',
+            nameId: 'sgiMisional3Name', catId: 'sgiMisional3Category',
+            fileId: 'sgiMisional3File', listId: 'vigilanciaControlItemsList',
+            saveBtn: 'sgiMisional3SaveBtn', cancelBtn: 'sgiMisional3CancelBtn',
+            apiSection: 'vigilancia-control'
+        }
+    ];
+
+    function initMisionalSection(cfg) {
+        const secEl = document.getElementById(cfg.sectionEl);
+        const form = document.getElementById(cfg.formId);
+        const editId = document.getElementById(cfg.editId);
+        const listEl = document.getElementById(cfg.listId);
+        let loadedItems = [];
+        let activeFilter = 'all';
+
+        // Nav click (usa navItems global que ya tiene el elemento correcto)
+        const navEl = document.getElementById(cfg.navId);
+        navEl.onclick = () => {
+            hideAll();
+            secEl.classList.remove('hidden');
+            navEl.classList.add('active');
+            loadList();
+        };
+
+        // Insertar barra de filtros encima del listado (solo una vez)
+        const filterBar = document.createElement('div');
+        filterBar.id = `${cfg.listId}-filterbar`;
+        filterBar.style.cssText = 'display:flex; align-items:center; gap:0.75rem; margin-bottom:1rem; flex-wrap:wrap;';
+        filterBar.innerHTML = `
+            <label style="font-weight:600; font-size:0.85rem; color:#334155;">
+                Filtrar por categoría:
+            </label>
+            <select id="${cfg.listId}-catfilter"
+                style="padding:0.45rem 0.8rem; border:1px solid #cbd5e1; border-radius:8px;
+                       font-size:0.85rem; background:#fff; cursor:pointer; color:#334155;">
+                <option value="all">Todas las categorías</option>
+            </select>
+            <span id="${cfg.listId}-count"
+                style="margin-left:auto; font-size:0.8rem; color:#64748b;"></span>
+        `;
+        listEl.parentNode.insertBefore(filterBar, listEl);
+        const catFilter = document.getElementById(`${cfg.listId}-catfilter`);
+        const countEl = document.getElementById(`${cfg.listId}-count`);
+
+        catFilter.onchange = () => {
+            activeFilter = catFilter.value;
+            renderList();
+        };
+
+        async function loadList() {
+            listEl.innerHTML = '<p style="padding:1rem;">Cargando...</p>';
+            try {
+                const res = await fetch(`/api/sgi/${cfg.apiSection}`);
+                loadedItems = await res.json();
+                rebuildFilterOptions();
+                renderList();
+            } catch (e) { showToast('Error al cargar', 'error'); }
+        }
+
+        function rebuildFilterOptions() {
+            // Categorías únicas de los items
+            const cats = [...new Set(loadedItems.map(i => i.category))].filter(Boolean);
+            catFilter.innerHTML = '<option value="all">Todas las categorías</option>';
+            cats.forEach(c => {
+                const opt = document.createElement('option');
+                opt.value = c;
+                opt.textContent = c;
+                if (c === activeFilter) opt.selected = true;
+                catFilter.appendChild(opt);
+            });
+            // Si el filtro activo ya no existe, reset a 'all'
+            if (activeFilter !== 'all' && !cats.includes(activeFilter)) activeFilter = 'all';
+        }
+
+        function renderList() {
+            const filtered = activeFilter === 'all'
+                ? loadedItems
+                : loadedItems.filter(i => i.category === activeFilter);
+
+            countEl.textContent = `${filtered.length} de ${loadedItems.length} documentos`;
+
+            if (filtered.length === 0) {
+                listEl.innerHTML = '<p style="padding:1rem;color:#64748b;">No hay documentos en esta categoría.</p>';
+                return;
+            }
+            listEl.innerHTML = '';
+            filtered.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'news-manage-card';
+                card.innerHTML = `
+                    <div class="news-info">
+                        <h4>${item.name}</h4>
+                        <p style="font-size:0.8rem;color:#64748b;">
+                            <span style="background:#e2e8f0;padding:0.15rem 0.5rem;border-radius:4px;font-weight:500;">
+                                ${item.category}
+                            </span>
+                            &nbsp;|&nbsp;
+                            <a href="${item.href}" target="_blank" style="color:#2e7d32;">Ver archivo</a>
+                        </p>
+                    </div>
+                    <div class="card-actions">
+                        <button class="btn-secondary btn-edit" data-id="${item.id}">Editar</button>
+                        <button class="btn-delete" data-id="${item.id}">Eliminar</button>
+                    </div>
+                `;
+                listEl.appendChild(card);
+            });
+
+            listEl.querySelectorAll('.btn-delete').forEach(btn => {
+                btn.onclick = () => deleteItem(btn.dataset.id);
+            });
+            listEl.querySelectorAll('.btn-edit').forEach(btn => {
+                btn.onclick = () => startEdit(loadedItems.find(i => i.id === btn.dataset.id));
+            });
+        }
+
+        function startEdit(item) {
+            if (!item) return;
+            editId.value = item.id;
+            document.getElementById(cfg.nameId).value = item.name;
+            document.getElementById(cfg.catId).value = item.category;
+            document.getElementById(cfg.saveBtn).innerText = 'Actualizar';
+            document.getElementById(cfg.cancelBtn).classList.remove('hidden');
+            form.setAttribute('data-current-url', item.href);
+            // Scroll al formulario
+            form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function cancelEdit() {
+            form.reset();
+            editId.value = '';
+            document.getElementById(cfg.saveBtn).innerText = 'Guardar';
+            document.getElementById(cfg.cancelBtn).classList.add('hidden');
+        }
+
+        document.getElementById(cfg.cancelBtn).onclick = cancelEdit;
+
+        form.onsubmit = async (e) => {
+            e.preventDefault();
+            const id = editId.value;
+            const fileInput = document.getElementById(cfg.fileId);
+            const file = fileInput.files[0];
+            let fileUrl = form.getAttribute('data-current-url') || '#';
+
+            showToast(id ? 'Actualizando...' : 'Guardando...', 'info');
+            try {
+                const name = document.getElementById(cfg.nameId).value;
+                const category = document.getElementById(cfg.catId).value;
+
+                if (file) {
+                    const fd = new FormData();
+                    // ⚠️ Los campos de texto DEBEN ir antes del archivo
+                    // para que Multer los tenga en req.body al elegir destino
+                    fd.append('section', cfg.apiSection);
+                    fd.append('category', category);   // subcarpeta destino
+                    fd.append('file', file);            // archivo al final
+                    const upRes = await fetch('/api/sgi/upload', { method: 'POST', body: fd });
+                    const upData = await upRes.json();
+                    fileUrl = upData.fileUrl;
+                }
+                const method = id ? 'PUT' : 'POST';
+                const url = id ? `/api/sgi/${cfg.apiSection}/${id}` : `/api/sgi/${cfg.apiSection}`;
+                const res = await fetch(url, {
+                    method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, category, fileUrl })
+                });
+                if (res.ok) {
+                    showToast(id ? 'Actualizado' : 'Guardado');
+                    cancelEdit();
+                    loadList();
+                } else {
+                    showToast('Error al guardar', 'error');
+                }
+            } catch (err) { showToast('Error en el proceso', 'error'); }
+        };
+
+        async function deleteItem(id) {
+            if (!confirm('¿Eliminar este documento?')) return;
+            try {
+                const res = await fetch(`/api/sgi/${cfg.apiSection}/${id}`, { method: 'DELETE' });
+                if (res.ok) { showToast('Eliminado'); loadList(); }
+            } catch (e) { showToast('Error al eliminar', 'error'); }
+        }
+    }
+
+    // Inicializar las 3 secciones misionales
+    misionalConfig.forEach(cfg => initMisionalSection(cfg));
+
 
     // --- Respel Logic ---
     const respelForm = document.getElementById('respelForm');
