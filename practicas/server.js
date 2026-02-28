@@ -35,7 +35,10 @@ app.use((err, req, res, next) => {
     res.status(500).json({ message: 'Error interno del servidor.', error: err.message });
 });
 
+app.get('/administrador', (req, res) => res.redirect('/administracion'));
+
 app.listen(PORT, () => {
     console.log(`Servidor CAS corriendo en http://localhost:${PORT}`);
-    console.log(`Panel de administración en http://localhost:${PORT}/administrador`);
+    console.log(`Panel de administración en http://localhost:${PORT}/administracion`);
 });
+

@@ -48,6 +48,43 @@ function initCarousel() {
 // --- Inicialización General ---
 document.addEventListener('DOMContentLoaded', () => {
 
+    // --- Carga dinámica de noticias ---
+    const newsGrids = [document.querySelector('.news-grid'), document.getElementById('noticas-grid'), document.getElementById('news-grid-main')];
+
+    newsGrids.forEach(newsGrid => {
+        if (newsGrid) {
+            // Limpiar si hay placeholder o items previos
+            newsGrid.innerHTML = '';
+
+            fetch('/api/news')
+                .then(res => res.json())
+                .then(news => {
+                    if (news && news.length > 0) {
+                        // Invertimos para que al hacer prepend queden en orden cronológico (más reciente arriba)
+                        // O simplemente usamos append si ya vienen ordenados (el modelo ya hace unshift)
+                        news.forEach(item => {
+                            const newsCard = document.createElement('div');
+                            newsCard.className = 'card news-item dynamic-news';
+                            newsCard.innerHTML = `
+                                <img src="${item.imageUrl}" alt="${item.title}" class="news-image" style="width: 100%; border-radius: 1rem;">
+                                <div class="news-body" style="padding: 1.5rem;">
+                                    <h3 style="margin-top: 0;">${item.title}</h3>
+                                    <p style="font-size: 0.9rem; color: var(--text-light); margin-top: 0.5rem;">${item.description}</p>
+                                </div>
+                            `;
+                            newsGrid.appendChild(newsCard); // Usamos appendChild porque el modelo ya viene ordenado [reciente -> antiguo]
+                        });
+                    } else {
+                        newsGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #64748b; padding: 2rem;">No hay noticias que mostrar en este momento.</p>';
+                    }
+                })
+                .catch(err => {
+                    console.error('Error al cargar noticias:', err);
+                    newsGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #ef4444; padding: 2rem;">Error al cargar las noticias.</p>';
+                });
+        }
+    });
+
     // Inicializar carrusel si existe en la página
     initCarousel();
 

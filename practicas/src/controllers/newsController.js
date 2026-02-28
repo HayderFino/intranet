@@ -13,13 +13,13 @@ const NewsController = {
     },
 
     createNews: (req, res) => {
-        const { title, description, imageUrl } = req.body;
+        const { title, description, imageUrl, category } = req.body;
         if (!title || !description || !imageUrl) {
             return res.status(400).json({ message: 'Faltan campos obligatorios.' });
         }
 
         try {
-            const id = NewsModel.create(title, description, imageUrl);
+            const id = NewsModel.create(title, description, imageUrl, category);
             res.status(201).json({ message: 'Noticia creada con éxito.', id });
         } catch (error) {
             res.status(500).json({ message: 'Error al crear la noticia.' });
@@ -29,8 +29,12 @@ const NewsController = {
     deleteNews: (req, res) => {
         const id = req.params.id;
         try {
-            NewsModel.delete(id);
-            res.status(200).json({ message: 'Noticia eliminada.' });
+            const success = NewsModel.delete(id);
+            if (success) {
+                res.status(200).json({ message: 'Noticia eliminada.' });
+            } else {
+                res.status(404).json({ message: 'Noticia no encontrada.' });
+            }
         } catch (error) {
             res.status(500).json({ message: 'Error al eliminar la noticia.' });
         }
@@ -40,7 +44,8 @@ const NewsController = {
         if (!req.file) {
             return res.status(400).json({ message: 'No se subió ninguna imagen.' });
         }
-        const imageUrl = `data/imagenes/${req.file.filename}`;
+        // Force absolute path for serving consistency
+        const imageUrl = `/data/imagenes/${req.file.filename}`;
         res.status(200).json({ imageUrl });
     }
 };

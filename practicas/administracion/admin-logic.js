@@ -1,4 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Sync initial state
+    loadNewsList();
+
     // --- UI Elements ---
     const toast = document.getElementById('toast');
     const sections = {
@@ -223,13 +226,22 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const res = await fetch('/api/news');
             const news = await res.json();
-            newsItemsList.innerHTML = news.length ? '' : '<p>No hay noticias.</p>';
+
+            // Actualizar el contador de noticias en el Dashboard
+            const statValue = document.querySelector('.stat-value');
+            if (statValue) statValue.textContent = news.length;
+
+            newsItemsList.innerHTML = news.length ? '' : '<p style="padding: 1.5rem;">No hay noticias guardadas en el sistema JSON.</p>';
             news.forEach(item => {
                 const card = document.createElement('div');
                 card.className = 'news-manage-card';
                 card.innerHTML = `
-                    <img src="../${item.imageUrl}" style="width: 60px; height: 60px; object-fit: cover;">
-                    <div class="news-info"><h4>${item.title}</h4></div>
+                    <img src="${item.imageUrl}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;">
+                    <div class="news-info" style="flex: 1; margin-left: 1rem; overflow: hidden;">
+                        <h4 style="margin: 0;">${item.title}</h4>
+                        <p style="font-size: 0.8rem; color: #64748b; margin: 2px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${item.description}</p>
+                        <span style="font-size: 0.7rem; background: #e2e8f0; padding: 2px 6px; border-radius: 4px;">${item.category || 'General'}</span>
+                    </div>
                     <button class="btn-delete" onclick="deleteNews('${item.id}')">Eliminar</button>
                 `;
                 newsItemsList.appendChild(card);
@@ -244,25 +256,90 @@ document.addEventListener('DOMContentLoaded', () => {
         showToast('Eliminada');
     };
 
+    // --- Preview dinámico de imagen seleccionada ---
+    const imageInput = document.getElementById('imageInput');
+    const previewArea = document.getElementById('previewArea');
+    const previewCard = document.getElementById('previewCard');
+
+    imageInput.addEventListener('change', () => {
+        const file = imageInput.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                showPreview(e.target.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    const previewBtn = document.getElementById('previewBtn');
+    previewBtn.onclick = () => {
+        const title = document.getElementById('title').value || 'Título de ejemplo';
+        const description = document.getElementById('description').value || 'Descripción del contenido...';
+        const category = document.getElementById('category').value;
+        const file = imageInput.files[0];
+
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                showPreview(e.target.result, title, description, category);
+            };
+            reader.readAsDataURL(file);
+        } else {
+            showPreview('../data/imagenes/placeholder.jpeg', title, description, category);
+        }
+    };
+
+    function showPreview(imgSrc, title = '', desc = '', cat = '') {
+        previewArea.classList.remove('hidden');
+        previewCard.innerHTML = `
+            <div class="card news-item" style="max-width: 400px; margin: 0 auto; background: white; border-radius: 1rem; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
+                <img src="${imgSrc}" style="width: 100%; height: 200px; object-fit: cover;">
+                <div style="padding: 1.5rem;">
+                    <span style="font-size: 0.7rem; color: #3b82f6; text-transform: uppercase; font-weight: 700;">${cat}</span>
+                    <h3 style="margin: 0.5rem 0;">${title || 'Título de la Noticia'}</h3>
+                    <p style="font-size: 0.9rem; color: #64748b;">${desc || 'Descripción de la noticia...'}</p>
+                </div>
+            </div>
+        `;
+        previewArea.scrollIntoView({ behavior: 'smooth' });
+    }
+
     document.getElementById('newsForm').onsubmit = async (e) => {
         e.preventDefault();
+        showToast('Subiendo imagen...', 'info');
+
         const fd = new FormData();
         fd.append('image', document.getElementById('imageInput').files[0]);
-        const upRes = await fetch('/api/news/upload', { method: 'POST', body: fd });
-        const { imageUrl } = await upRes.json();
 
-        await fetch('/api/news', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                title: document.getElementById('title').value,
-                category: document.getElementById('category').value,
-                description: document.getElementById('description').value,
-                imageUrl
-            })
-        });
-        showToast('Noticia publicada');
-        document.getElementById('newsForm').reset();
+        try {
+            const upRes = await fetch('/api/news/upload', { method: 'POST', body: fd });
+            if (!upRes.ok) throw new Error('Error al subir imagen');
+            const { imageUrl } = await upRes.json();
+
+            const newsRes = await fetch('/api/news', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    title: document.getElementById('title').value,
+                    category: document.getElementById('category').value,
+                    description: document.getElementById('description').value,
+                    imageUrl
+                })
+            });
+
+            if (newsRes.ok) {
+                showToast('Noticia publicada con éxito');
+                document.getElementById('newsForm').reset();
+                previewArea.classList.add('hidden');
+                loadNewsList(); // Refrescar lista y estadísticas
+            } else {
+                showToast('Error al guardar noticia', 'error');
+            }
+        } catch (err) {
+            showToast('Error en el servidor', 'error');
+            console.error(err);
+        }
     };
 
     // --- Agenda Logic ---
