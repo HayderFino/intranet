@@ -23,4 +23,10 @@ router.post('/', ctrl.createItem);
 router.put('/:id', ctrl.updateItem);
 router.delete('/:id', ctrl.deleteItem);
 
+// --- Tabla de Plazos ---
+router.get('/tabla', ctrl.getAllRows);
+router.post('/tabla', ctrl.createRow);
+router.put('/tabla/:id', ctrl.updateRow);
+router.delete('/tabla/:id', ctrl.deleteRow);
+
 module.exports = router;

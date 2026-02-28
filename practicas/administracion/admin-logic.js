@@ -416,6 +416,120 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     })();
 
+    // --- PCB Tabla de Plazos ---
+    (() => {
+        const form = document.getElementById('pcbTablaForm');
+        const editId = document.getElementById('pcbTablaEditId');
+        const tablaList = document.getElementById('pcbTablaList');
+        let rows = [];
+
+        // Carga la lista de filas cuando se abre la sección PCB
+        const origPcbOnclick = navItems.pcb.onclick;
+        navItems.pcb.onclick = () => {
+            if (origPcbOnclick) origPcbOnclick();
+            loadRows();
+        };
+
+        async function loadRows() {
+            tablaList.innerHTML = '<p style="padding:0.5rem;">Cargando filas...</p>';
+            try {
+                const res = await fetch('/api/pcb/tabla');
+                rows = await res.json();
+                renderRows();
+            } catch (e) { tablaList.innerHTML = '<p style="color:red;">Error al cargar.</p>'; }
+        }
+
+        function renderRows() {
+            if (rows.length === 0) {
+                tablaList.innerHTML = '<p style="color:#64748b;">No hay filas en la tabla.</p>';
+                return;
+            }
+            tablaList.innerHTML = '';
+            rows.forEach(row => {
+                const card = document.createElement('div');
+                card.className = 'news-manage-card';
+                card.style.cssText = 'flex-wrap:wrap; gap:0.5rem;';
+                card.innerHTML = `
+                    <div class="news-info" style="width:100%;">
+                        <h4 style="font-size:0.9rem; margin-bottom:0.25rem;">${row.tipoProp}</h4>
+                        <p style="font-size:0.78rem; color:#64748b;">
+                            Plazo: <strong>${row.plazoInsc}</strong> &nbsp;|&nbsp;
+                            Límite: <strong>${row.fechaLimite}</strong> &nbsp;|&nbsp;
+                            Anual: <strong>${row.actualizacion}</strong>
+                        </p>
+                    </div>
+                    <div class="card-actions">
+                        <button class="btn-secondary btn-edit" data-id="${row.id}">Editar</button>
+                        <button class="btn-delete" data-id="${row.id}">Eliminar</button>
+                    </div>
+                `;
+                tablaList.appendChild(card);
+            });
+            tablaList.querySelectorAll('.btn-delete').forEach(btn => {
+                btn.onclick = () => deleteRow(btn.dataset.id);
+            });
+            tablaList.querySelectorAll('.btn-edit').forEach(btn => {
+                btn.onclick = () => startRowEdit(rows.find(r => r.id === btn.dataset.id));
+            });
+        }
+
+        function startRowEdit(row) {
+            if (!row) return;
+            editId.value = row.id;
+            document.getElementById('pcbTablaTipo').value = row.tipoProp;
+            document.getElementById('pcbTablaPlazo').value = row.plazoInsc;
+            document.getElementById('pcbTablaBalance').value = row.periodoBalance;
+            document.getElementById('pcbTablaFecha').value = row.fechaLimite;
+            document.getElementById('pcbTablaActual').value = row.actualizacion;
+            document.getElementById('pcbTablaSaveBtn').innerText = 'Actualizar Fila';
+            document.getElementById('pcbTablaCancelBtn').classList.remove('hidden');
+            form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function cancelRowEdit() {
+            form.reset();
+            editId.value = '';
+            document.getElementById('pcbTablaSaveBtn').innerText = 'Guardar Fila';
+            document.getElementById('pcbTablaCancelBtn').classList.add('hidden');
+        }
+        document.getElementById('pcbTablaCancelBtn').onclick = cancelRowEdit;
+
+        form.onsubmit = async (e) => {
+            e.preventDefault();
+            const id = editId.value;
+            const data = {
+                tipoProp: document.getElementById('pcbTablaTipo').value,
+                plazoInsc: document.getElementById('pcbTablaPlazo').value,
+                periodoBalance: document.getElementById('pcbTablaBalance').value,
+                fechaLimite: document.getElementById('pcbTablaFecha').value,
+                actualizacion: document.getElementById('pcbTablaActual').value
+            };
+            const method = id ? 'PUT' : 'POST';
+            const url = id ? `/api/pcb/tabla/${id}` : '/api/pcb/tabla';
+            try {
+                const res = await fetch(url, {
+                    method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                if (res.ok) {
+                    showToast(id ? 'Fila actualizada' : 'Fila agregada');
+                    cancelRowEdit();
+                    loadRows();
+                } else showToast('Error al guardar fila', 'error');
+            } catch (err) { showToast('Error en el proceso', 'error'); }
+        };
+
+        async function deleteRow(id) {
+            if (!confirm('¿Eliminar esta fila de la tabla?')) return;
+            try {
+                const res = await fetch(`/api/pcb/tabla/${id}`, { method: 'DELETE' });
+                if (res.ok) { showToast('Fila eliminada'); loadRows(); }
+                else showToast('Error al eliminar', 'error');
+            } catch (e) { showToast('Error al eliminar', 'error'); }
+        }
+    })();
+
     // --- Respel Logic ---
     const respelForm = document.getElementById('respelForm');
     const respelItemsList = document.getElementById('respelItemsList');

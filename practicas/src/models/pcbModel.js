@@ -123,6 +123,95 @@ const PcbModel = {
         if (!data.fileUrl || data.fileUrl === '#') data.fileUrl = existing.href;
         if (PcbModel.delete(id)) return PcbModel.create(data);
         return null;
+    },
+
+    // ===== TABLA DE PLAZOS =====
+    getAllRows: () => {
+        if (!fs.existsSync(PCB_HTML_PATH)) return [];
+        const content = fs.readFileSync(PCB_HTML_PATH, 'utf8');
+        const tbodyRegex = /<tbody>([\s\S]*?)<!-- END_PCB_TABLE -->/;
+        const match = tbodyRegex.exec(content);
+        if (!match) return [];
+
+        const rows = [];
+        const parts = match[1].split(/<tr /);
+        for (let i = 1; i < parts.length; i++) {
+            const chunk = parts[i];
+            const idMatch = /data-id="([^"]*)"/.exec(chunk);
+            const cells = [...chunk.matchAll(/<td[^>]*>([\s\S]*?)<\/td>/g)].map(m => m[1].trim());
+            if (idMatch && cells.length === 5) {
+                rows.push({
+                    id: idMatch[1],
+                    tipoProp: cells[0],
+                    plazoInsc: cells[1],
+                    periodoBalance: cells[2],
+                    fechaLimite: cells[3],
+                    actualizacion: cells[4]
+                });
+            }
+        }
+        return rows;
+    },
+
+    createRow: (data) => {
+        if (!fs.existsSync(PCB_HTML_PATH)) return null;
+        let content = fs.readFileSync(PCB_HTML_PATH, 'utf8');
+
+        // Alternar colores de fila
+        const rows = PcbModel.getAllRows();
+        const bg = rows.length % 2 === 0 ? '#fff' : '#f1f8ff';
+        const id = 'pcbtbl' + Date.now();
+
+        const tdStyle1 = 'padding:0.75rem 1rem; border-bottom:1px solid #e0e0e0;';
+        const tdStyle2 = 'padding:0.75rem 1rem; border-bottom:1px solid #e0e0e0; text-align:center;';
+
+        const newRow = `
+                            <tr data-id="${id}" style="background:${bg};">
+                                <td style="${tdStyle1}">${data.tipoProp}</td>
+                                <td style="${tdStyle2}">${data.plazoInsc}</td>
+                                <td style="${tdStyle2}">${data.periodoBalance}</td>
+                                <td style="${tdStyle2}">${data.fechaLimite}</td>
+                                <td style="${tdStyle2}">${data.actualizacion}</td>
+                            </tr>`;
+
+        content = content.replace(
+            '<!-- END_PCB_TABLE -->',
+            newRow + '\n                        <!-- END_PCB_TABLE -->'
+        );
+        fs.writeFileSync(PCB_HTML_PATH, content, 'utf8');
+        return id;
+    },
+
+    deleteRow: (id) => {
+        if (!fs.existsSync(PCB_HTML_PATH)) return false;
+        let content = fs.readFileSync(PCB_HTML_PATH, 'utf8');
+
+        const tbodyRegex = /(<tbody>)([\s\S]*?)(<!-- END_PCB_TABLE -->)/;
+        const m = tbodyRegex.exec(content);
+        if (!m) return false;
+
+        const tbodyContent = m[2];
+        const parts = tbodyContent.split(/<tr /);
+        const targetTag = `data-id="${id}"`;
+        let found = false;
+
+        const newParts = parts.filter((p, i) => {
+            if (i === 0) return true;
+            if (p.includes(targetTag)) { found = true; return false; }
+            return true;
+        });
+
+        if (!found) return false;
+
+        const newTbody = newParts.map((p, i) => i === 0 ? p : `<tr ${p}`).join('');
+        content = content.replace(tbodyContent, newTbody);
+        fs.writeFileSync(PCB_HTML_PATH, content, 'utf8');
+        return true;
+    },
+
+    updateRow: (id, data) => {
+        if (PcbModel.deleteRow(id)) return PcbModel.createRow(data);
+        return null;
     }
 };
 
