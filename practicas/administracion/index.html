@@ -58,18 +58,55 @@
             </header>
 
             <section class="admin-content">
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-value">20</div>
-                        <div class="stat-label">Noticias Totales</div>
+                <!-- Dashboard Section -->
+                <div id="dashboardSection">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div id="stat-news-count" class="stat-value">--</div>
+                            <div class="stat-label">Noticias Publicadas</div>
+                        </div>
+                        <div class="stat-card">
+                            <div id="stat-sgi-count" class="stat-value">--</div>
+                            <div class="stat-label">Documentos SGI</div>
+                        </div>
+                        <div class="stat-card">
+                            <div id="stat-agenda-count" class="stat-value">--</div>
+                            <div class="stat-label">Eventos en Agenda</div>
+                        </div>
+                        <div class="stat-card">
+                            <div id="stat-last-update" class="stat-value" style="font-size: 1.2rem;">--</div>
+                            <div class="stat-label">&Uacute;ltima Actividad</div>
+                        </div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-value">Hoy</div>
-                        <div class="stat-label">&Uacute;ltima Actualizaci&oacute;n</div>
+
+                    <div class="dashboard-summary-grid"
+                        style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2rem;">
+                        <div class="admin-form-container" style="max-width: 100%;">
+                            <h2>Accesos R&aacute;pidos</h2>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                <button class="btn-secondary"
+                                    onclick="document.getElementById('nav-new-news').click()">+ Nueva Noticia</button>
+                                <button class="btn-secondary" onclick="document.getElementById('nav-agenda').click()">+
+                                    Agendar Evento</button>
+                                <button class="btn-secondary" onclick="document.getElementById('nav-sgi').click()">+
+                                    Subir Planeaci&oacute;n</button>
+                                <button class="btn-secondary" onclick="document.getElementById('nav-mejora').click()">+
+                                    Subir Mejora</button>
+                            </div>
+                        </div>
+                        <div class="admin-form-container" style="max-width: 100%;">
+                            <h2>Estado del Sistema</h2>
+                            <p style="color: #64748b; font-size: 0.9rem;">Servidor: <span
+                                    style="color: #10b981; font-weight: 600;">En l&iacute;nea</span></p>
+                            <p style="color: #64748b; font-size: 0.9rem; margin-top: 0.5rem;">Base de datos: <span
+                                    style="color: #10b981; font-weight: 600;">JSON Conectado</span></p>
+                            <p style="color: #64748b; font-size: 0.9rem; margin-top: 0.5rem;">Carpeta de datos: <span
+                                    style="color: #64748b; font-weight: 600;">/data</span></p>
+                        </div>
                     </div>
                 </div>
 
-                <div id="newsFormSection" class="admin-form-container">
+                <div id="newsFormSection" class="admin-form-container hidden">
                     <h2>Subir Nueva Noticia</h2>
                     <form id="newsForm" class="news-form">
                         <div class="form-group">
@@ -146,12 +183,7 @@
                 <!-- SGI Section -->
                 <div id="sgiSection" class="admin-form-container hidden">
                     <h2>Gesti&oacute;n de SGI</h2>
-                    <div class="tabs"
-                        style="margin-bottom: 2rem; display: flex; gap: 1rem; border-bottom: 1px solid #eee; padding-bottom: 1rem;">
-                        <button class="tab-btn active" data-target="planeacion">Planeaci&oacute;n
-                            Estrat&eacute;gica</button>
-                        <button class="tab-btn" data-target="mejora">Mejora Continua</button>
-                    </div>
+                    <!-- Tabs removed because they are in the sidebar -->
 
                     <div id="sgiManagementForm">
                         <p id="sgiSubtitle" style="color: #64748b; margin-bottom: 1.5rem;">Administra los documentos de
@@ -186,6 +218,17 @@
                                     Edici&oacute;n</button>
                             </div>
                         </form>
+
+                        <div class="list-filter"
+                            style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1rem; background: #f8fafc; padding: 1rem; border-radius: 8px; border: 1px solid #e2e8f0;">
+                            <label for="sgiFilterCategory"
+                                style="font-weight: 600; color: #64748b; font-size: 0.9rem;">Filtrar por
+                                Categor&iacute;a:</label>
+                            <select id="sgiFilterCategory"
+                                style="flex: 1; max-width: 300px; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.9rem;">
+                                <option value="all">Todas las categor&iacute;as</option>
+                            </select>
+                        </div>
 
                         <div id="sgiItemsList" class="news-management-list">
                             <!-- Items inyectados por JS -->

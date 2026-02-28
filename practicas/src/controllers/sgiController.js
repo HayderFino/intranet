@@ -3,8 +3,8 @@ const path = require('path');
 const fs = require('fs');
 
 const DATA_CONFIG = {
-    'planeacion': '../../data/sgi/Procesos Estratégicos/Planeación Estratégica',
-    'mejora': '../../data/sgi/Procesos Estratégicos/mejora continua'
+    'planeacion': '../../data/menu header/sgi/Procesos Estratégicos/Planeación Estratégica',
+    'mejora': '../../data/menu header/sgi/Procesos Estratégicos/mejora continua'
 };
 
 const SgiController = {

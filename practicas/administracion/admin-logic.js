@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
         newsList: document.getElementById('newsListSection'),
         agenda: document.getElementById('agendaSection'),
         sgi: document.getElementById('sgiSection'),
+        dashboard: document.getElementById('dashboardSection'),
         preview: document.getElementById('previewArea')
     };
 
@@ -27,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
         Object.values(navItems).forEach(nav => nav.classList.remove('active'));
     }
 
-    navItems.dashboard.onclick = () => { hideAll(); sections.newsForm.classList.remove('hidden'); navItems.dashboard.classList.add('active'); };
+    navItems.dashboard.onclick = () => { hideAll(); sections.dashboard.classList.remove('hidden'); navItems.dashboard.classList.add('active'); updateStats(); };
     navItems.newNews.onclick = () => { hideAll(); sections.newsForm.classList.remove('hidden'); navItems.newNews.classList.add('active'); };
     navItems.listNews.onclick = () => { hideAll(); sections.newsList.classList.remove('hidden'); navItems.listNews.classList.add('active'); loadNewsList(); };
     navItems.agenda.onclick = () => { hideAll(); sections.agenda.classList.remove('hidden'); navItems.agenda.classList.add('active'); loadAgendaList(); };
@@ -55,9 +56,37 @@ document.addEventListener('DOMContentLoaded', () => {
     const sgiSaveBtn = document.getElementById('sgiSaveBtn');
     const sgiCancelEditBtn = document.getElementById('sgiCancelEditBtn');
     const sgiSubtitle = document.getElementById('sgiSubtitle');
+    const sgiFilterCategory = document.getElementById('sgiFilterCategory');
     const sgiTabButtons = document.querySelectorAll('.tab-btn');
 
     let loadedSgiItems = [];
+
+    // --- Stats Logic ---
+    async function updateStats() {
+        try {
+            const [newsR, agendaR, planeacionR, mejoraR] = await Promise.all([
+                fetch('/api/news'),
+                fetch('/api/agenda'),
+                fetch('/api/sgi/planeacion'),
+                fetch('/api/sgi/mejora')
+            ]);
+
+            const news = await newsR.json();
+            const agenda = await agendaR.json();
+            const planeacion = await planeacionR.json();
+            const mejora = await mejoraR.json();
+
+            document.getElementById('stat-news-count').textContent = news.length;
+            document.getElementById('stat-agenda-count').textContent = agenda.length;
+            document.getElementById('stat-sgi-count').textContent = planeacion.length + mejora.length;
+            document.getElementById('stat-last-update').textContent = new Date().toLocaleDateString('es-ES', { day: '2-digit', month: 'short' });
+        } catch (e) {
+            console.error('Error updating stats', e);
+        }
+    }
+
+    // Initial call
+    updateStats();
 
     const SGI_CATEGORIES = {
         'planeacion': ['Anexos', 'Caracterización', 'Formatos', 'Instructivo', 'Manuales', 'Mapa de riesgos', 'Procedimientos', 'Registros', 'Mejora Continua'],
@@ -73,13 +102,19 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.classList.toggle('active', btn.dataset.target === section);
         });
 
-        // Update Categories Select
-        sgiCategory.innerHTML = SGI_CATEGORIES[section].map(cat => `<option value="${cat}">${cat}</option>`).join('');
+        // Update Categories Select & Filter Select
+        const optionsHtml = SGI_CATEGORIES[section].map(cat => `<option value="${cat}">${cat}</option>`).join('');
+        const filterOptionsHtml = `<option value="all">Todas las categor&iacute;as</option>` + optionsHtml;
+
+        sgiCategory.innerHTML = optionsHtml;
+        sgiFilterCategory.innerHTML = filterOptionsHtml;
 
         // Reset Form
         cancelSgiEdit();
         loadSgiList();
     }
+
+    sgiFilterCategory.onchange = () => renderSgiList();
 
     sgiTabButtons.forEach(btn => {
         btn.onclick = () => switchSgiSection(btn.dataset.target);
@@ -90,42 +125,49 @@ document.addEventListener('DOMContentLoaded', () => {
         sgiItemsList.innerHTML = '<p style="padding: 1rem;">Cargando documentos...</p>';
         try {
             const res = await fetch(`/api/sgi/${section}`);
-            const data = await res.json();
-            loadedSgiItems = data;
-
-            if (data.length === 0) {
-                sgiItemsList.innerHTML = '<p style="padding: 1rem; color: #64748b;">No hay documentos en esta sección.</p>';
-                return;
-            }
-
-            sgiItemsList.innerHTML = '';
-            data.forEach(item => {
-                const card = document.createElement('div');
-                card.className = 'news-manage-card';
-                card.innerHTML = `
-                    <div class="news-info">
-                        <span class="category-tag" style="background: #e2e8f0; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem;">${item.category}</span>
-                        <h4>${item.name}</h4>
-                        <p style="font-size: 0.8rem; color: #64748b; word-break: break-all;">${item.href}</p>
-                    </div>
-                    <div class="card-actions" style="display: flex; gap: 0.5rem; flex-shrink: 0;">
-                        <button class="btn-secondary btn-edit" data-id="${item.id}" style="padding: 5px 10px; font-size: 0.8rem;">Editar</button>
-                        <button class="btn-delete" data-id="${item.id}" style="padding: 5px 10px; font-size: 0.8rem;">Eliminar</button>
-                    </div>
-                `;
-                sgiItemsList.appendChild(card);
-            });
-
-            sgiItemsList.querySelectorAll('.btn-delete').forEach(btn => {
-                btn.onclick = () => deleteSgiItem(btn.dataset.id);
-            });
-
-            sgiItemsList.querySelectorAll('.btn-edit').forEach(btn => {
-                btn.onclick = () => startSgiEdit(loadedSgiItems.find(i => i.id === btn.dataset.id));
-            });
+            loadedSgiItems = await res.json();
+            renderSgiList();
         } catch (error) {
             showToast('Error al cargar items', 'error');
         }
+    }
+
+    function renderSgiList() {
+        const filter = sgiFilterCategory.value;
+        const filteredData = filter === 'all'
+            ? loadedSgiItems
+            : loadedSgiItems.filter(item => item.category === filter);
+
+        if (filteredData.length === 0) {
+            sgiItemsList.innerHTML = `<p style="padding: 1rem; color: #64748b;">No hay documentos ${filter !== 'all' ? `en la categoría "${filter}"` : 'en esta sección'}.</p>`;
+            return;
+        }
+
+        sgiItemsList.innerHTML = '';
+        filteredData.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'news-manage-card';
+            card.innerHTML = `
+                <div class="news-info">
+                    <span class="category-tag" style="background: #e2e8f0; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem;">${item.category}</span>
+                    <h4>${item.name}</h4>
+                    <p style="font-size: 0.8rem; color: #64748b; word-break: break-all;">${item.href}</p>
+                </div>
+                <div class="card-actions" style="display: flex; gap: 0.5rem; flex-shrink: 0;">
+                    <button class="btn-secondary btn-edit" data-id="${item.id}" style="padding: 5px 10px; font-size: 0.8rem;">Editar</button>
+                    <button class="btn-delete" data-id="${item.id}" style="padding: 5px 10px; font-size: 0.8rem;">Eliminar</button>
+                </div>
+            `;
+            sgiItemsList.appendChild(card);
+        });
+
+        sgiItemsList.querySelectorAll('.btn-delete').forEach(btn => {
+            btn.onclick = () => deleteSgiItem(btn.dataset.id);
+        });
+
+        sgiItemsList.querySelectorAll('.btn-edit').forEach(btn => {
+            btn.onclick = () => startSgiEdit(loadedSgiItems.find(i => i.id === btn.dataset.id));
+        });
     }
 
     function startSgiEdit(item) {

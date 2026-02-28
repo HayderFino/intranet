@@ -4,11 +4,11 @@ const path = require('path');
 const CONFIG = {
     'planeacion': {
         htmlPath: path.join(__dirname, '../../header_menu/sgi/planeacion-estrategica.html'),
-        dataPath: '../../data/sgi/Procesos Estratégicos/Planeación Estratégica'
+        dataPath: '../../data/menu header/sgi/Procesos Estratégicos/Planeación Estratégica'
     },
     'mejora': {
         htmlPath: path.join(__dirname, '../../header_menu/sgi/mejora-continua.html'),
-        dataPath: '../../data/sgi/Procesos Estratégicos/mejora continua'
+        dataPath: '../../data/menu header/sgi/Procesos Estratégicos/mejora continua'
     }
 };
 
@@ -26,7 +26,10 @@ const SgiModel = {
         while ((catMatch = categoryRegex.exec(content)) !== null) {
             // Mapeo inverso para mostrar nombres limpios en el admin
             const reverseCategoryMap = {
-                'Caracterizaci&oacute;n': 'Caracterización'
+                'Caracterizaci&oacute;n': 'Caracterización',
+                'Planeaci&oacute;n': 'Planeación',
+                'Evaluaci&oacute;n': 'Evaluación',
+                'Gesti&oacute;n': 'Gestión'
             };
             const categoryName = reverseCategoryMap[catMatch[1].trim()] || catMatch[1].trim();
             const gridContent = catMatch[2];
@@ -69,7 +72,10 @@ const SgiModel = {
 
         // Mapeo para buscar en el HTML (con entidades)
         const categoryMap = {
-            'Caracterización': 'Caracterizaci&oacute;n'
+            'Caracterización': 'Caracterizaci&oacute;n',
+            'Planeación': 'Planeaci&oacute;n',
+            'Evaluación': 'Evaluaci&oacute;n',
+            'Gestión': 'Gesti&oacute;n'
         };
         const searchCategory = categoryMap[category] || category;
 
