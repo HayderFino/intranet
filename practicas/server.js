@@ -26,6 +26,8 @@ app.use('/data', express.static(path.join(__dirname, 'data')));
 app.use('/api/news', newsRoutes);
 app.use('/api/agenda', require('./src/routes/agendaRoutes'));
 app.use('/api/sgi', require('./src/routes/sgiRoutes'));
+app.use('/api/respel', require('./src/routes/respelRoutes'));
+
 
 app.get('/api/debug/error', (req, res) => {
     const logPath = path.join(__dirname, 'error_log.txt');

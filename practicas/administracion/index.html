@@ -40,6 +40,10 @@
                                 <path
                                     d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 12c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 3.74C4.46 4.97 4 6.43 4 8c0 4.42 3.58 8 8 8v3l4-4-4-4v3z" />
                             </svg> Mejora Continua</a></li>
+                    <li id="nav-respel"><a href="#"><svg viewBox="0 0 24 24">
+                                <path
+                                    d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z" />
+                            </svg> Respel</a></li>
                 </ul>
             </nav>
             <div class="admin-footer">
@@ -74,6 +78,14 @@
                             <div class="stat-label">Eventos en Agenda</div>
                         </div>
                         <div class="stat-card">
+                            <div id="stat-respel-count" class="stat-value">--</div>
+                            <div class="stat-label">Documentos Respel</div>
+                        </div>
+                        <div class="stat-card">
+                            <div id="stat-empresas-count" class="stat-value">--</div>
+                            <div class="stat-label">Empresas Gestoras</div>
+                        </div>
+                        <div class="stat-card">
                             <div id="stat-last-update" class="stat-value" style="font-size: 1.2rem;">--</div>
                             <div class="stat-label">&Uacute;ltima Actividad</div>
                         </div>
@@ -92,6 +104,8 @@
                                     Subir Planeaci&oacute;n</button>
                                 <button class="btn-secondary" onclick="document.getElementById('nav-mejora').click()">+
                                     Subir Mejora</button>
+                                <button class="btn-secondary" onclick="document.getElementById('nav-respel').click()">+
+                                    Gestionar Respel</button>
                             </div>
                         </div>
                         <div class="admin-form-container" style="max-width: 100%;">
@@ -231,6 +245,61 @@
                         </div>
 
                         <div id="sgiItemsList" class="news-management-list">
+                            <!-- Items inyectados por JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Respel Section -->
+                <div id="respelSection" class="admin-form-container hidden">
+                    <h2>Gestión de RESPEL</h2>
+                    <div class="tabs-container" style="display: flex; gap: 1rem; margin-bottom: 2rem;">
+                        <button class="btn-secondary active respel-tab" data-target="documentos">Docs de
+                            Referencia</button>
+                        <button class="btn-secondary respel-tab" data-target="empresas">Empresas Gestoras</button>
+                    </div>
+
+                    <div id="respelManagementForm">
+                        <form id="respelForm" class="news-form"
+                            style="margin-bottom: 2rem; border-bottom: 1px solid #eee; padding-bottom: 2rem;">
+                            <input type="hidden" id="respelEditId">
+                            <input type="hidden" id="respelCurrentSection" value="documentos">
+
+                            <div class="form-group">
+                                <label for="respelName" id="respelNameLabel">Nombre del Documento</label>
+                                <input type="text" id="respelName" placeholder="Ej: Manual de Residuos" required>
+                            </div>
+
+                            <div id="respelEmpresasFields" class="hidden">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="respelActNum">Nº Acto Administrativo</label>
+                                        <input type="text" id="respelActNum" placeholder="Ej: 1288">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="respelActDate">Fecha Acto</label>
+                                        <input type="text" id="respelActDate" placeholder="Ej: 30/12/2014">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="respelFileName">Texto del Enlace (Ej: LICENCIA ...)</label>
+                                    <input type="text" id="respelFileName" placeholder="Ej: LICENCIA FERMAR - 0074-14">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="respelFile">Subir Archivo</label>
+                                <input type="file" id="respelFile" accept=".pdf,.doc,.docx,.xls,.xlsx">
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="submit" class="btn-primary" id="respelSaveBtn">Guardar Item</button>
+                                <button type="button" class="btn-secondary hidden" id="respelCancelEditBtn">Cancelar
+                                    Edición</button>
+                            </div>
+                        </form>
+
+                        <div id="respelItemsList" class="news-management-list">
                             <!-- Items inyectados por JS -->
                         </div>
                     </div>

@@ -47,7 +47,185 @@ document.addEventListener('DOMContentLoaded', () => {
         switchSgiSection('mejora');
     };
 
-    // --- SGI Logic (Planeación & Mejora) ---
+    navItems.respel = document.getElementById('nav-respel');
+    sections.respel = document.getElementById('respelSection');
+
+    navItems.respel.onclick = () => {
+        hideAll();
+        sections.respel.classList.remove('hidden');
+        navItems.respel.classList.add('active');
+        switchRespelSection('documentos');
+    };
+
+    // --- Respel Logic ---
+    const respelForm = document.getElementById('respelForm');
+    const respelItemsList = document.getElementById('respelItemsList');
+    const respelEditId = document.getElementById('respelEditId');
+    const respelCurrentSection = document.getElementById('respelCurrentSection');
+    const respelTabButtons = document.querySelectorAll('.respel-tab');
+
+    let loadedRespelItems = [];
+
+    function switchRespelSection(section) {
+        respelCurrentSection.value = section;
+        respelTabButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.target === section));
+
+        // Update labels and show/hide fields
+        const isEmpresas = section === 'empresas';
+        document.getElementById('respelNameLabel').innerText = isEmpresas ? 'Nombre de la Empresa' : 'Nombre del Documento';
+        document.getElementById('respelName').placeholder = isEmpresas ? 'Ej: Geoambiental LTDA.' : 'Ej: Manual de Residuos';
+        document.getElementById('respelEmpresasFields').classList.toggle('hidden', !isEmpresas);
+
+        cancelRespelEdit();
+        loadRespelList();
+    }
+
+    respelTabButtons.forEach(btn => {
+        btn.onclick = () => switchRespelSection(btn.dataset.target);
+    });
+
+    async function loadRespelList() {
+        const section = respelCurrentSection.value;
+        respelItemsList.innerHTML = '<p style="padding: 1rem;">Cargando listado...</p>';
+        try {
+            const res = await fetch(`/api/respel/${section}`);
+            loadedRespelItems = await res.json();
+            renderRespelList();
+            updateStats();
+        } catch (error) {
+            showToast('Error al cargar items', 'error');
+        }
+    }
+
+    function renderRespelList() {
+        const section = respelCurrentSection.value;
+        if (loadedRespelItems.length === 0) {
+            respelItemsList.innerHTML = '<p style="padding: 1rem; color: #64748b;">No hay registros encontrados.</p>';
+            return;
+        }
+
+        respelItemsList.innerHTML = '';
+        loadedRespelItems.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'news-manage-card';
+
+            let infoHtml = `<h4>${item.name}</h4><p style="font-size: 0.8rem; color: #64748b;">${item.href}</p>`;
+            if (section === 'empresas') {
+                infoHtml = `<h4>${item.name}</h4><p style="font-size: 0.8rem; color: #64748b;">Acto: ${item.actNum} (${item.actDate}) - ${item.fileName}</p>`;
+            }
+
+            card.innerHTML = `
+                <div class="news-info">${infoHtml}</div>
+                <div class="card-actions">
+                    <button class="btn-secondary btn-edit" data-id="${item.id}">Editar</button>
+                    <button class="btn-delete" data-id="${item.id}">Eliminar</button>
+                </div>
+            `;
+            respelItemsList.appendChild(card);
+        });
+
+        respelItemsList.querySelectorAll('.btn-delete').forEach(btn => {
+            btn.onclick = () => deleteRespelItem(btn.dataset.id);
+        });
+
+        respelItemsList.querySelectorAll('.btn-edit').forEach(btn => {
+            btn.onclick = () => startRespelEdit(loadedRespelItems.find(i => i.id === btn.dataset.id));
+        });
+    }
+
+    function startRespelEdit(item) {
+        if (!item) return;
+        respelEditId.value = item.id;
+        document.getElementById('respelName').value = item.name;
+
+        if (respelCurrentSection.value === 'empresas') {
+            document.getElementById('respelActNum').value = item.actNum || '';
+            document.getElementById('respelActDate').value = item.actDate || '';
+            document.getElementById('respelFileName').value = item.fileName || '';
+        }
+
+        document.getElementById('respelSaveBtn').innerText = 'Actualizar Item';
+        document.getElementById('respelCancelEditBtn').classList.remove('hidden');
+        respelForm.setAttribute('data-current-url', item.href);
+        respelForm.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function cancelRespelEdit() {
+        respelForm.reset();
+        respelEditId.value = '';
+        document.getElementById('respelSaveBtn').innerText = 'Guardar Item';
+        document.getElementById('respelCancelEditBtn').classList.add('hidden');
+    }
+
+    document.getElementById('respelCancelEditBtn').onclick = cancelRespelEdit;
+
+    respelForm.onsubmit = async (e) => {
+        e.preventDefault();
+        const section = respelCurrentSection.value;
+        const id = respelEditId.value;
+        const fileInput = document.getElementById('respelFile');
+        const file = fileInput.files[0];
+        let fileUrl = respelForm.getAttribute('data-current-url') || '#';
+
+        showToast(id ? 'Actualizando...' : 'Guardando...', 'info');
+
+        try {
+            if (file) {
+                const fd = new FormData();
+                fd.append('section', section);
+                fd.append('file', file);
+                const upRes = await fetch('/api/respel/upload', { method: 'POST', body: fd });
+                const upData = await upRes.json();
+                fileUrl = upData.fileUrl;
+            }
+
+            const payload = {
+                name: document.getElementById('respelName').value,
+                fileUrl: fileUrl
+            };
+
+            if (section === 'empresas') {
+                payload.actNum = document.getElementById('respelActNum').value;
+                payload.actDate = document.getElementById('respelActDate').value;
+                payload.fileName = document.getElementById('respelFileName').value;
+                payload.isAlternate = loadedRespelItems.length % 2 === 1; // Basic zebra striping for new items
+            }
+
+            const method = id ? 'PUT' : 'POST';
+            const url = id ? `/api/respel/${section}/${id}` : `/api/respel/${section}`;
+
+            const res = await fetch(url, {
+                method: method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (res.ok) {
+                showToast(id ? 'Actualizado' : 'Guardado');
+                cancelRespelEdit();
+                loadRespelList();
+            } else {
+                showToast('Error al guardar', 'error');
+            }
+        } catch (error) {
+            showToast('Error en el proceso', 'error');
+        }
+    };
+
+    async function deleteRespelItem(id) {
+        if (!confirm('¿Eliminar este registro? El archivo físico también se borrará.')) return;
+        const section = respelCurrentSection.value;
+        try {
+            const res = await fetch(`/api/respel/${section}/${id}`, { method: 'DELETE' });
+            if (res.ok) {
+                showToast('Eliminado');
+                loadRespelList();
+            }
+        } catch (e) { showToast('Error al eliminar', 'error'); }
+    }
+
+    // --- News Logic ---
+    // ... rest of the file ...
     const sgiForm = document.getElementById('sgiForm');
     const sgiItemsList = document.getElementById('sgiItemsList');
     const sgiEditId = document.getElementById('sgiEditId');
@@ -64,21 +242,27 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Stats Logic ---
     async function updateStats() {
         try {
-            const [newsR, agendaR, planeacionR, mejoraR] = await Promise.all([
+            const [newsR, agendaR, planeacionR, mejoraR, respelR, empresasR] = await Promise.all([
                 fetch('/api/news'),
                 fetch('/api/agenda'),
                 fetch('/api/sgi/planeacion'),
-                fetch('/api/sgi/mejora')
+                fetch('/api/sgi/mejora'),
+                fetch('/api/respel/documentos'),
+                fetch('/api/respel/empresas')
             ]);
 
             const news = await newsR.json();
             const agenda = await agendaR.json();
             const planeacion = await planeacionR.json();
             const mejora = await mejoraR.json();
+            const respel = await respelR.json();
+            const empresas = await empresasR.json();
 
             document.getElementById('stat-news-count').textContent = news.length;
             document.getElementById('stat-agenda-count').textContent = agenda.length;
             document.getElementById('stat-sgi-count').textContent = planeacion.length + mejora.length;
+            document.getElementById('stat-respel-count').textContent = respel.length;
+            document.getElementById('stat-empresas-count').textContent = empresas.length;
             document.getElementById('stat-last-update').textContent = new Date().toLocaleDateString('es-ES', { day: '2-digit', month: 'short' });
         } catch (e) {
             console.error('Error updating stats', e);
