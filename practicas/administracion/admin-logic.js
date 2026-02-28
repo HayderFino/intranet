@@ -530,6 +530,133 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     })();
 
+    // --- Manuales SGI ---
+    (() => {
+        const API = '/api/manuales-sgi';
+        const form = document.getElementById('manualesSgiForm');
+        const editId = document.getElementById('manualesSgiEditId');
+        const listEl = document.getElementById('manualesSgiList');
+        const saveBtn = document.getElementById('manualesSgiSaveBtn');
+        const cancelBtn = document.getElementById('manualesSgiCancelBtn');
+
+        // Registrar sección/nav
+        sections.manualesSgi = document.getElementById('manualesSgiSection');
+        navItems.manualesSgi = document.getElementById('nav-manuales-sgi');
+
+        navItems.manualesSgi.onclick = () => {
+            hideAll();
+            sections.manualesSgi.classList.remove('hidden');
+            navItems.manualesSgi.classList.add('active');
+            loadList();
+        };
+
+        let items = [];
+
+        async function loadList() {
+            listEl.innerHTML = '<p style="padding:0.5rem;">Cargando...</p>';
+            try {
+                const res = await fetch(API);
+                items = await res.json();
+                renderList();
+            } catch (e) { listEl.innerHTML = '<p style="color:red;">Error al cargar manuales.</p>'; }
+        }
+
+        function renderList() {
+            if (items.length === 0) {
+                listEl.innerHTML = '<p style="color:#64748b;">No hay manuales registrados.</p>';
+                return;
+            }
+            listEl.innerHTML = '';
+            items.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'news-manage-card';
+                card.innerHTML = `
+                    <div class="news-info">
+                        <h4>${item.title}</h4>
+                        <p style="font-size:0.82rem; color:#64748b;">${item.code || ''}
+                            ${item.href && item.href !== '#'
+                        ? `&nbsp;— <a href="${item.href}" target="_blank" style="color:#1565c0;">Ver archivo</a>`
+                        : ''}</p>
+                    </div>
+                    <div class="card-actions">
+                        <button class="btn-secondary btn-edit" data-id="${item.id}">Editar</button>
+                        <button class="btn-delete" data-id="${item.id}">Eliminar</button>
+                    </div>`;
+                listEl.appendChild(card);
+            });
+            listEl.querySelectorAll('.btn-delete').forEach(btn =>
+                btn.onclick = () => deleteItem(btn.dataset.id));
+            listEl.querySelectorAll('.btn-edit').forEach(btn =>
+                btn.onclick = () => startEdit(items.find(i => i.id === btn.dataset.id)));
+        }
+
+        function startEdit(item) {
+            if (!item) return;
+            editId.value = item.id;
+            document.getElementById('manualesSgiTitle').value = item.title;
+            document.getElementById('manualesSgiCode').value = item.code || '';
+            saveBtn.innerText = 'Actualizar Manual';
+            cancelBtn.classList.remove('hidden');
+            form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function cancelEdit() {
+            form.reset();
+            editId.value = '';
+            saveBtn.innerText = 'Guardar Manual';
+            cancelBtn.classList.add('hidden');
+        }
+        cancelBtn.onclick = cancelEdit;
+
+        form.onsubmit = async (e) => {
+            e.preventDefault();
+            const id = editId.value;
+            let fileUrl = '';
+
+            // 1. Subir archivo si hay uno
+            const fileInput = document.getElementById('manualesSgiFile');
+            if (fileInput.files.length > 0) {
+                const fd = new FormData();
+                fd.append('file', fileInput.files[0]);
+                try {
+                    const upRes = await fetch(`${API}/upload`, { method: 'POST', body: fd });
+                    const upData = await upRes.json();
+                    fileUrl = upData.fileUrl || '';
+                } catch { showToast('Error al subir archivo', 'error'); return; }
+            }
+
+            const data = {
+                title: document.getElementById('manualesSgiTitle').value,
+                code: document.getElementById('manualesSgiCode').value,
+                fileUrl
+            };
+
+            const method = id ? 'PUT' : 'POST';
+            const url = id ? `${API}/${id}` : API;
+            try {
+                const res = await fetch(url, {
+                    method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                if (res.ok) {
+                    showToast(id ? 'Manual actualizado' : 'Manual guardado');
+                    cancelEdit();
+                    loadList();
+                } else showToast('Error al guardar', 'error');
+            } catch { showToast('Error en el proceso', 'error'); }
+        };
+
+        async function deleteItem(id) {
+            if (!confirm('¿Eliminar este manual? El archivo también se borrará.')) return;
+            try {
+                const res = await fetch(`${API}/${id}`, { method: 'DELETE' });
+                if (res.ok) { showToast('Manual eliminado'); loadList(); }
+                else showToast('Error al eliminar', 'error');
+            } catch { showToast('Error al eliminar', 'error'); }
+        }
+    })();
+
     // --- Respel Logic ---
     const respelForm = document.getElementById('respelForm');
     const respelItemsList = document.getElementById('respelItemsList');
