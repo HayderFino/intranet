@@ -28,6 +28,7 @@ app.use('/api/agenda', require('./src/routes/agendaRoutes'));
 app.use('/api/sgi', require('./src/routes/sgiRoutes'));
 app.use('/api/respel', require('./src/routes/respelRoutes'));
 app.use('/api/rua', require('./src/routes/ruaRoutes'));
+app.use('/api/boletines', require('./src/routes/boletinesRoutes'));
 
 
 app.get('/api/debug/error', (req, res) => {

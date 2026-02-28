@@ -48,6 +48,10 @@
                                 <path
                                     d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-2 5V3.5L17.5 9H12zM8 16h8v2H8v-2zm0-4h8v2H8v-2z" />
                             </svg> RUA</a></li>
+                    <li id="nav-boletines"><a href="#"><svg viewBox="0 0 24 24">
+                                <path
+                                    d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-1 14H5V8h14v10zM7 10h10v2H7zm0 4h7v2H7z" />
+                            </svg> Boletines GIT</a></li>
                 </ul>
             </nav>
             <div class="admin-footer">
@@ -343,6 +347,44 @@
                         </form>
 
                         <div id="ruaItemsList" class="news-management-list">
+                            <!-- Items inyectados por JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Boletines GIT Section -->
+                <div id="boletinesSection" class="admin-form-container hidden">
+                    <h2>Gestión de Boletines de Seguridad GIT</h2>
+                    <div id="boletinesManagementForm">
+                        <form id="boletinesForm" class="news-form"
+                            style="margin-bottom: 2rem; border-bottom: 1px solid #eee; padding-bottom: 2rem;">
+                            <input type="hidden" id="boletinesEditId">
+
+                            <div class="form-group">
+                                <label for="boletinesTitle">Título del Boletín</label>
+                                <input type="text" id="boletinesTitle" placeholder="Ej: Boletín 001-2024" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="boletinesSubtitle">Descripción corta</label>
+                                <input type="text" id="boletinesSubtitle" placeholder="Ej: Ciberseguridad 2024">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="boletinesFile">Archivo PDF del Boletín</label>
+                                <input type="file" id="boletinesFile" accept=".pdf,.png,.jpg">
+                                <small style="display:block; margin-top:0.3rem; color:#64748b;">Deja en blanco para
+                                    mantener el archivo actual al editar.</small>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="submit" class="btn-primary" id="boletinesSaveBtn">Guardar Boletín</button>
+                                <button type="button" class="btn-secondary hidden" id="boletinesCancelEditBtn">Cancelar
+                                    Edición</button>
+                            </div>
+                        </form>
+
+                        <div id="boletinesItemsList" class="news-management-list">
                             <!-- Items inyectados por JS -->
                         </div>
                     </div>

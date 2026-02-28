@@ -67,6 +67,16 @@ document.addEventListener('DOMContentLoaded', () => {
         loadRuaList();
     };
 
+    navItems.boletines = document.getElementById('nav-boletines');
+    sections.boletines = document.getElementById('boletinesSection');
+
+    navItems.boletines.onclick = () => {
+        hideAll();
+        sections.boletines.classList.remove('hidden');
+        navItems.boletines.classList.add('active');
+        loadBoletinesList();
+    };
+
     // --- Respel Logic ---
     const respelForm = document.getElementById('respelForm');
     const respelItemsList = document.getElementById('respelItemsList');
@@ -352,6 +362,126 @@ document.addEventListener('DOMContentLoaded', () => {
             if (res.ok) {
                 showToast('Eliminado');
                 loadRuaList();
+            }
+        } catch (e) { showToast('Error al eliminar', 'error'); }
+    }
+
+    // --- Boletines GIT Logic ---
+    const boletinesForm = document.getElementById('boletinesForm');
+    const boletinesItemsList = document.getElementById('boletinesItemsList');
+    const boletinesEditId = document.getElementById('boletinesEditId');
+    let loadedBoletinesItems = [];
+
+    async function loadBoletinesList() {
+        boletinesItemsList.innerHTML = '<p style="padding: 1rem;">Cargando boletines...</p>';
+        try {
+            const res = await fetch('/api/boletines');
+            loadedBoletinesItems = await res.json();
+            renderBoletinesList();
+        } catch (error) {
+            showToast('Error al cargar boletines', 'error');
+        }
+    }
+
+    function renderBoletinesList() {
+        if (loadedBoletinesItems.length === 0) {
+            boletinesItemsList.innerHTML = '<p style="padding: 1rem; color: #64748b;">No hay boletines registrados.</p>';
+            return;
+        }
+        boletinesItemsList.innerHTML = '';
+        loadedBoletinesItems.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'news-manage-card';
+            card.innerHTML = `
+                <div class="news-info">
+                    <h4>${item.title}</h4>
+                    <p style="font-size:0.8rem; color:#64748b;">${item.subtitle || ''} &nbsp;|&nbsp; <a href="${item.href}" target="_blank" style="color:#2e7d32;">Ver archivo</a></p>
+                </div>
+                <div class="card-actions">
+                    <button class="btn-secondary btn-edit" data-id="${item.id}">Editar</button>
+                    <button class="btn-delete" data-id="${item.id}">Eliminar</button>
+                </div>
+            `;
+            boletinesItemsList.appendChild(card);
+        });
+
+        boletinesItemsList.querySelectorAll('.btn-delete').forEach(btn => {
+            btn.onclick = () => deleteBoletinItem(btn.dataset.id);
+        });
+        boletinesItemsList.querySelectorAll('.btn-edit').forEach(btn => {
+            btn.onclick = () => startBoletinEdit(loadedBoletinesItems.find(i => i.id === btn.dataset.id));
+        });
+    }
+
+    function startBoletinEdit(item) {
+        if (!item) return;
+        boletinesEditId.value = item.id;
+        document.getElementById('boletinesTitle').value = item.title;
+        document.getElementById('boletinesSubtitle').value = item.subtitle || '';
+        document.getElementById('boletinesSaveBtn').innerText = 'Actualizar Boletín';
+        document.getElementById('boletinesCancelEditBtn').classList.remove('hidden');
+        boletinesForm.setAttribute('data-current-url', item.href);
+    }
+
+    function cancelBoletinEdit() {
+        boletinesForm.reset();
+        boletinesEditId.value = '';
+        document.getElementById('boletinesSaveBtn').innerText = 'Guardar Boletín';
+        document.getElementById('boletinesCancelEditBtn').classList.add('hidden');
+    }
+
+    document.getElementById('boletinesCancelEditBtn').onclick = cancelBoletinEdit;
+
+    boletinesForm.onsubmit = async (e) => {
+        e.preventDefault();
+        const id = boletinesEditId.value;
+        const fileInput = document.getElementById('boletinesFile');
+        const file = fileInput.files[0];
+        let fileUrl = boletinesForm.getAttribute('data-current-url') || '#';
+
+        showToast(id ? 'Actualizando...' : 'Guardando...', 'info');
+        try {
+            if (file) {
+                const fd = new FormData();
+                fd.append('file', file);
+                const upRes = await fetch('/api/boletines/upload', { method: 'POST', body: fd });
+                const upData = await upRes.json();
+                fileUrl = upData.fileUrl;
+            }
+
+            const payload = {
+                title: document.getElementById('boletinesTitle').value,
+                subtitle: document.getElementById('boletinesSubtitle').value,
+                fileUrl
+            };
+
+            const method = id ? 'PUT' : 'POST';
+            const url = id ? `/api/boletines/${id}` : '/api/boletines';
+            const res = await fetch(url, {
+                method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (res.ok) {
+                showToast(id ? 'Boletín actualizado' : 'Boletín guardado');
+                cancelBoletinEdit();
+                loadBoletinesList();
+            } else {
+                showToast('Error al guardar', 'error');
+            }
+        } catch (error) {
+            showToast('Error en el proceso', 'error');
+        }
+    };
+
+    async function deleteBoletinItem(id) {
+        if (!confirm('¿Eliminar este boletín? El archivo físico también se borrará.')) return;
+        try {
+            const res = await fetch(`/api/boletines/${id}`, { method: 'DELETE' });
+            if (res.ok) {
+                showToast('Boletín eliminado');
+                loadBoletinesList();
             }
         } catch (e) { showToast('Error al eliminar', 'error'); }
     }
