@@ -296,6 +296,125 @@ document.addEventListener('DOMContentLoaded', () => {
     // Inicializar las 3 secciones misionales
     misionalConfig.forEach(cfg => initMisionalSection(cfg));
 
+    // --- PCB Logic ---
+    (() => {
+        // Registrar en globals para hideAll
+        sections.pcb = document.getElementById('pcbSection');
+        navItems.pcb = document.getElementById('nav-pcb');
+
+        const form = document.getElementById('pcbForm');
+        const editId = document.getElementById('pcbEditId');
+        const listEl = document.getElementById('pcbItemsList');
+        let loadedItems = [];
+
+        navItems.pcb.onclick = () => {
+            hideAll();
+            sections.pcb.classList.remove('hidden');
+            navItems.pcb.classList.add('active');
+            loadList();
+        };
+
+        async function loadList() {
+            listEl.innerHTML = '<p style="padding:1rem;">Cargando...</p>';
+            try {
+                const res = await fetch('/api/pcb');
+                loadedItems = await res.json();
+                renderList();
+            } catch (e) { showToast('Error al cargar PCB', 'error'); }
+        }
+
+        function renderList() {
+            if (loadedItems.length === 0) {
+                listEl.innerHTML = '<p style="padding:1rem; color:#64748b;">No hay documentos PCB.</p>';
+                return;
+            }
+            listEl.innerHTML = '';
+            loadedItems.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'news-manage-card';
+                card.innerHTML = `
+                    <div class="news-info">
+                        <h4>${item.title}</h4>
+                        <p style="font-size:0.8rem; color:#64748b;">
+                            <a href="${item.href}" target="_blank" style="color:#2e7d32;">Ver archivo</a>
+                        </p>
+                    </div>
+                    <div class="card-actions">
+                        <button class="btn-secondary btn-edit" data-id="${item.id}">Editar</button>
+                        <button class="btn-delete" data-id="${item.id}">Eliminar</button>
+                    </div>
+                `;
+                listEl.appendChild(card);
+            });
+            listEl.querySelectorAll('.btn-delete').forEach(btn => {
+                btn.onclick = () => deleteItem(btn.dataset.id);
+            });
+            listEl.querySelectorAll('.btn-edit').forEach(btn => {
+                btn.onclick = () => startEdit(loadedItems.find(i => i.id === btn.dataset.id));
+            });
+        }
+
+        function startEdit(item) {
+            if (!item) return;
+            editId.value = item.id;
+            document.getElementById('pcbTitle').value = item.title;
+            document.getElementById('pcbSaveBtn').innerText = 'Actualizar';
+            document.getElementById('pcbCancelBtn').classList.remove('hidden');
+            form.setAttribute('data-current-url', item.href);
+            form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function cancelEdit() {
+            form.reset();
+            editId.value = '';
+            document.getElementById('pcbSaveBtn').innerText = 'Guardar Documento';
+            document.getElementById('pcbCancelBtn').classList.add('hidden');
+        }
+
+        document.getElementById('pcbCancelBtn').onclick = cancelEdit;
+
+        form.onsubmit = async (e) => {
+            e.preventDefault();
+            const id = editId.value;
+            const file = document.getElementById('pcbFile').files[0];
+            let fileUrl = form.getAttribute('data-current-url') || '#';
+
+            showToast(id ? 'Actualizando...' : 'Guardando...', 'info');
+            try {
+                if (file) {
+                    const fd = new FormData();
+                    fd.append('file', file);
+                    const upRes = await fetch('/api/pcb/upload', { method: 'POST', body: fd });
+                    const upData = await upRes.json();
+                    fileUrl = upData.fileUrl;
+                }
+                const title = document.getElementById('pcbTitle').value;
+                const method = id ? 'PUT' : 'POST';
+                const url = id ? `/api/pcb/${id}` : '/api/pcb';
+                const res = await fetch(url, {
+                    method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ title, fileUrl })
+                });
+                if (res.ok) {
+                    showToast(id ? 'Documento actualizado' : 'Documento guardado');
+                    cancelEdit();
+                    loadList();
+                } else {
+                    showToast('Error al guardar', 'error');
+                }
+            } catch (err) { showToast('Error en el proceso', 'error'); }
+        };
+
+        async function deleteItem(id) {
+            if (!confirm('¿Eliminar este documento PCB? El archivo también se borrará.')) return;
+            try {
+                const res = await fetch(`/api/pcb/${id}`, { method: 'DELETE' });
+                if (res.ok) { showToast('Documento eliminado'); loadList(); }
+                else showToast('Error al eliminar', 'error');
+            } catch (e) { showToast('Error al eliminar', 'error'); }
+        }
+    })();
 
     // --- Respel Logic ---
     const respelForm = document.getElementById('respelForm');

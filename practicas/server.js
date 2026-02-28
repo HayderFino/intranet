@@ -29,6 +29,7 @@ app.use('/api/sgi', require('./src/routes/sgiRoutes'));
 app.use('/api/respel', require('./src/routes/respelRoutes'));
 app.use('/api/rua', require('./src/routes/ruaRoutes'));
 app.use('/api/boletines', require('./src/routes/boletinesRoutes'));
+app.use('/api/pcb', require('./src/routes/pcbRoutes'));
 
 
 app.get('/api/debug/error', (req, res) => {
