@@ -1,35 +1,33 @@
 const NewsModel = require('../models/newsModel');
-const path = require('path');
-const fs = require('fs');
 
 const NewsController = {
-    getAllNews: (req, res) => {
+    getAllNews: async (req, res) => {
         try {
-            const news = NewsModel.getAll();
+            const news = await NewsModel.getAll();
             res.status(200).json(news);
         } catch (error) {
             res.status(500).json({ message: 'Error al obtener noticias.' });
         }
     },
 
-    createNews: (req, res) => {
+    createNews: async (req, res) => {
         const { title, description, imageUrl, category } = req.body;
         if (!title || !description || !imageUrl) {
             return res.status(400).json({ message: 'Faltan campos obligatorios.' });
         }
 
         try {
-            const id = NewsModel.create(title, description, imageUrl, category);
+            const id = await NewsModel.create(title, description, imageUrl, category);
             res.status(201).json({ message: 'Noticia creada con éxito.', id });
         } catch (error) {
             res.status(500).json({ message: 'Error al crear la noticia.' });
         }
     },
 
-    deleteNews: (req, res) => {
+    deleteNews: async (req, res) => {
         const id = req.params.id;
         try {
-            const success = NewsModel.delete(id);
+            const success = await NewsModel.delete(id);
             if (success) {
                 res.status(200).json({ message: 'Noticia eliminada.' });
             } else {
@@ -44,7 +42,6 @@ const NewsController = {
         if (!req.file) {
             return res.status(400).json({ message: 'No se subió ninguna imagen.' });
         }
-        // Force absolute path for serving consistency
         const imageUrl = `/data/imagenes/${req.file.filename}`;
         res.status(200).json({ imageUrl });
     }

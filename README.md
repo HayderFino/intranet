@@ -1,18 +1,75 @@
 # Portal de Intranet - CAS
 
-Este es el repositorio oficial del Portal de Intranet de la Corporación Autónoma Regional de Santander.
+Este es el repositorio oficial del Portal de Intranet de la Corporación Autónoma Regional de Santander (CAS). El sistema es una plataforma corporativa dinámica que incluye gestión de noticias basada en MongoDB, visualización de documentos oficiales y un panel de administración centralizado.
 
-## 📖 Documentación
+---
 
-Toda la documentación detallada sobre el funcionamiento, arquitectura y administración se encuentra en la siguiente carpeta:
+## 📖 Documentación Completa
 
-👉 **[Ir a Carpeta de Documentación](./documentacion/README.md)**
+Toda la documentación detallada sobre el funcionamiento, arquitectura y administración se encuentra centralizada en la carpeta `documentacion/`:
 
-## Inicio Rápido
+1.  **[Guía General](./documentacion/general.md)**: Visión global y estructura del repositorio.
+2.  **[Documentación Técnica](./documentacion/tecnico.md)**: Instalación, ejecución y control de versiones.
+3.  **[Arquitectura MVC](./documentacion/arquitectura_mvc.md)**: Detalle del patrón de diseño en el backend.
+4.  **[Gestión de Datos](./documentacion/gestion_datos.md)**: Organización de archivos y activos (data).
+5.  **[Administración](./documentacion/administracion.md)**: Guía del panel de gestión.
+6.  **[Herramientas](./documentacion/herramientas.md)**: Catálogo de utilidades y páginas especiales.
 
-Para poner en marcha el servidor localmente:
+---
 
-1.  Entre a la carpeta `practicas`.
-2.  Ejecute `npm install`.
-3.  Ejecute `node server.js`.
-4.  Abra `http://localhost:3000` en su navegador.
+## 🚀 Configuración y Despliegue del Servidor
+
+Para poner en marcha la intranet en un servidor central dentro de la red, siga estos pasos:
+
+### 1. Requisitos Previos
+*   **Node.js** (v18 o superior)
+*   **MongoDB Server** (v7.0 o superior)
+*   **Git** (para control de versiones)
+
+### 2. Instalación de Dependencias
+Navegue a la carpeta `practicas` y ejecute:
+```bash
+cd practicas
+npm install
+```
+
+### 3. Migración Inicial de Datos
+Si es la primera vez que se configura el servidor y desea importar las noticias desde el sistema antiguo (JSON):
+```bash
+node migrate_to_mongo.js
+```
+*Nota: Este paso solo es necesario una vez para inicializar la base de datos.*
+
+### 4. Iniciar el Servidor
+Para poner la intranet en línea:
+```bash
+node server.js
+```
+El servidor estará disponible localmente en `http://localhost:3000`.
+
+---
+
+## 💻 Acceso para Usuarios Finales
+Los usuarios de la oficina **NO NECESITAN INSTALAR NADA**. Simplemente deben abrir su navegador y escribir la dirección IP del servidor central. Ejemplo:
+`http://192.168.1.50:3000`
+
+---
+
+## 📂 Estructura Principal del Proyecto
+
+*   `documentacion/`: Guías técnicas y manuales de arquitectura.
+*   `practicas/`: Núcleo del servidor (Backend Node.js).
+    *   `/src/models`: Modelos de datos (Noticias en MongoDB).
+    *   `/src/controllers`: Lógica de negocio.
+    *   `/src/routes`: Definición de rutas API.
+*   `data/`: Repositorio de archivos estáticos, imágenes y documentos institucionales.
+*   `administracion/`: Módulos del panel de control para administradores.
+
+---
+
+## 🛠️ Guía para Desarrolladores
+Si estás contribuyendo al código o realizando pruebas:
+1. Asegúrate de tener una instancia de MongoDB activa localmente.
+2. Realiza siempre un `npm install` tras descargar cambios.
+3. Prueba tus cambios ejecutando `node server.js` dentro de la carpeta `practicas`.
+4. Todos los archivos de documentación deben actualizarse en la carpeta `documentacion/`.

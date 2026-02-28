@@ -1,11 +1,18 @@
 const express = require('express');
-const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const cors = require('cors');
+const mongoose = require('mongoose');
 
 const app = express();
 const PORT = 3000;
+
+// Configuración de MongoDB
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/intranet_cas';
+
+mongoose.connect(MONGO_URI)
+    .then(() => console.log('✅ Conectado a MongoDB'))
+    .catch(err => console.error('❌ Error de conexión a MongoDB:', err));
 
 const newsRoutes = require('./src/routes/newsRoutes');
 

@@ -1,58 +1,49 @@
-const fs = require('fs');
-const path = require('path');
-
-const noticiasPath = path.join(__dirname, '../../data/noticias.json');
+const News = require('./MongoNews');
 
 const NewsModel = {
-    getAll: () => {
-        if (!fs.existsSync(noticiasPath)) return [];
+    getAll: async () => {
         try {
-            const content = fs.readFileSync(noticiasPath, 'utf8');
-            return JSON.parse(content);
+            const news = await News.find().sort({ createdAt: -1 });
+            return news.map(item => ({
+                id: item._id.toString(),
+                title: item.title,
+                description: item.description,
+                imageUrl: item.imageUrl,
+                category: item.category,
+                createdAt: item.createdAt
+            }));
         } catch (error) {
-            console.error('Error reading noticias.json:', error);
+            console.error('Error reading from MongoDB:', error);
             return [];
         }
     },
 
-    create: (title, description, imageUrl, category = 'General') => {
-        const newsArray = NewsModel.getAll();
-        const newsId = Date.now().toString();
-
-        // Ensure imageUrl starts with /
-        const fixedImageUrl = imageUrl.startsWith('/') ? imageUrl : '/' + imageUrl;
-
-        const newNews = {
-            id: newsId,
-            title,
-            description,
-            imageUrl: fixedImageUrl,
-            category,
-            createdAt: new Date().toISOString()
-        };
-
-        newsArray.unshift(newNews); // Prepend new news
-
+    create: async (title, description, imageUrl, category = 'General') => {
         try {
-            fs.writeFileSync(noticiasPath, JSON.stringify(newsArray, null, 2), 'utf8');
-            return newsId;
+            const fixedImageUrl = imageUrl.startsWith('/') ? imageUrl : '/' + imageUrl;
+
+            const newNews = new News({
+                title,
+                description,
+                imageUrl: fixedImageUrl,
+                category,
+                createdAt: new Date()
+            });
+
+            const saved = await newNews.save();
+            return saved._id.toString();
         } catch (error) {
-            console.error('Error writing noticias.json:', error);
+            console.error('Error writing to MongoDB:', error);
             throw error;
         }
     },
 
-    delete: (id) => {
-        let newsArray = NewsModel.getAll();
-        const filtered = newsArray.filter(item => item.id !== id);
-
-        if (newsArray.length === filtered.length) return false;
-
+    delete: async (id) => {
         try {
-            fs.writeFileSync(noticiasPath, JSON.stringify(filtered, null, 2), 'utf8');
-            return true;
+            const result = await News.findByIdAndDelete(id);
+            return !!result;
         } catch (error) {
-            console.error('Error deleting news:', error);
+            console.error('Error deleting from MongoDB:', error);
             throw error;
         }
     }
