@@ -57,6 +57,16 @@ document.addEventListener('DOMContentLoaded', () => {
         switchRespelSection('documentos');
     };
 
+    navItems.rua = document.getElementById('nav-rua');
+    sections.rua = document.getElementById('ruaSection');
+
+    navItems.rua.onclick = () => {
+        hideAll();
+        sections.rua.classList.remove('hidden');
+        navItems.rua.classList.add('active');
+        loadRuaList();
+    };
+
     // --- Respel Logic ---
     const respelForm = document.getElementById('respelForm');
     const respelItemsList = document.getElementById('respelItemsList');
@@ -224,6 +234,128 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (e) { showToast('Error al eliminar', 'error'); }
     }
 
+    // --- RUA Logic ---
+    const ruaForm = document.getElementById('ruaForm');
+    const ruaItemsList = document.getElementById('ruaItemsList');
+    const ruaEditId = document.getElementById('ruaEditId');
+    let loadedRuaItems = [];
+
+    async function loadRuaList() {
+        ruaItemsList.innerHTML = '<p style="padding: 1rem;">Cargando listado RUA...</p>';
+        try {
+            const res = await fetch('/api/rua');
+            loadedRuaItems = await res.json();
+            renderRuaList();
+            updateStats();
+        } catch (error) {
+            showToast('Error al cargar RUA', 'error');
+        }
+    }
+
+    function renderRuaList() {
+        if (loadedRuaItems.length === 0) {
+            ruaItemsList.innerHTML = '<p style="padding: 1rem; color: #64748b;">No hay registros RUA.</p>';
+            return;
+        }
+
+        ruaItemsList.innerHTML = '';
+        loadedRuaItems.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'news-manage-card';
+            card.innerHTML = `
+                <div class="news-info">
+                    <h4>${item.name}</h4>
+                    <p style="font-size:0.8rem; color:#64748b;">${item.href}</p>
+                </div>
+                <div class="card-actions">
+                    <button class="btn-secondary btn-edit" data-id="${item.id}">Editar</button>
+                    <button class="btn-delete" data-id="${item.id}">Eliminar</button>
+                </div>
+            `;
+            ruaItemsList.appendChild(card);
+        });
+
+        ruaItemsList.querySelectorAll('.btn-delete').forEach(btn => {
+            btn.onclick = () => deleteRuaItem(btn.dataset.id);
+        });
+        ruaItemsList.querySelectorAll('.btn-edit').forEach(btn => {
+            btn.onclick = () => startRuaEdit(loadedRuaItems.find(i => i.id === btn.dataset.id));
+        });
+    }
+
+    function startRuaEdit(item) {
+        if (!item) return;
+        ruaEditId.value = item.id;
+        document.getElementById('ruaName').value = item.name;
+        document.getElementById('ruaSaveBtn').innerText = 'Actualizar Item';
+        document.getElementById('ruaCancelEditBtn').classList.remove('hidden');
+        ruaForm.setAttribute('data-current-url', item.href);
+    }
+
+    function cancelRuaEdit() {
+        ruaForm.reset();
+        ruaEditId.value = '';
+        document.getElementById('ruaSaveBtn').innerText = 'Guardar Item';
+        document.getElementById('ruaCancelEditBtn').classList.add('hidden');
+    }
+
+    document.getElementById('ruaCancelEditBtn').onclick = cancelRuaEdit;
+
+    ruaForm.onsubmit = async (e) => {
+        e.preventDefault();
+        const id = ruaEditId.value;
+        const fileInput = document.getElementById('ruaFile');
+        const file = fileInput.files[0];
+        let fileUrl = ruaForm.getAttribute('data-current-url') || '#';
+
+        showToast(id ? 'Actualizando...' : 'Guardando...', 'info');
+
+        try {
+            if (file) {
+                const fd = new FormData();
+                fd.append('file', file);
+                const upRes = await fetch('/api/rua/upload', { method: 'POST', body: fd });
+                const upData = await upRes.json();
+                fileUrl = upData.fileUrl;
+            }
+
+            const payload = {
+                name: document.getElementById('ruaName').value,
+                fileUrl: fileUrl
+            };
+
+            const method = id ? 'PUT' : 'POST';
+            const url = id ? `/api/rua/${id}` : '/api/rua';
+
+            const res = await fetch(url, {
+                method: method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (res.ok) {
+                showToast(id ? 'Actualizado' : 'Guardado');
+                cancelRuaEdit();
+                loadRuaList();
+            } else {
+                showToast('Error al guardar', 'error');
+            }
+        } catch (error) {
+            showToast('Error en el proceso', 'error');
+        }
+    };
+
+    async function deleteRuaItem(id) {
+        if (!confirm('¿Eliminar este registro RUA?')) return;
+        try {
+            const res = await fetch(`/api/rua/${id}`, { method: 'DELETE' });
+            if (res.ok) {
+                showToast('Eliminado');
+                loadRuaList();
+            }
+        } catch (e) { showToast('Error al eliminar', 'error'); }
+    }
+
     // --- News Logic ---
     // ... rest of the file ...
     const sgiForm = document.getElementById('sgiForm');
@@ -242,13 +374,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Stats Logic ---
     async function updateStats() {
         try {
-            const [newsR, agendaR, planeacionR, mejoraR, respelR, empresasR] = await Promise.all([
+            const [newsR, agendaR, planeacionR, mejoraR, respelR, empresasR, ruaR] = await Promise.all([
                 fetch('/api/news'),
                 fetch('/api/agenda'),
                 fetch('/api/sgi/planeacion'),
                 fetch('/api/sgi/mejora'),
                 fetch('/api/respel/documentos'),
-                fetch('/api/respel/empresas')
+                fetch('/api/respel/empresas'),
+                fetch('/api/rua')
             ]);
 
             const news = await newsR.json();
@@ -257,12 +390,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const mejora = await mejoraR.json();
             const respel = await respelR.json();
             const empresas = await empresasR.json();
+            const rua = await ruaR.json();
 
             document.getElementById('stat-news-count').textContent = news.length;
             document.getElementById('stat-agenda-count').textContent = agenda.length;
             document.getElementById('stat-sgi-count').textContent = planeacion.length + mejora.length;
             document.getElementById('stat-respel-count').textContent = respel.length;
             document.getElementById('stat-empresas-count').textContent = empresas.length;
+            document.getElementById('stat-rua-count').textContent = rua.length;
             document.getElementById('stat-last-update').textContent = new Date().toLocaleDateString('es-ES', { day: '2-digit', month: 'short' });
         } catch (e) {
             console.error('Error updating stats', e);

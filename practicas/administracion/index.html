@@ -44,6 +44,10 @@
                                 <path
                                     d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z" />
                             </svg> Respel</a></li>
+                    <li id="nav-rua"><a href="#"><svg viewBox="0 0 24 24">
+                                <path
+                                    d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-2 5V3.5L17.5 9H12zM8 16h8v2H8v-2zm0-4h8v2H8v-2z" />
+                            </svg> RUA</a></li>
                 </ul>
             </nav>
             <div class="admin-footer">
@@ -82,6 +86,10 @@
                             <div class="stat-label">Documentos Respel</div>
                         </div>
                         <div class="stat-card">
+                            <div id="stat-rua-count" class="stat-value">--</div>
+                            <div class="stat-label">Documentos RUA</div>
+                        </div>
+                        <div class="stat-card">
                             <div id="stat-empresas-count" class="stat-value">--</div>
                             <div class="stat-label">Empresas Gestoras</div>
                         </div>
@@ -106,6 +114,8 @@
                                     Subir Mejora</button>
                                 <button class="btn-secondary" onclick="document.getElementById('nav-respel').click()">+
                                     Gestionar Respel</button>
+                                <button class="btn-secondary" onclick="document.getElementById('nav-rua').click()">+
+                                    Gestionar RUA</button>
                             </div>
                         </div>
                         <div class="admin-form-container" style="max-width: 100%;">
@@ -300,6 +310,39 @@
                         </form>
 
                         <div id="respelItemsList" class="news-management-list">
+                            <!-- Items inyectados por JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RUA Section -->
+                <div id="ruaSection" class="admin-form-container hidden">
+                    <h2>Gestión de RUA</h2>
+                    <div id="ruaManagementForm">
+                        <form id="ruaForm" class="news-form"
+                            style="margin-bottom: 2rem; border-bottom: 1px solid #eee; padding-bottom: 2rem;">
+                            <input type="hidden" id="ruaEditId">
+
+                            <div class="form-group">
+                                <label for="ruaName">Nombre del Documento</label>
+                                <input type="text" id="ruaName" placeholder="Ej: Protocolo de Monitoreo" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="ruaFile">Archivo PDF / Documento</label>
+                                <input type="file" id="ruaFile" accept=".pdf,.doc,.docx">
+                                <small style="display: block; margin-top: 0.3rem; color: #64748b;">Deja en blanco para
+                                    mantener el archivo actual si estás editando.</small>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="submit" class="btn-primary" id="ruaSaveBtn">Guardar Item</button>
+                                <button type="button" class="btn-secondary hidden" id="ruaCancelEditBtn">Cancelar
+                                    Edición</button>
+                            </div>
+                        </form>
+
+                        <div id="ruaItemsList" class="news-management-list">
                             <!-- Items inyectados por JS -->
                         </div>
                     </div>
