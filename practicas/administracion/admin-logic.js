@@ -595,6 +595,8 @@ document.addEventListener('DOMContentLoaded', () => {
             editId.value = item.id;
             document.getElementById('manualesSgiTitle').value = item.title;
             document.getElementById('manualesSgiCode').value = item.code || '';
+            // Preservar URL actual
+            form.setAttribute('data-current-url', item.href || '#');
             saveBtn.innerText = 'Actualizar Manual';
             cancelBtn.classList.remove('hidden');
             form.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -603,6 +605,7 @@ document.addEventListener('DOMContentLoaded', () => {
         function cancelEdit() {
             form.reset();
             editId.value = '';
+            form.removeAttribute('data-current-url');
             saveBtn.innerText = 'Guardar Manual';
             cancelBtn.classList.add('hidden');
         }
@@ -611,7 +614,7 @@ document.addEventListener('DOMContentLoaded', () => {
         form.onsubmit = async (e) => {
             e.preventDefault();
             const id = editId.value;
-            let fileUrl = '';
+            let fileUrl = form.getAttribute('data-current-url') || '';
 
             // 1. Subir archivo si hay uno
             const fileInput = document.getElementById('manualesSgiFile');
@@ -656,6 +659,158 @@ document.addEventListener('DOMContentLoaded', () => {
             } catch { showToast('Error al eliminar', 'error'); }
         }
     })();
+
+    // --- Control Interno Logic ---
+    (() => {
+        const API_SECTION = 'control-interno';
+        const form = document.getElementById('controlInternoForm');
+        const editId = document.getElementById('controlInternoEditId');
+        const nameInput = document.getElementById('controlInternoName');
+        const catSelect = document.getElementById('controlInternoCategory');
+        const fileInput = document.getElementById('controlInternoFile');
+        const listEl = document.getElementById('controlInternoList');
+        const saveBtn = document.getElementById('controlInternoSaveBtn');
+        const cancelBtn = document.getElementById('controlInternoCancelBtn');
+        const filterSel = document.getElementById('controlInternoFilter');
+        const countEl = document.getElementById('controlInternoCount');
+
+        let allItems = [];
+
+        // Registrar sección y nav
+        sections.controlInterno = document.getElementById('controlInternoSection');
+        navItems.controlInterno = document.getElementById('nav-control-interno');
+
+        navItems.controlInterno.onclick = () => {
+            hideAll();
+            sections.controlInterno.classList.remove('hidden');
+            navItems.controlInterno.classList.add('active');
+            loadList();
+        };
+
+        async function loadList() {
+            listEl.innerHTML = '<p style="padding:1rem;">Cargando...</p>';
+            try {
+                const res = await fetch(`/api/sgi/${API_SECTION}`);
+                if (!res.ok) throw new Error('Status: ' + res.status);
+                allItems = await res.json();
+                renderList();
+            } catch (e) {
+                console.error(e);
+                listEl.innerHTML = `<p style="color:red; padding:1rem;">Error al cargar: ${e.message}</p>`;
+            }
+        }
+
+        function renderList() {
+            const filterVal = filterSel.value;
+            const filtered = (filterVal === "" || filterVal === "all")
+                ? allItems
+                : allItems.filter(i => i.category === filterVal);
+
+            countEl.textContent = `${filtered.length} de ${allItems.length} documentos`;
+
+            if (filtered.length === 0) {
+                listEl.innerHTML = '<p style="padding:2rem; color:#64748b; text-align:center;">No hay documentos que mostrar.</p>';
+                return;
+            }
+
+            listEl.innerHTML = '';
+            filtered.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'news-manage-card';
+                card.innerHTML = `
+                    <div class="news-info">
+                        <h4>${item.name}</h4>
+                        <p style="font-size:0.8rem; color:#64748b; margin-top:0.25rem;">
+                            <span style="background:#e2e8f0; padding:0.15rem 0.5rem; border-radius:4px; font-weight:500;">
+                                ${item.category}
+                            </span>
+                            &nbsp;|&nbsp;
+                            ${item.fileUrl && item.fileUrl !== '#'
+                        ? `<a href="${item.fileUrl}" target="_blank" style="color:#2e7d32; font-weight:600;">Ver archivo</a>`
+                        : '<span style="color:#94a3b8; font-style:italic;">Sin archivo</span>'}
+                        </p>
+                    </div>
+                    <div class="card-actions">
+                        <button class="btn-secondary btn-edit" data-id="${item.id}">Editar</button>
+                        <button class="btn-delete" data-id="${item.id}">Eliminar</button>
+                    </div>`;
+                listEl.appendChild(card);
+            });
+
+            listEl.querySelectorAll('.btn-delete').forEach(btn =>
+                btn.onclick = () => deleteItem(btn.dataset.id));
+            listEl.querySelectorAll('.btn-edit').forEach(btn =>
+                btn.onclick = () => startEdit(allItems.find(i => i.id === btn.dataset.id)));
+        }
+
+        filterSel.onchange = renderList;
+
+        function startEdit(item) {
+            if (!item) return;
+            editId.value = item.id;
+            nameInput.value = item.name;
+            catSelect.value = item.category;
+            form.setAttribute('data-current-url', item.fileUrl || '#');
+            saveBtn.innerText = 'Actualizar';
+            cancelBtn.classList.remove('hidden');
+            form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function cancelEdit() {
+            form.reset();
+            editId.value = '';
+            form.removeAttribute('data-current-url');
+            saveBtn.innerText = 'Guardar Documento';
+            cancelBtn.classList.add('hidden');
+        }
+        cancelBtn.onclick = cancelEdit;
+
+        form.onsubmit = async (e) => {
+            e.preventDefault();
+            const id = editId.value;
+            const name = nameInput.value;
+            const category = catSelect.value;
+            let fileUrl = form.getAttribute('data-current-url') || '';
+
+            if (fileInput.files.length > 0) {
+                const fd = new FormData();
+                fd.append('section', API_SECTION);
+                fd.append('category', category);
+                fd.append('file', fileInput.files[0]);
+                try {
+                    const upRes = await fetch('/api/sgi/upload', { method: 'POST', body: fd });
+                    const upData = await upRes.json();
+                    fileUrl = upData.fileUrl || '';
+                } catch { showToast('Error al subir archivo', 'error'); return; }
+            }
+
+            const data = { name, category, fileUrl };
+            const method = id ? 'PUT' : 'POST';
+            const url = id ? `/api/sgi/${API_SECTION}/${id}` : `/api/sgi/${API_SECTION}`;
+            try {
+                const res = await fetch(url, {
+                    method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                if (res.ok) {
+                    showToast(id ? 'Documento actualizado' : 'Documento guardado');
+                    cancelEdit();
+                    loadList();
+                } else showToast('Error al guardar', 'error');
+            } catch { showToast('Error en el proceso', 'error'); }
+        };
+
+        async function deleteItem(id) {
+            if (!confirm('¿Eliminar este documento?')) return;
+            try {
+                const res = await fetch(`/api/sgi/${API_SECTION}/${id}`, { method: 'DELETE' });
+                if (res.ok) { showToast('Documento eliminado'); loadList(); }
+                else showToast('Error al eliminar', 'error');
+            } catch { showToast('Error al eliminar', 'error'); }
+        }
+    })();
+
 
     // --- Respel Logic ---
     const respelForm = document.getElementById('respelForm');
@@ -1084,30 +1239,33 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Stats Logic ---
     async function updateStats() {
         try {
-            const [newsR, agendaR, planeacionR, mejoraR, respelR, empresasR, ruaR] = await Promise.all([
+            const [newsR, agendaR, planeacionR, mejoraR, controlIR, respelR, empresasR, ruaR] = await Promise.all([
                 fetch('/api/news'),
                 fetch('/api/agenda'),
                 fetch('/api/sgi/planeacion'),
                 fetch('/api/sgi/mejora'),
+                fetch('/api/sgi/control-interno'),
                 fetch('/api/respel/documentos'),
                 fetch('/api/respel/empresas'),
                 fetch('/api/rua')
             ]);
 
-            const news = await newsR.json();
-            const agenda = await agendaR.json();
-            const planeacion = await planeacionR.json();
-            const mejora = await mejoraR.json();
-            const respel = await respelR.json();
-            const empresas = await empresasR.json();
-            const rua = await ruaR.json();
+            // Verificamos individualmente para no romper todo si falla una carga
+            const news = newsR.ok ? await newsR.json() : [];
+            const agenda = agendaR.ok ? await agendaR.json() : [];
+            const planeacion = planeacionR.ok ? await planeacionR.json() : [];
+            const mejora = mejoraR.ok ? await mejoraR.json() : [];
+            const controlI = controlIR.ok ? await controlIR.json() : [];
+            const respel = respelR.ok ? await respelR.json() : [];
+            const empresas = empresasR.ok ? await empresasR.json() : [];
+            const rua = ruaR.ok ? await ruaR.json() : [];
 
-            document.getElementById('stat-news-count').textContent = news.length;
-            document.getElementById('stat-agenda-count').textContent = agenda.length;
-            document.getElementById('stat-sgi-count').textContent = planeacion.length + mejora.length;
-            document.getElementById('stat-respel-count').textContent = respel.length;
-            document.getElementById('stat-empresas-count').textContent = empresas.length;
-            document.getElementById('stat-rua-count').textContent = rua.length;
+            document.getElementById('stat-news-count').textContent = news.length || 0;
+            document.getElementById('stat-agenda-count').textContent = agenda.length || 0;
+            document.getElementById('stat-sgi-count').textContent = (planeacion.length || 0) + (mejora.length || 0) + (controlI.length || 0);
+            document.getElementById('stat-respel-count').textContent = respel.length || 0;
+            document.getElementById('stat-empresas-count').textContent = empresas.length || 0;
+            document.getElementById('stat-rua-count').textContent = rua.length || 0;
             document.getElementById('stat-last-update').textContent = new Date().toLocaleDateString('es-ES', { day: '2-digit', month: 'short' });
         } catch (e) {
             console.error('Error updating stats', e);

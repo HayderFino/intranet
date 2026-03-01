@@ -72,6 +72,10 @@
                                 <path
                                     d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z" />
                             </svg> Manuales SGI</a></li>
+                    <li id="nav-control-interno"><a href="#"><svg viewBox="0 0 24 24">
+                                <path
+                                    d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-1 14l-3-3 1.41-1.41L11 12.17l4.59-4.58L17 9l-6 6z" />
+                            </svg> Control Interno</a></li>
                 </ul>
             </nav>
             <div class="admin-footer">
@@ -613,6 +617,62 @@
                         </div>
                     </form>
                     <div id="manualesSgiList" class="news-management-list"></div>
+                </div>
+                <!-- ===== CONTROL INTERNO ===== -->
+                <div id="controlInternoSection" class="hidden">
+                    <div class="section-header" style="margin-bottom:1.5rem;">
+                        <h2>Control Interno — PCI</h2>
+                        <p style="color:#64748b; font-size:0.9rem;">Evaluaci&oacute;n y Seguimiento — Documentos del
+                            proceso de Control Interno.</p>
+                    </div>
+                    <form id="controlInternoForm" class="news-form" style="margin-bottom:2rem;">
+                        <input type="hidden" id="controlInternoEditId">
+                        <div class="form-group">
+                            <label>Nombre del Documento</label>
+                            <input type="text" id="controlInternoName" placeholder="Ej: Caracterización del Proceso"
+                                required>
+                        </div>
+                        <div class="form-group">
+                            <label>Categoría</label>
+                            <select id="controlInternoCategory">
+                                <option value="Caracterización">Caracterización</option>
+                                <option value="Formatos Institucionales (F-PCI)">Formatos Institucionales (F-PCI)
+                                </option>
+                                <option value="Procedimientos (PCI)">Procedimientos (PCI)</option>
+                                <option value="Instructivos de Auditoría (I-PCI)">Instructivos de Auditor&iacute;a
+                                    (I-PCI)</option>
+                                <option value="Gestión de Riesgos y Matriz">Gesti&oacute;n de Riesgos y Matriz</option>
+                                <option value="Anexos y Guías Técnicas">Anexos y Gu&iacute;as T&eacute;cnicas</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Archivo (PDF, DOC, DOCX)</label>
+                            <input type="file" id="controlInternoFile" accept=".pdf,.doc,.docx">
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn-primary" id="controlInternoSaveBtn">Guardar
+                                Documento</button>
+                            <button type="button" class="btn-secondary hidden"
+                                id="controlInternoCancelBtn">Cancelar</button>
+                        </div>
+                    </form>
+                    <!-- Filtro de categoría -->
+                    <div style="margin-bottom:1rem; display:flex; align-items:center; gap:1rem; flex-wrap:wrap;">
+                        <label style="font-weight:600; color:#334155;">Filtrar por categoría:</label>
+                        <select id="controlInternoFilter"
+                            style="padding:0.4rem 0.8rem; border:1px solid #cbd5e1; border-radius:8px; font-size:0.88rem;">
+                            <option value="">— Todas —</option>
+                            <option value="Caracterización">Caracterización</option>
+                            <option value="Formatos Institucionales (F-PCI)">Formatos Institucionales (F-PCI)</option>
+                            <option value="Procedimientos (PCI)">Procedimientos (PCI)</option>
+                            <option value="Instructivos de Auditoría (I-PCI)">Instructivos de Auditor&iacute;a (I-PCI)
+                            </option>
+                            <option value="Gestión de Riesgos y Matriz">Gesti&oacute;n de Riesgos y Matriz</option>
+                            <option value="Anexos y Guías Técnicas">Anexos y Gu&iacute;as T&eacute;cnicas</option>
+                        </select>
+                        <span id="controlInternoCount" style="font-size:0.82rem; color:#64748b;"></span>
+                    </div>
+                    <div id="controlInternoList" class="news-management-list"></div>
                 </div>
 
                 <!-- Preview Area -->
