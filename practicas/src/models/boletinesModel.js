@@ -44,7 +44,7 @@ const BoletinesModel = {
                         data-id="${id}"
                         target="_blank"
                         style="text-decoration: none; padding: 1.25rem; display: flex; align-items: center; gap: 1rem; border: 1px solid #e2e8f0; background: #fff;">
-                        <span style="font-size: 1.5rem; color: #e63946;">&rsaquo;</span>
+                        <span style="font-size: 1.5rem; color: var(--text-light);">&rsaquo;</span>
                         <div>
                             <strong style="display: block; font-size: 0.9rem;">${data.title}</strong>
                             <span style="font-size: 0.75rem; color: #666;">${data.subtitle || ''}</span>

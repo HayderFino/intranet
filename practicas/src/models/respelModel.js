@@ -47,7 +47,7 @@ const RespelModel = {
                         const actNum = tds[1].replace(/<td[^>]*>/, '').trim();
                         const actDate = tds[2].replace(/<td[^>]*>/, '').trim();
                         const fileLinkMatch = /href="([^"]*)"/.exec(tds[3]);
-                        const fileNameMatch = />\s*(?:&#128196;)?\s*([\s\S]*?)<\/a>/.exec(tds[3]);
+                        const fileNameMatch = /<a[^>]*>\s*(?:&#128196;)?\s*([\s\S]*?)<\/a>/.exec(tds[3]);
 
                         items.push({
                             id: idMatch[1],
@@ -90,7 +90,7 @@ const RespelModel = {
                                 <td style="padding:0.75rem 1rem; border-bottom:1px solid #e0e0e0; text-align:center;">${data.actNum}</td>
                                 <td style="padding:0.75rem 1rem; border-bottom:1px solid #e0e0e0; text-align:center;">${data.actDate}</td>
                                 <td style="padding:0.75rem 1rem; border-bottom:1px solid #e0e0e0; text-align:center;">
-                                    <a href="${data.fileUrl || '#'}" target="_blank" style="display:inline-flex; align-items:center; gap:0.3rem; background:#e53935; color:#fff; padding:0.35rem 0.8rem; border-radius:6px; font-size:0.78rem; font-weight:600; text-decoration:none;">&#128196; ${data.fileName || 'VER'}</a>
+                                    <a href="${data.fileUrl || '#'}" target="_blank" class="respel-file-badge">&#128196; ${data.fileName || 'VER'}</a>
                                 </td>
                             </tr>`;
 

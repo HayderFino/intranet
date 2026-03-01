@@ -198,14 +198,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 card.className = 'news-manage-card';
                 card.innerHTML = `
                     <div class="news-info">
-                        <h4>${item.name}</h4>
-                        <p style="font-size:0.8rem;color:#64748b;">
-                            <span style="background:#e2e8f0;padding:0.15rem 0.5rem;border-radius:4px;font-weight:500;">
+                        <div style="display: flex; align-items:center; gap:0.6rem; margin-bottom:0.3rem;">
+                             <span style="background:#e2e8f0; color:#475569; padding:2px 8px; border-radius:4px; font-size:0.7rem; font-weight:600;">
                                 ${item.category}
                             </span>
-                            &nbsp;|&nbsp;
-                            <a href="${item.href}" target="_blank" style="color:#2e7d32;">Ver archivo</a>
-                        </p>
+                            <a href="${item.href}" target="_blank" class="admin-file-badge">
+                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+                                Ver Archivo
+                            </a>
+                        </div>
+                        <h4>${item.name}</h4>
                     </div>
                     <div class="card-actions">
                         <button class="btn-secondary btn-edit" data-id="${item.id}">Editar</button>
@@ -335,9 +337,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 card.innerHTML = `
                     <div class="news-info">
                         <h4>${item.title}</h4>
-                        <p style="font-size:0.8rem; color:#64748b;">
-                            <a href="${item.href}" target="_blank" style="color:#2e7d32;">Ver archivo</a>
-                        </p>
+                        <a href="${item.href}" target="_blank" class="admin-file-badge" style="margin-top: 0.4rem;">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+                            Ver Archivo
+                        </a>
                     </div>
                     <div class="card-actions">
                         <button class="btn-secondary btn-edit" data-id="${item.id}">Editar</button>
@@ -573,10 +576,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 card.innerHTML = `
                     <div class="news-info">
                         <h4>${item.title}</h4>
-                        <p style="font-size:0.82rem; color:#64748b;">${item.code || ''}
-                            ${item.href && item.href !== '#'
-                        ? `&nbsp;— <a href="${item.href}" target="_blank" style="color:#1565c0;">Ver archivo</a>`
-                        : ''}</p>
+                        <div style="display: flex; align-items: center; gap: 0.8rem; margin-top: 0.4rem;">
+                             <span style="font-size:0.75rem; color:#64748b;">${item.code || ''}</span>
+                             ${item.fileUrl && item.fileUrl !== '#'
+                        ? `<a href="${item.fileUrl}" target="_blank" class="admin-file-badge">
+                                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+                                    Descargar Manual
+                                 </a>`
+                        : '<span style="font-size:0.7rem; color:#94a3b8; font-style:italic;">Sin archivo</span>'}
+                        </div>
                     </div>
                     <div class="card-actions">
                         <button class="btn-secondary btn-edit" data-id="${item.id}">Editar</button>
@@ -719,16 +727,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 card.className = 'news-manage-card';
                 card.innerHTML = `
                     <div class="news-info">
-                        <h4>${item.name}</h4>
-                        <p style="font-size:0.8rem; color:#64748b; margin-top:0.25rem;">
-                            <span style="background:#e2e8f0; padding:0.15rem 0.5rem; border-radius:4px; font-weight:500;">
+                        <div style="display: flex; align-items: center; gap: 0.8rem; margin-bottom: 0.4rem;">
+                            <span style="background:#e2e8f0; color:#475569; padding:2px 8px; border-radius:4px; font-size:0.7rem; font-weight:600;">
                                 ${item.category}
                             </span>
-                            &nbsp;|&nbsp;
                             ${item.fileUrl && item.fileUrl !== '#'
-                        ? `<a href="${item.fileUrl}" target="_blank" style="color:#2e7d32; font-weight:600;">Ver archivo</a>`
-                        : '<span style="color:#94a3b8; font-style:italic;">Sin archivo</span>'}
-                        </p>
+                        ? `<a href="${item.fileUrl}" target="_blank" class="admin-file-badge">
+                                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+                                    Ver Archivo
+                                   </a>`
+                        : '<span style="font-size:0.7rem; color:#94a3b8; font-style:italic;">Sin archivo</span>'}
+                        </div>
+                        <h4>${item.name}</h4>
                     </div>
                     <div class="card-actions">
                         <button class="btn-secondary btn-edit" data-id="${item.id}">Editar</button>
@@ -866,7 +876,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
             let infoHtml = `<h4>${item.name}</h4><p style="font-size: 0.8rem; color: #64748b;">${item.href}</p>`;
             if (section === 'empresas') {
-                infoHtml = `<h4>${item.name}</h4><p style="font-size: 0.8rem; color: #64748b;">Acto: ${item.actNum} (${item.actDate}) - ${item.fileName}</p>`;
+                infoHtml = `
+                    <h4>${item.name}</h4>
+                    <p style="font-size: 0.8rem; color: #64748b; margin-top: 0.4rem;">
+                        Acto: ${item.actNum} (${item.actDate}) &nbsp;|&nbsp; 
+                        <a href="${item.href}" target="_blank" class="admin-file-badge">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+                            ${item.fileName}
+                        </a>
+                    </p>`;
             }
 
             card.innerHTML = `
@@ -1010,7 +1028,10 @@ document.addEventListener('DOMContentLoaded', () => {
             card.innerHTML = `
                 <div class="news-info">
                     <h4>${item.name}</h4>
-                    <p style="font-size:0.8rem; color:#64748b;">${item.href}</p>
+                    <a href="${item.href}" target="_blank" class="admin-file-badge" style="margin-top: 0.4rem;">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+                        Ver Documento
+                    </a>
                 </div>
                 <div class="card-actions">
                     <button class="btn-secondary btn-edit" data-id="${item.id}">Editar</button>
@@ -1130,7 +1151,13 @@ document.addEventListener('DOMContentLoaded', () => {
             card.innerHTML = `
                 <div class="news-info">
                     <h4>${item.title}</h4>
-                    <p style="font-size:0.8rem; color:#64748b;">${item.subtitle || ''} &nbsp;|&nbsp; <a href="${item.href}" target="_blank" style="color:#2e7d32;">Ver archivo</a></p>
+                    <div style="display: flex; align-items: center; gap: 0.8rem; margin-top: 0.4rem;">
+                        <span style="font-size:0.8rem; color:#64748b;">${item.subtitle || 'Sin descripción'}</span>
+                        <a href="${item.href}" target="_blank" class="admin-file-badge">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+                            Ver Boletín
+                        </a>
+                    </div>
                 </div>
                 <div class="card-actions">
                     <button class="btn-secondary btn-edit" data-id="${item.id}">Editar</button>
@@ -1336,13 +1363,18 @@ document.addEventListener('DOMContentLoaded', () => {
             card.className = 'news-manage-card';
             card.innerHTML = `
                 <div class="news-info">
-                    <span class="category-tag" style="background: #e2e8f0; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem;">${item.category}</span>
+                    <div style="display: flex; align-items: center; gap: 0.8rem; margin-bottom: 0.4rem;">
+                        <span class="category-tag" style="background: #e2e8f0; color: #475569; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 600;">${item.category}</span>
+                        <a href="${item.href}" target="_blank" class="admin-file-badge">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+                            Ver Archivo
+                        </a>
+                    </div>
                     <h4>${item.name}</h4>
-                    <p style="font-size: 0.8rem; color: #64748b; word-break: break-all;">${item.href}</p>
                 </div>
-                <div class="card-actions" style="display: flex; gap: 0.5rem; flex-shrink: 0;">
-                    <button class="btn-secondary btn-edit" data-id="${item.id}" style="padding: 5px 10px; font-size: 0.8rem;">Editar</button>
-                    <button class="btn-delete" data-id="${item.id}" style="padding: 5px 10px; font-size: 0.8rem;">Eliminar</button>
+                <div class="card-actions">
+                    <button class="btn-secondary btn-edit" data-id="${item.id}">Editar</button>
+                    <button class="btn-delete" data-id="${item.id}">Eliminar</button>
                 </div>
             `;
             sgiItemsList.appendChild(card);
@@ -1469,7 +1501,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="news-info" style="flex: 1; margin-left: 1rem; overflow: hidden;">
                         <h4 style="margin: 0;">${item.title}</h4>
                         <p style="font-size: 0.8rem; color: #64748b; margin: 2px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${item.description}</p>
-                        <span style="font-size: 0.7rem; background: #e2e8f0; padding: 2px 6px; border-radius: 4px;">${item.category || 'General'}</span>
+                        <span style="font-size: 0.7rem; background: #f1f5f9; color: #475569; padding: 2px 6px; border-radius: 4px; font-weight: 600;">${item.category || 'General'}</span>
                     </div>
                     <button class="btn-delete" onclick="deleteNews('${item.id}')">Eliminar</button>
                 `;

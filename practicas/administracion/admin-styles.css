@@ -47,8 +47,12 @@ body {
     color: white;
     display: flex;
     flex-direction: column;
-    padding: 1.5rem;
+    padding: 1.5rem 1rem;
     transition: all 0.3s ease;
+    overflow-y: auto;
+    height: 100vh;
+    position: sticky;
+    top: 0;
 }
 
 .admin-logo {
@@ -70,7 +74,21 @@ body {
 }
 
 .admin-nav li {
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.25rem;
+}
+
+.nav-group-title {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #475569;
+    font-weight: 700;
+    margin: 1.5rem 1rem 0.5rem 1rem;
+    display: block;
+}
+
+.nav-group-title:first-child {
+    margin-top: 0;
 }
 
 .admin-nav a {
@@ -345,15 +363,50 @@ button {
 }
 
 .btn-delete {
-    background-color: #fee2e2;
-    color: #ef4444;
+    background-color: #ffffff;
+    color: #64748b;
     padding: 0.5rem 1rem;
     font-size: 0.8125rem;
+    border: 1px solid var(--admin-border);
 }
 
 .btn-delete:hover {
-    background-color: #fecaca;
-    color: #dc2626;
+    background-color: #f1f5f9;
+    color: #ef4444;
+    border-color: #fecaca;
+}
+
+/* Card Actions & Badges */
+.card-actions {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.admin-file-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: #f1f5f9;
+    color: #475569;
+    padding: 0.2rem 0.6rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s;
+    border: 1px solid var(--admin-border);
+}
+
+.admin-file-badge:hover {
+    background: #e2e8f0;
+    color: var(--admin-primary);
+    transform: translateY(-1px);
+}
+
+.admin-file-badge svg {
+    width: 14px;
+    height: 14px;
 }
 
 @media (max-width: 768px) {
