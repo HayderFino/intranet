@@ -31,6 +31,7 @@ app.use('/api/rua', require('./src/routes/ruaRoutes'));
 app.use('/api/boletines', require('./src/routes/boletinesRoutes'));
 app.use('/api/pcb', require('./src/routes/pcbRoutes'));
 app.use('/api/manuales-sgi', require('./src/routes/manualesRoutes'));
+app.use('/api/cita', require('./src/routes/citaRoutes'));
 
 
 app.get('/api/debug/error', (req, res) => {

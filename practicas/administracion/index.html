@@ -87,6 +87,12 @@
                                 <path
                                     d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z" />
                             </svg> PCB</a></li>
+
+                    <span class="nav-group-title">GIT</span>
+                    <li id="nav-cita"><a href="#"><svg viewBox="0 0 24 24">
+                                <path
+                                    d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
+                            </svg> CITA</a></li>
                 </ul>
             </nav>
             <div class="admin-footer">
@@ -684,6 +690,65 @@
                         <span id="controlInternoCount" style="font-size:0.82rem; color:#64748b;"></span>
                     </div>
                     <div id="controlInternoList" class="news-management-list"></div>
+                </div>
+
+                <!-- CITA Section -->
+                <div id="citaSection" class="admin-form-container hidden">
+                    <h2>Gestión de Manuales CITA</h2>
+                    <div id="citaManagementForm">
+                        <form id="citaForm" class="news-form"
+                            style="margin-bottom: 2rem; border-bottom: 1px solid #eee; padding-bottom: 2rem;">
+                            <div class="form-group">
+                                <label for="citaName">Nombre del Manual / Guía</label>
+                                <input type="text" id="citaName" placeholder="Ej: Guía Aprovechamiento Forestal"
+                                    required>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="citaCategory">Categoría</label>
+                                    <select id="citaCategory" required>
+                                        <option value="guias liquidaciones">Guías - Liquidaciones</option>
+                                        <option value="guias permisos">Guías - Permisos y Trámites</option>
+                                        <option value="guias sancionatorias">Guías - Sancionatorio</option>
+                                        <option value="procedimientos permisos">Procedimientos - Permisos y Trámites
+                                        </option>
+                                        <option value="procedimientos sancionatorios">Procedimientos - Sancionatorios
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="citaFile">Subir Archivo PDF</label>
+                                    <input type="file" id="citaFile" accept=".pdf" required>
+                                </div>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="submit" class="btn-primary" id="citaSaveBtn">Guardar Manual</button>
+                            </div>
+                        </form>
+
+                        <div class="list-filter"
+                            style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1rem; background: #f8fafc; padding: 1rem; border-radius: 8px; border: 1px solid #e2e8f0;">
+                            <label for="citaFilterCategory"
+                                style="font-weight: 600; color: #64748b; font-size: 0.9rem;">Filtrar por
+                                Categoría:</label>
+                            <select id="citaFilterCategory"
+                                style="flex: 1; max-width: 300px; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.9rem;">
+                                <option value="all">Todas las categorías</option>
+                                <option value="GUÍAS - LIQUIDACIONES">Guías - Liquidaciones</option>
+                                <option value="GUÍAS - PERMISOS Y TRÁMITES">Guías - Permisos y Trámites</option>
+                                <option value="GUÍAS - SANCIONATORIO">Guías - Sancionatorio</option>
+                                <option value="PROCEDIMIENTOS - PERMISOS Y TRÁMITES">Procedimientos - Permisos y
+                                    Trámites</option>
+                                <option value="PROCEDIMIENTOS - SANCIONATORIOS">Procedimientos - Sancionatorios</option>
+                            </select>
+                        </div>
+
+                        <div id="citaItemsList" class="news-management-list">
+                            <!-- Items inyectados por JS -->
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Preview Area -->

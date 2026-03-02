@@ -14,7 +14,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // Procesos misionales
         adminRecursos: document.getElementById('adminRecursosSection'),
         planeacionAmbiental: document.getElementById('planeacionAmbientalSection'),
-        vigilanciaControl: document.getElementById('vigilanciaControlSection')
+        vigilanciaControl: document.getElementById('vigilanciaControlSection'),
+        cita: document.getElementById('citaSection')
     };
 
     const navItems = {
@@ -27,7 +28,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // Procesos misionales
         adminRecursos: document.getElementById('nav-admin-recursos'),
         planeacionAmbiental: document.getElementById('nav-planeacion-ambiental'),
-        vigilanciaControl: document.getElementById('nav-vigilancia-control')
+        vigilanciaControl: document.getElementById('nav-vigilancia-control'),
+        cita: document.getElementById('nav-cita')
     };
 
     // --- Navigation Logic ---
@@ -83,6 +85,13 @@ document.addEventListener('DOMContentLoaded', () => {
         sections.boletines.classList.remove('hidden');
         navItems.boletines.classList.add('active');
         loadBoletinesList();
+    };
+
+    navItems.cita.onclick = () => {
+        hideAll();
+        sections.cita.classList.remove('hidden');
+        navItems.cita.classList.add('active');
+        loadCitaList();
     };
 
     // --- Procesos Misionales SGI (genérico) ---
@@ -1637,6 +1646,98 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('agendaForm').reset();
         };
     }
+
+    // --- CITA Logic ---
+    async function loadCitaList() {
+        const listEl = document.getElementById('citaItemsList');
+        const filterVal = document.getElementById('citaFilterCategory').value;
+        listEl.innerHTML = '<p style="padding:1rem;">Cargando...</p>';
+        try {
+            const res = await fetch('/api/cita');
+            const data = await res.json();
+
+            const filtered = filterVal === 'all' ? data : data.filter(i => i.category === filterVal);
+
+            if (filtered.length === 0) {
+                listEl.innerHTML = '<p style="padding:2rem; color:#64748b; text-align:center;">No hay manuales en esta categoría.</p>';
+                return;
+            }
+
+            listEl.innerHTML = '';
+            filtered.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'news-manage-card';
+                card.innerHTML = `
+                    <div class="news-info">
+                        <div style="display: flex; align-items: center; gap: 0.8rem; margin-bottom: 0.4rem;">
+                            <span style="background:#e0f2fe; color:#0369a1; padding:2px 8px; border-radius:4px; font-size:0.7rem; font-weight:600;">
+                                ${item.category}
+                            </span>
+                            <a href="${item.href}" target="_blank" class="admin-file-badge">
+                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+                                Ver PDF
+                            </a>
+                        </div>
+                        <h4>${item.name}</h4>
+                    </div>
+                    <div class="card-actions">
+                        <button class="btn-delete" onclick="deleteCita('${item.id}')">Eliminar</button>
+                    </div>`;
+                listEl.appendChild(card);
+            });
+        } catch (e) { showToast('Error al cargar CITA', 'error'); }
+    }
+
+    document.getElementById('citaFilterCategory').onchange = loadCitaList;
+
+    window.deleteCita = async (id) => {
+        if (!confirm('¿Eliminar este manual de CITA? El archivo también se borrará.')) return;
+        try {
+            const res = await fetch(`/api/cita/${id}`, { method: 'DELETE' });
+            if (res.ok) {
+                showToast('Manual eliminado con éxito');
+                loadCitaList();
+            } else {
+                showToast('Error al eliminar', 'error');
+            }
+        } catch (e) { showToast('Error al eliminar', 'error'); }
+    }
+
+    document.getElementById('citaForm').onsubmit = async (e) => {
+        e.preventDefault();
+        const name = document.getElementById('citaName').value;
+        const category = document.getElementById('citaCategory').value;
+        const file = document.getElementById('citaFile').files[0];
+
+        if (!file) {
+            showToast('Por favor selecciona un archivo PDF', 'error');
+            return;
+        }
+
+        showToast('Guardando manual...', 'info');
+
+        const fd = new FormData();
+        fd.append('name', name);
+        fd.append('category', category);
+        fd.append('file', file);
+
+        try {
+            const res = await fetch('/api/cita', {
+                method: 'POST',
+                body: fd
+            });
+
+            if (res.ok) {
+                showToast('Manual guardado con éxito');
+                document.getElementById('citaForm').reset();
+                loadCitaList();
+            } else {
+                showToast('Error al guardar manual', 'error');
+            }
+        } catch (err) {
+            showToast('Error en el servidor', 'error');
+        }
+    };
 
     // --- Helper ---
     function showToast(message, type = 'success') {
