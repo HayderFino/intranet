@@ -13,6 +13,7 @@ Contiene los archivos físicos que sirve el servidor:
 - `/imagenes/noticias/`: Fotos subidas desde el panel Admin.
 - `/uploads/citas/`: Manuales PDFs organizados por subcarpetas de categoría.
 - `/boletines/`, `/manuales-sgi/`, `/meci/`: Documentos de referencia para áreas específicas.
+- `/menu header/la cas/talento humano/`: Subcarpetas para Manual de Funciones, Directorio de Funcionarios, SIGEP, Planes, Convocatorias, Estudios Técnicos, Provisión de Empleos y Desprendibles de Nómina.
 
 ## 3. Respaldo
 - **Base de Datos**: Se recomienda usar `mongodump` semanalmente.

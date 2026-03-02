@@ -98,7 +98,20 @@ $template = @"
                         <a href="{{REL}}header_menu/cas/politica-ambiental.html">Pol&iacute;tica Ambiental</a>
                         <a href="{{REL}}header_menu/cas/normativa-cas.html">Normativa CAS</a>
                         <a href="{{REL}}header_menu/cas/informe-gestion.html">Informe de Gesti&oacute;n</a>
-                        <a href="{{REL}}header_menu/cas/talento-humano.html">Talento Humano</a>
+                        <div class="dropdown-submenu">
+                            <a href="{{REL}}header_menu/cas/talento-humano.html">Talento Humano <span
+                                    class="submenu-arrow">&#9656;</span></a>
+                            <div class="dropdown-content">
+                                <a href="#">Manual de Funciones</a>
+                                <a href="#">Directorio de Funcionarios</a>
+                                <a href="#">Plan de monitoreo del SIGEP</a>
+                                <a href="#">Planes</a>
+                                <a href="#">Convocatorias</a>
+                                <a href="#">Estudios T&eacute;cnicos</a>
+                                <a href="#">Provisi&oacute;n de empleos</a>
+                                <a href="https://cas.delfineco.com/gdpagos_cas/" target="_blank">Desprendibles de Nomina</a>
+                            </div>
+                        </div>
                         <a href="{{REL}}header_menu/cas/postalcas.html">PostalCAS</a>
                         <a href="{{REL}}header_menu/cas/noticas-cas.html">NotiCAS</a>
                         <a href="{{REL}}header_menu/cas/agenda.html">Agenda CAS</a>
