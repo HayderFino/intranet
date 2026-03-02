@@ -107,7 +107,7 @@ $template = @"
                                 <a href="#">Plan de monitoreo del SIGEP</a>
                                 <a href="#">Planes</a>
                                 <a href="#">Convocatorias</a>
-                                <a href="#">Estudios T&eacute;cnicos</a>
+                                <a href="{{REL}}header_menu/cas/estudios-tecnicos.html">Estudios T&eacute;cnicos</a>
                                 <a href="{{REL}}header_menu/cas/provision-empleos.html">Provisi&oacute;n de empleos</a>
                                 <a href="https://cas.delfineco.com/gdpagos_cas/" target="_blank">Desprendibles de Nomina</a>
                             </div>
@@ -216,4 +216,5 @@ $html_meci = $template.Replace('{{REL}}', '').Replace('{{TITLE}}', 'MECI').Repla
 [System.IO.File]::WriteAllText("$(Get-Location)/meci.html", $html_meci)
 
 Write-Host "Portal re-generado con entidades HTML."
+
 
