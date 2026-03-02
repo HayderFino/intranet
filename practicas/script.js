@@ -147,4 +147,68 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.appendChild(toast);
         setTimeout(() => toast.remove(), 3000);
     };
+    // --- Feed de Actividad Reciente ---
+    const loadRecentActivity = async () => {
+        const feedContainer = document.getElementById('recent-activity-feed');
+        if (!feedContainer) return;
+
+        try {
+            // Fetch Agenda y CITA en paralelo
+            const [agendaRes, citaRes] = await Promise.all([
+                fetch('/api/agenda'),
+                fetch('/api/cita')
+            ]);
+
+            const agenda = await agendaRes.json();
+            const citas = await citaRes.json();
+
+            // Combinar y ordenar por fecha (más reciente primero)
+            const activity = [
+                ...agenda.map(item => ({ ...item, type: 'agenda' })),
+                ...citas.map(item => ({ ...item, type: 'cita' }))
+            ].sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+
+            if (activity.length === 0) {
+                feedContainer.innerHTML = '<p class="feed-placeholder">No hay actividad reciente.</p>';
+                return;
+            }
+
+            feedContainer.innerHTML = '';
+            activity.slice(0, 4).forEach(item => {
+                const feedItem = document.createElement('div');
+                feedItem.className = 'feed-item';
+
+                let icon = '';
+                let title = '';
+                let desc = '';
+                let dateStr = new Date(item.fecha).toLocaleDateString();
+
+                if (item.type === 'agenda') {
+                    icon = '<svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2zm-7 5h5v5h-5z"/></svg>';
+                    title = 'Nuevo Evento en Agenda';
+                    desc = item.actividad || item.title;
+                } else {
+                    icon = '<svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>';
+                    title = 'Nuevo Manual Cargado';
+                    desc = `${item.titulo} (${item.categoria})`;
+                }
+
+                feedItem.innerHTML = `
+                    <div class="feed-icon">${icon}</div>
+                    <div class="feed-content">
+                        <h4>${title}</h4>
+                        <p>${desc}</p>
+                        <span class="feed-date">${dateStr}</span>
+                    </div>
+                `;
+                feedContainer.appendChild(feedItem);
+            });
+
+        } catch (err) {
+            console.error('Error al cargar actividad reciente:', err);
+            feedContainer.innerHTML = '<p class="feed-placeholder">Error al cargar actividad.</p>';
+        }
+    };
+
+    loadRecentActivity();
 });
