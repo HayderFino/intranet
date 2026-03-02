@@ -27,4 +27,4 @@ Detalle técnico sobre el entorno, ejecución y mantenimiento de la **Intranet C
 ## 🛠️ Herramientas de Mantenimiento
 - **Visual Studio Code**: Recomendado para edición de código.
 - **MongoDB Compass**: Para visualización y limpieza de datos en `intranet_cas`.
-- **PowerShell**: Para ejecutar el script de actualización de layouts `generate_pages.ps1`.
+- **PowerShell**: Para  ejecutar el script de actualización de layouts `generate_pages.ps1`. 
