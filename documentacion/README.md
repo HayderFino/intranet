@@ -1,6 +1,6 @@
 # Portal de Intranet - CAS
 
-Este es el repositorio oficial del Portal de Intranet de la Corporación Autónoma Regional de Santander (CAS). El sistema es una plataforma corporativa dinámica que incluye gestión de noticias basada en MongoDB, visualización de documentos oficiales y un panel de administración centralizado.
+Este es el repositorio oficial del Portal de Intranet de la Corporación Autónoma Regional de Santander (CAS). El sistema es una plataforma corporativa dinámica que incluye gestión de contenidos basada en MongoDB, visualización de documentos oficiales y un panel de administración centralizado.
 
 ---
 
@@ -9,11 +9,12 @@ Este es el repositorio oficial del Portal de Intranet de la Corporación Autóno
 Toda la documentación detallada sobre el funcionamiento, arquitectura y administración se encuentra centralizada en la carpeta `documentacion/`:
 
 1.  **[Guía General](./documentacion/general.md)**: Visión global y estructura del repositorio.
-2.  **[Documentación Técnica](./documentacion/tecnico.md)**: Instalación, ejecución y control de versiones.
-3.  **[Arquitectura MVC](./documentacion/arquitectura_mvc.md)**: Detalle del patrón de diseño en el backend.
-4.  **[Gestión de Datos](./documentacion/gestion_datos.md)**: Organización de archivos y activos (data).
-5.  **[Administración](./documentacion/administracion.md)**: Guía del panel de gestión.
-6.  **[Herramientas](./documentacion/herramientas.md)**: Catálogo de utilidades y páginas especiales.
+2.  **[Guía de Navegación](./documentacion/guia_navegacion.md)**: Estructura del portal, menús y dashboard.
+3.  **[Documentación Técnica](./documentacion/tecnico.md)**: Instalación, ejecución y control de versiones.
+4.  **[Arquitectura MVC](./documentacion/arquitectura_mvc.md)**: Detalle del patrón de diseño en el backend.
+5.  **[Gestión de Datos](./documentacion/gestion_datos.md)**: Organización de archivos y activos (data).
+6.  **[Administración](./documentacion/administracion.md)**: Guía del panel de gestión (Noticias, Agenda, SGI, CITA).
+7.  **[Herramientas](./documentacion/herramientas.md)**: Catálogo de utilidades y páginas especiales (RESPEL, RUA, PCB).
 
 ---
 
@@ -23,7 +24,7 @@ Para poner en marcha la intranet en un servidor central dentro de la red, siga e
 
 ### 1. Requisitos Previos
 *   **Node.js** (v18 o superior)
-*   **MongoDB Server** (v7.0 o superior)
+*   **MongoDB Server** (v7.0 o superior) - Debe estar corriendo localmente o configurar la URI.
 *   **Git** (para control de versiones)
 
 ### 2. Instalación de Dependencias
@@ -34,11 +35,11 @@ npm install
 ```
 
 ### 3. Migración Inicial de Datos
-Si es la primera vez que se configura el servidor y desea importar las noticias desde el sistema antiguo (JSON):
+Si existen datos antiguos en formato JSON que no han sido migrados:
 ```bash
 node migrate_to_mongo.js
 ```
-*Nota: Este paso solo es necesario una vez para inicializar la base de datos.*
+*Nota: Este paso solo es necesario una vez para inicializar la base de datos de noticias y agenda.*
 
 ### 4. Iniciar el Servidor
 Para poner la intranet en línea:
@@ -59,9 +60,9 @@ Los usuarios de la oficina **NO NECESITAN INSTALAR NADA**. Simplemente deben abr
 
 *   `documentacion/`: Guías técnicas y manuales de arquitectura.
 *   `practicas/`: Núcleo del servidor (Backend Node.js).
-    *   `/src/models`: Modelos de datos (Noticias en MongoDB).
-    *   `/src/controllers`: Lógica de negocio.
-    *   `/src/routes`: Definición de rutas API.
+    *   `/src/models`: Modelos de datos (Mongoose para Noticias, Agenda y CITA; Lógica HTML para SGI/RESPEL).
+    *   `/src/controllers`: Lógica de negocio y procesamiento de peticiones.
+    *   `/src/routes`: Definición de rutas API REST.
 *   `data/`: Repositorio de archivos estáticos, imágenes y documentos institucionales.
 *   `administracion/`: Módulos del panel de control para administradores.
 
@@ -69,7 +70,7 @@ Los usuarios de la oficina **NO NECESITAN INSTALAR NADA**. Simplemente deben abr
 
 ## 🛠️ Guía para Desarrolladores
 Si estás contribuyendo al código o realizando pruebas:
-1. Asegúrate de tener una instancia de MongoDB activa localmente.
+1. Asegúrate de tener una instancia de MongoDB activa localmente (`mongodb://127.0.0.1:27017/intranet_cas`).
 2. Realiza siempre un `npm install` tras descargar cambios.
 3. Prueba tus cambios ejecutando `node server.js` dentro de la carpeta `practicas`.
 4. Todos los archivos de documentación deben actualizarse en la carpeta `documentacion/`.

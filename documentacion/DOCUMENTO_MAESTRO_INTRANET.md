@@ -7,31 +7,34 @@ Este documento constituye la documentación oficial y técnica del portal de Int
 
 ## 1. Introducción y Propósito
 
-El portal de Intranet CAS es una plataforma centralizada diseñada para facilitar el acceso a la información institucional, la gestión de procesos del Sistema de Gestión Integrado (SGI), y la comunicación interna.
+El portal de Intranet CAS es una plataforma centralizada diseñada para facilitar el acceso a la información institucional, la gestión de procesos del Sistema de Gestión Integrado (SGI), la administración de manuales CITA, y la comunicación interna.
 
 **Objetivos clave:**
 - Centralizar el acceso a documentos normativos y manuales.
 - Automatizar la publicación de noticias institucional (NotiCAS).
-- Ofrecer un punto único de acceso a herramientas transversales (RESPEL, RUA, etc.).
+- Ofrecer un punto único de acceso a herramientas transversales (RESPEL, RUA, CITA, etc.).
 - Mantener una estética moderna y profesional ("Premium Design").
 
 ---
 
 ## 2. Arquitectura Técnica
 
-El sistema ha evolucionado de un sitio estático a una aplicación web dinámica basada en el patrón **MVC (Model-View-Controller)**.
+El sistema ha evolucionado de un sitio estático a una aplicación web dinámica basada en el patrón **MVC (Model-View-Controller)** con persistencia en base de datos.
 
 ### Tecnologías Core
 - **Frontend**: HTML5, CSS3 (Vanilla), JavaScript (ES6+).
 - **Backend**: Node.js con el framework Express.
-- **Gestión de Datos**: Sistema de persistencia basado en archivos JSON y sistema de archivos local para activos.
+- **Gestión de Datos**:
+  - **MongoDB**: Para datos estructurados dinámicos (Noticias, Agenda, CITA).
+  - **Sistema de Archivos Local**: Para activos binarios (PDFs, Imágenes) en `/data`.
+  - **HTML-as-DB**: Para secciones heredadas de documentos SGI/RESPEL donde la vista y el dato están vinculados.
 - **Automatización**: Scripts de PowerShell para la generación masiva de estructuras HTML.
 
 ### Estructura de Directorios Principal
 - `/practicas`: Directorio raíz de la aplicación activa.
   - `/src`: Lógica del servidor (Controladores, Modelos, Rutas).
   - `/data`: Repositorio central de activos (Imágenes, PDFs, Boletines).
-  - `/administrador`: Panel de control para usuarios con permisos.
+  - `/administracion`: Panel de control unificado.
   - `/header_menu`: Contenido segmentado por áreas (CAS, SGI, GIT).
   - `/herramientas`: Enlaces a aplicaciones externas y recursos técnicos.
 - `/documentacion`: Repositorio de guías técnicas y manuales de administración.
@@ -41,55 +44,57 @@ El sistema ha evolucionado de un sitio estático a una aplicación web dinámica
 ## 3. Gestión de Procesos y Datos
 
 ### 3.1. Centralización de Activos (`/data`)
-Para mejorar la mantenibilidad y facilitar los respaldos, todos los archivos que no son código (PDFs de manuales, imágenes de noticias, logos) se gestionan en la carpeta `/data`. El servidor Node.js sirve esta carpeta de forma estática, permitiendo enlaces consistentes en todo el portal.
+Todos los archivos físicos (PDFs de manuales, imágenes de noticias) se gestionan en la carpeta `/data`. El servidor Node.js sirve esta carpeta de forma estática, permitiendo enlaces consistentes.
 
 ### 3.2. Panel de Administración
-La gestión de contenido dinámico se realiza a través del `/administrador`. Este panel interactúa con la API REST del backend para:
-1. **NotiCAS**: Carga de noticias con imagen y persistencia automática en el inicio y en la sección de noticias.
-2. **Agenda CAS**: Programación de eventos que se reflejan en tiempo real.
-3. **Control de Noticias**: Listado y eliminación de contenido dinámico generado.
+La gestión de contenido se realiza a través de `/administracion`. Módulos integrados:
+1. **NotiCAS**: Gestión de noticias en MongoDB.
+2. **Agenda CAS**: Programación de eventos en MongoDB.
+3. **Manuales CITA**: Gestión documental técnica basada en MongoDB.
+4. **SGI/RESPEL/RUA/Boletines**: Actualización dinámica de archivos HTML.
 
-### 3.3. Ciclo de Vida de una Petición
-1. **Usuario**: Interactúa con la UI (ej. sube una noticia).
+### 3.3. Ciclo de Vida de una Petición (MongoDB)
+1. **Usuario**: Realiza una acción en el panel (ej. crear noticia).
 2. **Router**: Captura la petición en `/api/news`.
-3. **Controlador**: Procesa la descarga del archivo (usando `multer`) y actualiza los punteros de datos.
-4. **Modelo**: Escribe los cambios en el disco o actualiza los archivos HTML dinámicos.
-5. **Respuesta**: La UI se actualiza sin necesidad de intervención manual en el código.
+3. **Controlador**: Procesa datos y archivos (Multer).
+4. **Modelo (Mongoose)**: Guarda el documento en la colección correspondiente en MongoDB.
+5. **Respuesta**: La UI se actualiza y el contenido se sirve dinámicamente en el portal.
 
 ---
 
 ## 4. Diseño y Experiencia de Usuario (UX/UI)
 
 El portal utiliza un sistema de diseño "Premium" caracterizado por:
-- **Navegación Intuitiva**: Sidebar lateral para herramientas y menú superior desplegable para secciones institucionales.
-- **Componentes Dinámicos**: Carruseles de imágenes para noticias destacadas y grids de tarjetas para documentos.
-- **Tipografía**: Uso de la fuente 'Inter' para máxima legibilidad.
-- **Responsive**: Adaptabilidad a diferentes tamaños de pantalla.
+- **Navegación Intuitiva**: Sidebar lateral y menú superior desplegable.
+- **Componentes Dinámicos**: Carruseles de noticias y grids de tarjetas para documentos.
+- **Tipografía**: Fuente 'Inter'.
+- **Responsive**: Adaptabilidad total.
 
 ---
 
 ## 5. Guía de Operación y Mantenimiento
 
 ### Ejecución del Servidor
-Para que las funciones dinámicas (Admin, Agenda, Noticias) funcionen, el servidor debe estar activo:
 ```bash
-cd c:\Users\HAYDER\Documents\intranet\intranet\practicas
+cd c:\Users\HAYDER\Videos\intranet\practicas
 node server.js
 ```
+*Asegúrese de que el servicio de MongoDB esté iniciado.*
 
 ### Generación de Nuevas Secciones
-El script `generate_pages.ps1` permite crear rápidamente la carcasa de nuevas páginas manteniendo la coherencia estética y los menús actualizados. Este script utiliza entidades HTML para asegurar que los caracteres especiales (tildes, eñes) se visualicen correctamente en cualquier navegador.
+El script `generate_pages.ps1` permite crear la carcasa de nuevas páginas manteniendo la coherencia estética.
 
 ---
 
-## 6. Análisis de Seguridad y Ciberseguridad
+## 6. Evolución del Proyecto (Roadmap Reales)
 
-El portal incluye una sección dedicada a la **Ciberseguridad (GIT)**, donde se gestionan:
-- Boletines de seguridad mensuales.
-- Manuales de políticas de protección de datos.
-- Normatividad vigente sobre Gobierno Digital.
+| Fase | Título | Descripción |
+| :--- | :--- | :--- |
+| **Fase 4** | Documentación Maestra | Entrega de manuales técnicos iniciales. |
+| **Fase 5** | Migración NoSQL | Implementación de MongoDB para noticias y agenda. |
+| **Fase 6** | CRUD CITA | Implementación de administración completa para manuales CITA. |
 
 ---
 
 > [!IMPORTANT]
-> **Recomendación de Respaldo**: Se recomienda realizar copias de seguridad periódicas de la carpeta `practicas/data` y de los archivos HTML raíz, ya que contienen la información dinámica generada por los usuarios.
+> **Respaldo de Base de Datos**: Es crítico realizar dumps periódicos de MongoDB (`mongodump`) además del respaldo de la carpeta `/data`.

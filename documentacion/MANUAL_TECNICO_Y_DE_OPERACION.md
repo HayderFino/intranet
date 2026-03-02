@@ -7,85 +7,83 @@ Este documento es la guía definitiva para la administración, mantenimiento y e
 
 ## 1. Resumen de Proyecto: "¿Qué se ha hecho?"
 
-El portal ha pasado de ser una colección de archivos HTML aislados a un sistema web dinámico y escalable. Los principales hitos alcanzados son:
-- **Migración a Arquitectura MVC**: Separación de rutas, modelos y controladores en el servidor Node.js.
-- **Unificación de Datos**: Centralización de todos los activos (PDF, imágenes) en un único directorio `/data`.
-- **Panel de Administración**: Implementación de una interfaz web para cargar noticias y eventos sin editar código manualmente.
-- **Automatización de Layouts**: Creación de scripts de generación masiva para asegurar que todas las páginas tengan el mismo diseño premium y menús actualizados.
-- **Corrección de Codificación**: Implementación de entidades HTML y UTF-8 para evitar errores de visualización de caracteres especiales.
+El portal ha evolucionado significativamente hacia una aplicación robusta. Los principales hitos alcanzados son:
+- **Migración a MongoDB**: Transición de archivos JSON a una base de datos NoSQL para Noticias, Agenda y CITA, mejorando la escalabilidad y velocidad de consulta.
+- **Arquitectura MVC**: Separación clara de rutas, modelos (Mongoose) y controladores.
+- **CRUD CITA**: Implementación de un sistema de gestión completo para manuales CITA, con creación dinámica de carpetas por categoría.
+- **Panel de Administración Unificado**: Interfaz centralizada para gestionar todos los módulos del portal.
+- **Centralización de Activos**: Todos los archivos físicos se almacenan y sirven desde `/data`.
 
 ---
 
 ## 2. Estructura de Carpetas (Disposición de Archivos)
 
-La organización del proyecto sigue estándares modernos de desarrollo web:
+La organización del proyecto sigue estándares modernos:
 
 ### Directorio Raíz del Repositorio
-- `practicas/`: Contiene todo el código fuente de la aplicación web.
-- `documentacion/`: Repositorio de manuales y documentos maestros.
-- `.git/`: Sistema de control de versiones.
+- `practicas/`: Código fuente de la aplicación.
+- `documentacion/`: Repositorio de manuales y documentos.
 
 ### Directorio `/practicas` (Corazón de la Web)
 ```text
 /practicas
-├── /administrador      # Interfaz de gestión para el personal de TIC.
+├── /administracion     # Interfaz de gestión unificada.
 ├── /data               # Repositorio central de documentos y activos.
-│   ├── /imagenes       # Logos, banners y fotos de noticias.
-│   ├── /manuales       # Documentación oficial del SGI.
-│   └── /boletines      # Boletines de ciberseguridad.
-├── /src                # Lógica del servidor (Backend).
-│   ├── /controllers    # Controladores (procesan las peticiones).
-│   ├── /models         # Modelos (interactúan con los datos).
-│   └── /routes         # Definición de rutas de la API.
+│   ├── /imagenes       # Fotos de noticias y logos.
+│   ├── /manuales       # Documentación SGI.
+│   ├── /boletines      # Seguridad informática.
+│   └── /uploads        # Archivos dinámicos (CITA, etc).
+├── /src                # Backend (Node.js).
+│   ├── /controllers    # Controladores.
+│   ├── /models         # Modelos (Mongoose y Logic HTML).
+│   └── /routes         # Rutas API.
 ├── /header_menu        # Secciones institucionales (CAS, SGI, GIT).
-├── /herramientas       # Enlaces a aplicaciones internas.
-├── index.html          # Página de inicio del portal.
-├── server.js           # Archivo principal de ejecución del servidor.
-├── styles.css          # Estilos globales (Premium UI).
-└── generate_pages.ps1  # Script de automatización de páginas.
+├── /herramientas       # REPSEL, RUA, PCB, CITA.
+├── index.html          # Inicio.
+├── server.js           # Punto de entrada.
+└── generate_pages.ps1  # Script de automatización.
 ```
 
 ---
 
 ## 3. Procesos Técnicos y Gestión
 
-### 3.1. Proceso de Generación de Páginas
-Para añadir o actualizar masivamente las páginas, se utiliza el script `generate_pages.ps1`.
-- **Función**: Toma una plantilla HTML premium y genera archivos individuales para cada ítem del menú.
-- **Beneficio**: Garantiza que si se cambia un enlace en el menú superior, todas las páginas se actualicen simultáneamente.
+### 3.1. Gestión de Datos con MongoDB
+El sistema utiliza **Mongoose** como ODM para interactuar con MongoDB.
+- Colecciones: `news`, `agenda`, `citas`.
+- Las imágenes y PDFs asociados se guardan en el disco, y la base de datos almacena la ruta relativa.
 
-### 3.2. Gestión de Activos y Persistencia
-- Los datos dinámicos (noticias) se inyectan dinámicamente.
-- El servidor Node.js utiliza el middleware `express.static` para servir la carpeta `/data`, permitiendo que cualquier página del portal acceda a los archivos con una ruta relativa estándar.
+### 3.2. Proceso de Generación de Páginas
+Se mantiene el uso de `generate_pages.ps1` para asegurar que el menú superior sea consistente en todas las páginas HTML estáticas.
 
-### 3.3. Estandarización de Caracteres
-Se ha implementado un proceso de limpieza para que todas las páginas utilicen entidades como `&aacute;` o `&ntilde;`, asegurando la compatibilidad universal entre diferentes servidores y navegadores.
+### 3.3. Middlewares Principales
+- `multer`: Para el manejo de carga de archivos.
+- `cors`: Para permitir peticiones desde el panel de administración.
+- `express.static`: Para servir archivos de `/data` y archivos raíz.
 
 ---
 
 ## 4. Manual de Operación (Para el Administrador)
 
 ### Acceso al Panel
-El administrador puede gestionar el portal entrando a: `http://localhost:3000/administrador`.
+Entrar a: `http://localhost:3000/administracion`.
 
-### Gestión de Contenido
-1. **Publicar Noticia**: Subir un título, descripción e imagen. El sistema actualizará automáticamente el carrusel de inicio y la sección de NotiCAS.
-2. **Agenda CAS**: Registrar eventos institucionales.
-3. **Mantenimiento**: Eliminar noticias antiguas o desactualizadas desde la pestaña "Listado".
+### Gestión por Módulo
+1. **Noticias**: Crear, editar o borrar noticias. La imagen se optimiza y se guarda en `/data/imagenes/noticias`.
+2. **Manuales CITA**: Permite subir PDFs categorizados. El sistema crea las subcarpetas automáticamente.
+3. **Módulos SGI/RESPEL**: Actualizan directamente los bloques de código en los archivos HTML correspondientes.
 
 ---
 
 ## 5. Requisitos y Ejecución Técnica
 
 ### Dependencias
-El sistema requiere **Node.js** y las siguientes librerías de `npm`:
-- `express`: Servidor web.
-- `multer`: Gestión de subida de archivos (imágenes/PDF).
-- `cors`: Permisos de seguridad para el administrador.
+El sistema requiere **Node.js** y **MongoDB**. Librerías clave:
+- `express`, `mongoose`, `multer`, `cors`.
 
 ### Comando de Inicio
 ```powershell
-cd c:\Users\HAYDER\Documents\intranet\intranet\practicas
+cd c:\Users\HAYDER\Videos\intranet\practicas
 node server.js
 ```
 
@@ -95,12 +93,11 @@ node server.js
 
 | Fecha | Actividad | Resultado |
 | :--- | :--- | :--- |
-| **Fase 1** | Migración MVC | Código más limpio y fácil de mantener. |
-| **Fase 2** | Centralización de `/data` | Eliminación de archivos duplicados y rutas rotas. |
-| **Fase 3** | Admin Panel v1 | Gestión autónoma de noticias por parte de los usuarios. |
-| **Fase 4** | Documentación Maestra | Entrega de manuales técnicos y operativos completos. |
+| **Fase 4** | Documentación Maestra | Manuales técnicos y operativos. |
+| **Fase 5** | Migración a MongoDB | Persistencia escalable para Noticias y Agenda. |
+| **Fase 6** | Implementación CITA | CRUD completo para manuales técnicos CITA. |
 
 ---
 
 > [!TIP]
-> **Expansión Futura**: El sistema está preparado para integrar una base de datos SQL o NoSQL si el volumen de noticias crece exponencialmente, ya que la lógica está aislada en la capa de `models`.
+> **Expansión**: Para nuevos módulos, siga el patrón en `newsRoutes.js` y `newsController.js` si requiere base de datos, o `sgiController.js` si requiere inyección de HTML.

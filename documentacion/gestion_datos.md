@@ -1,14 +1,19 @@
 # Gestión de Datos y Activos
 
-Todos los activos estáticos y archivos de datos se encuentran centralizados para facilitar su respaldo y organización.
+El sistema utiliza una arquitectura híbrida para la persistencia: **MongoDB** para datos estructurados y el **Sistema de Archivos** para activos binarios.
 
-## Directorio `practicas/data`
+## 1. Datos Estructurados (MongoDB)
+Las colecciones en la base de datos `intranet_cas` almacenan la información de:
+- **news**: Títulos, fechas, descripciones y referencias a imágenes.
+- **agenda**: Eventos institucionales.
+- **citas**: Metadatos de manuales técnicos.
 
-- `MECI/`: Manuales de control interno.
-- `Talento humano/`: Documentación administrativa.
-- `boletines/`: Comunicaciones de seguridad.
-- `imagenes/`: Material gráfico del portal.
-- `manuales/`: Guías del SGI.
+## 2. Directorio de Activos `/practicas/data`
+Contiene los archivos físicos que sirve el servidor:
+- `/imagenes/noticias/`: Fotos subidas desde el panel Admin.
+- `/uploads/citas/`: Manuales PDFs organizados por subcarpetas de categoría.
+- `/boletines/`, `/manuales-sgi/`, `/meci/`: Documentos de referencia para áreas específicas.
 
-## Uso Técnico
-El servidor sirve estos archivos a través de la ruta `/data/`. Es fundamental mantener la jerarquía para no romper los enlaces en los archivos HTML.
+## 3. Respaldo
+- **Base de Datos**: Se recomienda usar `mongodump` semanalmente.
+- **Archivos**: Copia de seguridad del directorio `/data` mensualmente o tras cargas masivas de manuales.
