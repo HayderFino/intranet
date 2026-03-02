@@ -121,39 +121,166 @@
             </nav>
 
             <section class="welcome-header">
-                <div>
-                    <h1>Sistema de Informaci&oacute;n del Recurso H&iacute;drico - SIRH</h1>
-                    <p style="max-width: 800px; margin-top: 0.5rem;">Manuales y gu&iacute;as de usuario para el sistema
-                        SIRH.</p>
+                <div
+                    style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
+                    <div>
+                        <h1>Sistema de Informaci&oacute;n del Recurso H&iacute;drico - SIRH</h1>
+                        <p style="max-width: 800px; margin-top: 0.5rem;">Gesti&oacute;n integral de la
+                            informaci&oacute;n del agua en Colombia.</p>
+                    </div>
+                    <div class="metadata-card">
+                        <ul>
+                            <li><strong>Publicado:</strong> 21 Diciembre 2015</li>
+                            <li><strong>&Uacute;ltima actualizaci&oacute;n:</strong> 05 Febrero 2016</li>
+                        </ul>
+                    </div>
                 </div>
             </section>
 
-            <div class="card info-card" style="margin-bottom: 2rem; border-left: 5px solid var(--primary);">
-                <p>Aqu&iacute; encontrar&aacute; toda la documentaci&oacute;n t&eacute;cnica y operativa para el
-                    correcto uso del sistema SIRH en la Corporaci&oacute;n y el IDEAM.</p>
-            </div>
+            <div class="main-content-layout" style="display: grid; gap: 3rem; margin-top: 1rem;">
 
-            <div class="pdf-grid">
-                <a href="#" class="pdf-folder-card">
-                    <div class="file-icon">
-                        <svg viewBox="0 0 24 24">
+                <!-- ¿Qué es el SIRH? -->
+                <section class="content-section">
+                    <h2
+                        style="color: var(--primary); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem;">
+                        <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
+                            <path
+                                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z" />
+                        </svg>
+                        &iquest;Qu&eacute; es el SIRH?
+                    </h2>
+                    <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 2rem; align-items: center;">
+                        <div class="card info-card" style="border-left: 5px solid var(--secondary);">
+                            <div class="info-card-content">
+                                <p>El <strong>Sistema de Información del Recurso Hídrico (SIRH)</strong> es el conjunto
+                                    de elementos que integra y estandariza el acopio, registro, manejo y consulta de
+                                    datos, bases de datos, estadísticas, sistemas, modelos, información documental y
+                                    bibliográfica, reglamentos y protocolos que facilitan la gestión integral del
+                                    recurso hídrico.</p>
+                                <p style="margin-top: 1rem;">Las aplicaciones que soportan la gestión de datos del SIRH
+                                    deben ofrecer:</p>
+                                <ul
+                                    style="margin-top: 0.5rem; padding-left: 1.5rem; color: var(--text-light); line-height: 1.6;">
+                                    <li>Instrumentos para la captura y consolidación de información.</li>
+                                    <li>Análisis a partir de la información registrada.</li>
+                                    <li>Disponibilidad de la información a través de diferentes medios.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="image-container"
+                            style="background: white; padding: 1rem; border-radius: 1rem; box-shadow: var(--shadow-sm);">
+                            <img src="../../../data/menu header/git/manuales de usuario/SIRH/funcionalidad_sirh.png"
+                                alt="Funcionalidad SIRH" style="width: 100%; border-radius: 0.5rem;">
+                            <p
+                                style="font-size: 0.75rem; color: #64748b; text-align: center; margin-top: 0.5rem; font-style: italic;">
+                                Diagrama de funcionalidad del SIRH</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Normativa -->
+                <section class="content-section">
+                    <h2
+                        style="color: var(--primary); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem;">
+                        <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
                             <path
                                 d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
                         </svg>
+                        Normativa
+                    </h2>
+                    <div class="card" style="background: #f8fafc; padding: 1.5rem; border-radius: 1rem;">
+                        <p>En el contexto de la gestión integral del recurso hídrico, definida esta como una de las
+                            líneas de acción del Plan Nacional de Desarrollo, el <strong>Ministerio de Ambiente</strong>
+                            considera fundamental que la Política Hídrica Nacional disponga de lineamientos relacionados
+                            con la información y la investigación del agua.</p>
+                        <p style="margin-top: 1rem;">La expedición del <strong>Decreto 1323 de 2007</strong> crea el
+                            SIRH como el principal instrumento que gestionará la información sobre el estado del agua
+                            como recurso natural del país. La Política Hídrica Nacional propenderá por crear condiciones
+                            para que el conocimiento se constituya en la herramienta que soporte la gestión del recurso
+                            hídrico en Colombia.</p>
                     </div>
-                    <h4>Manual de Usuario IDEAM - SIRH</h4>
-                    <p style="font-size: 0.75rem; color: var(--text-light);">PDF - 3.8MB</p>
-                </a>
-                <a href="#" class="pdf-folder-card">
-                    <div class="file-icon">
-                        <svg viewBox="0 0 24 24">
+                </section>
+
+                <!-- Estructuración -->
+                <section class="content-section">
+                    <h2
+                        style="color: var(--primary); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem;">
+                        <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
                             <path
-                                d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
+                                d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z" />
                         </svg>
+                        Estructuraci&oacute;n del SIRH
+                    </h2>
+                    <p style="margin-bottom: 1.5rem; color: var(--text-light);">El SIRH se estructura bajo cuatro ejes
+                        fundamentales:</p>
+                    <div
+                        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
+                        <div class="card" style="padding: 1.5rem; border-top: 4px solid #3b82f6;">
+                            <h4
+                                style="color: #3b82f6; margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                                Oferta</h4>
+                            <p style="font-size: 0.9rem; line-height: 1.6;">Articula información hidrometeorológica de
+                                la Red Básica Nacional de Monitoreo del IDEAM y autoridades ambientales para generar
+                                nueva información sobre el comportamiento de los cuerpos de agua.</p>
+                        </div>
+                        <div class="card" style="padding: 1.5rem; border-top: 4px solid #10b981;">
+                            <h4
+                                style="color: #10b981; margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                                Demanda</h4>
+                            <p style="font-size: 0.9rem; line-height: 1.6;">Insumo oficial para conocer la demanda
+                                hídrica mediante las concesiones de aguas otorgadas, permitiendo el seguimiento al
+                                aprovechamiento en cada jurisdicción.</p>
+                        </div>
+                        <div class="card" style="padding: 1.5rem; border-top: 4px solid #f59e0b;">
+                            <h4
+                                style="color: #f59e0b; margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                                Calidad</h4>
+                            <p style="font-size: 0.9rem; line-height: 1.6;">Recopila mediciones de puntos de monitoreo
+                                (vertimientos y red hídrica) sobre componentes físicos, químicos y bacteriológicos para
+                                la toma de decisiones.</p>
+                        </div>
+                        <div class="card" style="padding: 1.5rem; border-top: 4px solid #8b5cf6;">
+                            <h4
+                                style="color: #8b5cf6; margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                                Gesti&oacute;n</h4>
+                            <p style="font-size: 0.9rem; line-height: 1.6;">Consolida los documentos de planificación y
+                                ordenación del recurso hídrico, estableciendo estrategias de seguimiento de
+                                disponibilidad, calidad y cantidad.</p>
+                        </div>
                     </div>
-                    <h4>Gu&iacute;a de Captura de Datos</h4>
-                    <p style="font-size: 0.75rem; color: var(--text-light);">PDF - 1.5MB</p>
-                </a>
+                </section>
+
+                <!-- Instructivos -->
+                <section class="category-section">
+                    <h2
+                        style="color: var(--primary); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem;">
+                        <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
+                            <path
+                                d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z" />
+                        </svg>
+                        Instructivos y Documentos
+                    </h2>
+                    <div class="pdf-grid" id="sirh-docs-grid">
+                        <a href="../../../data/menu header/git/manuales de usuario/SIRH/instructivo_registro_ de_fuentes.pdf"
+                            class="pdf-folder-card" data-id="sirh_1">
+                            <div class="file-icon"><svg viewBox="0 0 24 24">
+                                    <path
+                                        d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
+                                </svg></div>
+                            <h4>Instructivo Registro de Fuentes</h4>
+                            <span class="btn-pdf-download">Descargar PDF</span>
+                        </a>
+                        <a href="../../../data/menu header/git/manuales de usuario/SIRH/instructivo_registro_de_usuarios_recurso_hidrico.pdf"
+                            class="pdf-folder-card" data-id="sirh_2">
+                            <div class="file-icon"><svg viewBox="0 0 24 24">
+                                    <path
+                                        d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
+                                </svg></div>
+                            <h4>Instructivo Registro de Usuarios Recurso H&iacute;drico</h4>
+                            <span class="btn-pdf-download">Descargar PDF</span>
+                        </a>
+                    </div>
+                </section>
             </div>
         </div>
     </main>
