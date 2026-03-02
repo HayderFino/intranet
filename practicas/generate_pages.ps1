@@ -102,7 +102,7 @@ $template = @"
                             <a href="{{REL}}header_menu/cas/talento-humano.html">Talento Humano <span
                                     class="submenu-arrow">&#9656;</span></a>
                             <div class="dropdown-content">
-                                <a href="#">Manual de Funciones</a>
+                                <a href="{{REL}}header_menu/cas/manual-funciones.html">Manual de Funciones</a>
                                 <a href="#">Directorio de Funcionarios</a>
                                 <a href="#">Plan de monitoreo del SIGEP</a>
                                 <a href="{{REL}}header_menu/cas/planes.html">Planes</a>
@@ -216,6 +216,7 @@ $html_meci = $template.Replace('{{REL}}', '').Replace('{{TITLE}}', 'MECI').Repla
 [System.IO.File]::WriteAllText("$(Get-Location)/meci.html", $html_meci)
 
 Write-Host "Portal re-generado con entidades HTML."
+
 
 
 
