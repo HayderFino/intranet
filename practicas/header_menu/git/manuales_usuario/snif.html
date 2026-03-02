@@ -121,39 +121,158 @@
             </nav>
 
             <section class="welcome-header">
-                <div>
-                    <h1>Sistema Nacional de Informaci&oacute;n Forestal - SNIF</h1>
-                    <p style="max-width: 800px; margin-top: 0.5rem;">Manuales y gu&iacute;as de usuario para el sistema
-                        SNIF.</p>
+                <div
+                    style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
+                    <div>
+                        <h1>Sistema Nacional de Informaci&oacute;n Forestal - SNIF</h1>
+                        <p style="max-width: 800px; margin-top: 0.5rem;">Monitoreo y seguimiento de los ecosistemas
+                            boscosos en Colombia.</p>
+                    </div>
+                    <div class="metadata-card">
+                        <ul>
+                            <li><strong>Publicado:</strong> 21 Diciembre 2015</li>
+                            <li><strong>&Uacute;ltima actualizaci&oacute;n:</strong> 05 Febrero 2016</li>
+                        </ul>
+                    </div>
                 </div>
             </section>
 
-            <div class="card info-card" style="margin-bottom: 2rem; border-left: 5px solid var(--primary);">
-                <p>Consulte la documentaci&oacute;n oficial para el reporte y gesti&oacute;n del recurso forestal a
-                    trav&eacute;s del sistema SNIF.</p>
-            </div>
+            <div class="main-content-layout" style="display: grid; gap: 2.5rem; margin-top: 1rem;">
 
-            <div class="pdf-grid">
-                <a href="#" class="pdf-folder-card">
-                    <div class="file-icon">
-                        <svg viewBox="0 0 24 24">
-                            <path
-                                d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
-                        </svg>
+                <!-- Introducción -->
+                <section class="content-section">
+                    <div class="card info-card" style="border-left: 5px solid var(--primary); background: #f0f9ff;">
+                        <div class="info-card-content">
+                            <p>El <strong>Sistema Nacional de Información Forestal (SNIF)</strong> constituye la
+                                herramienta informática para el montaje y operación del sistema de información del
+                                programa de monitoreo de bosques. Propende por la captura, análisis, procesamiento y
+                                difusión de la información sobre los ecosistemas boscosos con calidad, transparencia,
+                                objetividad y eficiencia de las instituciones públicas que generan información forestal
+                                en Colombia.</p>
+                        </div>
                     </div>
-                    <h4>Manual Operativo SNIF</h4>
-                    <p style="font-size: 0.75rem; color: var(--text-light);">PDF - 2.1MB</p>
-                </a>
-                <a href="#" class="pdf-folder-card">
-                    <div class="file-icon">
-                        <svg viewBox="0 0 24 24">
+                </section>
+
+                <!-- Módulos y Estadísticas -->
+                <section class="content-section">
+                    <h2
+                        style="color: var(--primary); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem;">
+                        <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
                             <path
-                                d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
+                                d="M12 2l-5.5 9h11L12 2zm0 3.84L13.93 9h-3.87L12 5.84zM17.5 13c-2.49 0-4.5 2.01-4.5 4.5s2.01 4.5 4.5 4.5 4.5-2.01 4.5-4.5-2.01-4.5-4.5-4.5zm0 7c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5zM3 21.5h8v-8H3v8zm2-6h4v4H5v-4z" />
                         </svg>
+                        Objetivos y Estad&iacute;sticas
+                    </h2>
+                    <div
+                        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+                        <div class="card" style="padding: 1.5rem;">
+                            <h4 style="color: var(--secondary); margin-bottom: 1rem;">Gesti&oacute;n del Recurso</h4>
+                            <p style="font-size: 0.95rem; line-height: 1.6;">Plantea tres grandes m&oacute;dulos que
+                                agrupan lo relacionado con la <strong>oferta, demanda y administraci&oacute;n</strong>
+                                del recurso forestal.</p>
+                        </div>
+                        <div class="card" style="padding: 1.5rem;">
+                            <h4 style="color: var(--secondary); margin-bottom: 1rem;">Estad&iacute;sticas Clave</h4>
+                            <ul
+                                style="font-size: 0.9rem; color: var(--text-light); padding-left: 1.2rem; line-height: 1.5;">
+                                <li>Volumen anual aprovechado y movilizado.</li>
+                                <li>Uso actual y potencial de especies forestales.</li>
+                                <li>Dep&oacute;sito de biomasa y carbono almacenado.</li>
+                                <li>&Aacute;reas afectadas por incendios forestales.</li>
+                            </ul>
+                        </div>
                     </div>
-                    <h4>Protocolo de Reporte Forestal</h4>
-                    <p style="font-size: 0.75rem; color: var(--text-light);">PDF - 0.9MB</p>
-                </a>
+                </section>
+
+                <!-- SIG y Monitoreo -->
+                <section class="content-section">
+                    <div
+                        style="background: var(--primary); color: white; padding: 2rem; border-radius: 1.5rem; display: flex; gap: 2rem; align-items: center;">
+                        <div style="font-size: 3rem; opacity: 0.5;">
+                            <svg viewBox="0 0 24 24" width="64" height="64" fill="currentColor">
+                                <path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 style="margin-bottom: 0.5rem;">Seguimiento Multitemporal y SIG</h3>
+                            <p style="opacity: 0.9;">El SNIF proporciona informaci&oacute;n aplicada al monitoreo
+                                forestal mediante el uso de <strong>Sistemas de Informaci&oacute;n Geogr&aacute;fica
+                                    (SIG)</strong> e im&aacute;genes de sat&eacute;lite para el desarrollo de alertas y
+                                pron&oacute;sticos en tiempo real.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Calidad y Protocolos -->
+                <section class="content-section">
+                    <h2
+                        style="color: var(--primary); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem;">
+                        <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
+                            <path
+                                d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-1 14l-3-3 1.41-1.41L11 12.17l4.59-4.58L17 9l-6 6z" />
+                        </svg>
+                        Calidad de la Informaci&oacute;n
+                    </h2>
+                    <p style="margin-bottom: 1.5rem;">La calidad del SNIF est&aacute; respaldada por el
+                        <strong>Protocolo Nacional de Bosques</strong>, que define el conjunto de directrices, reglas de
+                        comunicaci&oacute;n y est&aacute;ndares t&eacute;cnicos para la generaci&oacute;n de
+                        informaci&oacute;n con valor agregado.</p>
+                    <div class="card" style="padding: 1.2rem; border-left: 4px solid var(--secondary);">
+                        <p style="font-style: italic; color: var(--text-light);">"El monitoreo se apoya en el Mapa de
+                            Ecosistemas Continentales Costeros y Marinos de Colombia, con el respaldo de los institutos
+                            del SINA y el IGAC."</p>
+                    </div>
+                </section>
+
+                <!-- Documentos -->
+                <section class="category-section">
+                    <h2
+                        style="color: var(--primary); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem;">
+                        <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
+                            <path
+                                d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z" />
+                        </svg>
+                        Documentaci&oacute;n y Formatos
+                    </h2>
+                    <div class="pdf-grid">
+                        <a href="../../../data/menu header/git/manuales de usuario/Snif/manuales-de-diligenciamiento-tematicos-snif-2013-Version-2.pdf"
+                            class="pdf-folder-card" data-id="snif_1">
+                            <div class="file-icon"><svg viewBox="0 0 24 24">
+                                    <path
+                                        d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
+                                </svg></div>
+                            <h4>Manual de Diligenciamiento Tem&aacute;tico SNIF 2013</h4>
+                            <span class="btn-pdf-download">Descargar PDF</span>
+                        </a>
+                        <a href="../../../data/menu header/git/manuales de usuario/Snif/resolucion-000503-de-mayo-26-de-2015.pdf"
+                            class="pdf-folder-card" data-id="snif_2">
+                            <div class="file-icon"><svg viewBox="0 0 24 24">
+                                    <path
+                                        d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
+                                </svg></div>
+                            <h4>Resoluci&oacute;n 000503 de 2015 - Registro de Plantaciones</h4>
+                            <span class="btn-pdf-download">Descargar PDF</span>
+                        </a>
+                        <a href="../../../data/menu header/git/manuales de usuario/Snif/presentacion-snif-2015.ppt"
+                            class="pdf-folder-card" data-id="snif_3">
+                            <div class="file-icon" style="color: #d24726;"><svg viewBox="0 0 24 24">
+                                    <path
+                                        d="M6 2c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6H6zm7 7V3.5L18.5 9H13z" />
+                                </svg></div>
+                            <h4>Presentaci&oacute;n SNIF 2015</h4>
+                            <span class="btn-pdf-download" style="background: #d24726;">Descargar PPT</span>
+                        </a>
+                        <a href="../../../data/menu header/git/manuales de usuario/Snif/formatos-snif-ideam.xlsx"
+                            class="pdf-folder-card" data-id="snif_4">
+                            <div class="file-icon" style="color: #1d6f42;"><svg viewBox="0 0 24 24">
+                                    <path
+                                        d="M6 2c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6H6zm7 7V3.5L18.5 9H13z" />
+                                </svg></div>
+                            <h4>Formato SNIF - IDEAM</h4>
+                            <span class="btn-pdf-download" style="background: #1d6f42;">Descargar XLSX</span>
+                        </a>
+                    </div>
+                </section>
             </div>
         </div>
     </main>
