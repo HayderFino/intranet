@@ -15,6 +15,7 @@ Toda la documentación detallada sobre el funcionamiento, arquitectura y adminis
 5.  **[Gestión de Datos](./documentacion/gestion_datos.md)**: Organización de archivos y activos (data).
 6.  **[Administración](./documentacion/administracion.md)**: Guía del panel de gestión (Noticias, Agenda, SGI, CITA).
 7.  **[Herramientas](./documentacion/herramientas.md)**: Catálogo de utilidades y páginas especiales (RESPEL, RUA, PCB).
+8.  **[Guía Completa Unificada](./GUIA_COMPLETA_INTRANET_CAS.md)**: Documento único con funcionamiento, estructura de carpetas, manual de usuario y manual de programador.
 
 ---
 
