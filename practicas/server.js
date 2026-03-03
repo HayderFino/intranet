@@ -40,6 +40,7 @@ app.use('/api/plan-monitoreo', require('./src/routes/planMonitoreoRoutes'));
 app.use('/api/planes-talento', require('./src/routes/planesTalentoRoutes'));
 app.use('/api/convocatorias', require('./src/routes/convocatoriasRoutes'));
 app.use('/api/estudios-tecnicos', require('./src/routes/estudiosTecnicosRoutes'));
+app.use('/api/provision-empleos', require('./src/routes/provisionEmpleosRoutes'));
 
 
 app.get('/api/debug/error', (req, res) => {

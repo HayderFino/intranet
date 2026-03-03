@@ -22,7 +22,9 @@ document.addEventListener('DOMContentLoaded', () => {
         manualFunciones: document.getElementById('manualFuncionesSection'),
         planMonitoreo: document.getElementById('planMonitoreoSection'),
         planesTalento: document.getElementById('planesTalentoSection'),
-        convocatorias: document.getElementById('convocatoriasSection')
+        convocatorias: document.getElementById('convocatoriasSection'),
+        estudiosTecnicos: document.getElementById('estudiosTecnicosSection'),
+        provisionEmpleos: document.getElementById('provisionEmpleosSection')
     };
 
     const navItems = {
@@ -43,7 +45,9 @@ document.addEventListener('DOMContentLoaded', () => {
         manualFunciones: document.getElementById('nav-manual-funciones'),
         planMonitoreo: document.getElementById('nav-plan-monitoreo'),
         planesTalento: document.getElementById('nav-planes-talento'),
-        convocatorias: document.getElementById('nav-convocatorias')
+        convocatorias: document.getElementById('nav-convocatorias'),
+        estudiosTecnicos: document.getElementById('nav-estudios-tecnicos'),
+        provisionEmpleos: document.getElementById('nav-provision-empleos')
     };
 
     // --- Navigation Logic ---
@@ -155,6 +159,20 @@ document.addEventListener('DOMContentLoaded', () => {
         sections.convocatorias.classList.remove('hidden');
         navItems.convocatorias.classList.add('active');
         if (typeof ConvocatoriasAdmin !== 'undefined') ConvocatoriasAdmin.load();
+    };
+
+    navItems.estudiosTecnicos.onclick = () => {
+        hideAll();
+        sections.estudiosTecnicos.classList.remove('hidden');
+        navItems.estudiosTecnicos.classList.add('active');
+        if (typeof EstudiosTecnicosAdmin !== 'undefined') EstudiosTecnicosAdmin.load();
+    };
+
+    navItems.provisionEmpleos.onclick = () => {
+        hideAll();
+        sections.provisionEmpleos.classList.remove('hidden');
+        navItems.provisionEmpleos.classList.add('active');
+        if (typeof ProvisionEmpleosAdmin !== 'undefined') ProvisionEmpleosAdmin.load();
     };
 
     // --- Procesos Misionales SGI (genérico) ---
