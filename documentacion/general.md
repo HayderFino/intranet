@@ -10,8 +10,9 @@ Visión global de la estructura y el propósito de la **Intranet CAS**.
 
 ## Resumen de Hitos Recientes
 
-- **Migración a MongoDB**: Implementación de base de datos NoSQL para Noticias, Agenda y CITA, eliminando la dependencia de archivos JSON pesados.
-- **Implementación CITA**: Creación de un módulo completo de administración para manuales técnicos con categorización automática.
-- **Arquitectura MVC**: Backend organizado en controladores, modelos (Mongoose) y rutas API.
+- **Migración a MongoDB**: Implementación de base de datos NoSQL para Noticias, Agenda y CITA.
+- **Implementación de Módulos CRUD**: Creación de administradores para SNIF, Provisión de Empleos y Revisión de Red.
+- **Evolución Talento Humano**: Reestructuración de secciones para Convocatorias y Planes con diseño premium.
+- **Arquitectura MVC**: Backend organizado en controladores, modelos (Mongoose/FileSystem) y rutas API.
 - **Panel de Administración SPA**: Interfaz modernizada para una gestión rápida desde una sola pestaña.
 - **Centralización de Datos**: Todos los recursos externos servidos desde el directorio `/data`.

@@ -31,9 +31,9 @@ Ubicada a la izquierda, ofrece acceso directo a las herramientas técnicas trans
 ### 2.2. Menú Superior (Top Nav - Estructura Institucional)
 Organizado en menús desplegables por áreas estratégicas:
 
-1.  **La CAS**: Información institucional (Misión, Visión, Objetivos, Funciones, Estructura Organizacional y Talento Humano).
+1.  **La CAS**: Información institucional (Misión, Visión, Objetivos, Funciones, Estructura Organizacional y **Talento Humano** con secciones dedicadas a Convocatorias y Planes).
 2.  **SGI (Sistema de Gestión Integrado)**: Acceso a los cuatro tipos de procesos, políticas de calidad, manuales SGI y documentos institucionales.
-3.  **GIT (Grupo de Infraestructura Tecnológica)**: Normatividad TIC, Gobierno Digital, Manuales de Usuario (CITA, SIRH, SNIF) y Boletines de Seguridad.
+3.  **GIT (Grupo de Infraestructura Tecnológica)**: Normatividad TIC, Gobierno Digital, **Manuales de Usuario** (CITA, SIRH, SNIF, Revisión de Red) y Boletines de Seguridad.
 4.  **MECI / Administración**: Acceso rápido al Modelo Estándar de Control Interno y botón de ingreso al Panel de Gestión.
 
 ---
@@ -59,6 +59,7 @@ Al ingresar al portal (Inicio), el usuario se encuentra con:
 Haciendo clic en el botón **"Ingresar"** en la parte superior derecha, los administradores autorizados acceden a la consola de gestión, la cual permite:
 - Publicar y editar noticias en tiempo real.
 - Subir y categorizar manuales técnicos (CITA).
+- Gestionar documentos de **Provisión de Empleos**, **SNIF** y **Revisión de Red**.
 - Actualizar calendarios y agendas.
 - Gestionar la documentación masiva del SGI sin necesidad de programar.
 

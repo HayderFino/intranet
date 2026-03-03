@@ -22,7 +22,9 @@ Detalle técnico sobre el entorno, ejecución y mantenimiento de la **Intranet C
 | **1.0 - 1.3** | Desarrollo inicial, MVC y estandarización HTML. |
 | **2.0.0** | **Migración a MongoDB**: Persistencia NoSQL para noticias y agenda. |
 | **2.1.0** | **Módulo CITA**: CRUD completo para manuales técnicos con carga dinámica. |
-| **Actual** | Estabilidad de base de datos y documentación maestra integral. |
+| **2.2.0** | **Módulos de Archivos**: Implementación de CRUD para SNIF, Provisión de Empleos y Revisión de Red. |
+| **2.3.0** | **UX y Talento Humano**: Reestructuración de Convocatorias, Planes y categorías de manuales. |
+| **Actual** | Estabilidad de base de datos y documentación maestra integral actualizada. |
 
 ## 🛠️ Herramientas de Mantenimiento
 - **Visual Studio Code**: Recomendado para edición de código.

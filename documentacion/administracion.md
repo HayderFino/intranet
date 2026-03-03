@@ -13,11 +13,26 @@ Ubicado en `practicas/administracion`, este panel permite la gestión dinámica 
 - Permite programar actividades institucionales.
 - Los datos persisten en la colección `agenda`.
 
-### 3. Manuales CITA (MongoDB - NUEVO)
+### 3. Manuales CITA (MongoDB)
 - Permite la gestión de manuales técnicos.
 - Los archivos se organizan automáticamente por categorías (`mecánica`, `eléctrica`, etc.) en la carpeta `data/uploads/citas/`.
 
-### 4. Gestión de Documentos SGI/RESPEL/RUA
+### 4. Provisión de Empleos (Nuevo)
+- Módulo para la gestión de documentos relacionados con la Provisión de Empleos de Carrera Administrativa.
+- Permite subir, editar y eliminar archivos PDF/Word.
+- Los archivos se almacenan en `data/uploads/provision_empleos/`.
+
+### 5. SNIF - Sistema Nacional de Información Forestal (Nuevo)
+- Gestión documental para el módulo SNIF.
+- Permite el cargue y administración de formatos y manuales específicos del sistema forestal.
+- Los archivos se almacenan en `data/uploads/snif/`.
+
+### 6. Revisión de Red (Nuevo)
+- Administración de documentos de revisión de red para sedes regionales de apoyo.
+- Soporta la gestión de archivos técnicos de infraestructura.
+- Los archivos se almacenan en `data/uploads/revision_red/`.
+
+### 7. Gestión de Documentos SGI/RESPEL/RUA
 - Permite subir archivos y actualizar las listas de documentos en las páginas correspondientes mediante inyección directa de HTML.
 
 ## Solución de Problemas (Troubleshooting)

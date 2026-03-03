@@ -11,8 +11,9 @@
 El panel es una **página única (SPA)** donde todos los módulos están cargados en `administracion/index.html` y se muestran u ocultan mediante JavaScript (`admin-logic.js`). 
 
 Existen dos tipos de persistencia:
-1. **MongoDB (Mongoose)**: Para Noticias, Agenda y CITA. Los datos se guardan en la base de datos `intranet_cas`.
-2. **HTML-as-DB**: Para SGI, RESPEL, RUA, PCB y Boletines. El servidor modifica directamente el archivo HTML público.
+1. **MongoDB (Mongoose)**: Para Noticias, Agenda y CITA.
+2. **Sistema de Archivos Dinámico (CRUD)**: Para SNIF, Provisión de Empleos y Revisión de Red (metadatos en JSON/API + Archivos).
+3. **HTML-as-DB**: Para SGI, RESPEL, RUA, PCB y Boletines.
 
 ```
 Formulario Admin
@@ -93,6 +94,20 @@ MongoDB (NoSQL)    Archivo HTML (Inyección)
 **Descripción:** Boletines de seguridad informática.  
 **Almacenamiento:** HTML-as-DB.  
 **API:** `/api/boletines`.
+
+---
+
+### 7. 📁 Módulos de Documentación (SNIF, Provisión, Revisión Red)
+
+**Descripción:** Gestión completa de archivos para módulos específicos de GIT y Talento Humano.  
+**Archivos:** `/practicas/data/uploads/[snif|provision_empleos|revision_red]/`  
+**Lógica:** JavaScript especializado (`snif-admin.js`, etc.) con persistencia en metadatos.
+
+| Módulo | Sección | Ruta de Carga |
+|--------|---------|---------------|
+| SNIF | Documentación | `data/uploads/snif/` |
+| Provisión | Carrera | `data/uploads/provision_empleos/` |
+| Revisión Red | Sedes | `data/uploads/revision_red/` |
 
 ---
 

@@ -51,7 +51,8 @@ La gestión de contenido se realiza a través de `/administracion`. Módulos int
 1. **NotiCAS**: Gestión de noticias en MongoDB.
 2. **Agenda CAS**: Programación de eventos en MongoDB.
 3. **Manuales CITA**: Gestión documental técnica basada en MongoDB.
-4. **SGI/RESPEL/RUA/Boletines**: Actualización dinámica de archivos HTML.
+4. **Módulos de Archivos (Nuevo)**: Gestión CRUD para **Provisión de Empleos**, **SNIF** y **Revisión de Red**.
+5. **SGI/RESPEL/RUA/Boletines**: Actualización dinámica de archivos HTML.
 
 ### 3.3. Ciclo de Vida de una Petición (MongoDB)
 1. **Usuario**: Realiza una acción en el panel (ej. crear noticia).
@@ -93,6 +94,8 @@ El script `generate_pages.ps1` permite crear la carcasa de nuevas páginas mante
 | **Fase 4** | Documentación Maestra | Entrega de manuales técnicos iniciales. |
 | **Fase 5** | Migración NoSQL | Implementación de MongoDB para noticias y agenda. |
 | **Fase 6** | CRUD CITA | Implementación de administración completa para manuales CITA. |
+| **Fase 7** | Módulos de Gestión de Archivos | Implementación de CRUD para SNIF, Provisión de Empleos y Revisión de Red. |
+| **Fase 8** | Talento Humano y UX | Creación de secciones de Convocatorias/Planes y refinamiento de categorías. |
 
 ---
 

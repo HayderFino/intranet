@@ -13,7 +13,7 @@ Toda la documentación detallada sobre el funcionamiento, arquitectura y adminis
 3.  **[Documentación Técnica](./documentacion/tecnico.md)**: Instalación, ejecución y control de versiones.
 4.  **[Arquitectura MVC](./documentacion/arquitectura_mvc.md)**: Detalle del patrón de diseño en el backend.
 5.  **[Gestión de Datos](./documentacion/gestion_datos.md)**: Organización de archivos y activos (data).
-6.  **[Administración](./documentacion/administracion.md)**: Guía del panel de gestión (Noticias, Agenda, SGI, CITA).
+6.  **[Administración](./documentacion/administracion.md)**: Guía del panel de gestión (Noticias, Agenda, CITA, SNIF, Provisión de Empleos y Revisión de Red).
 7.  **[Herramientas](./documentacion/herramientas.md)**: Catálogo de utilidades y páginas especiales (RESPEL, RUA, PCB).
 
 ---

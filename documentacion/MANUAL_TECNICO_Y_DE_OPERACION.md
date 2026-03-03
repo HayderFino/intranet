@@ -10,7 +10,7 @@ Este documento es la guía definitiva para la administración, mantenimiento y e
 El portal ha evolucionado significativamente hacia una aplicación robusta. Los principales hitos alcanzados son:
 - **Migración a MongoDB**: Transición de archivos JSON a una base de datos NoSQL para Noticias, Agenda y CITA, mejorando la escalabilidad y velocidad de consulta.
 - **Arquitectura MVC**: Separación clara de rutas, modelos (Mongoose) y controladores.
-- **CRUD CITA**: Implementación de un sistema de gestión completo para manuales CITA, con creación dinámica de carpetas por categoría.
+- **CRUD SNIF, Provisión y Red**: Implementación de administradores especializados para la gestión de archivos técnicos y de talento humano.
 - **Panel de Administración Unificado**: Interfaz centralizada para gestionar todos los módulos del portal.
 - **Centralización de Activos**: Todos los archivos físicos se almacenan y sirven desde `/data`.
 
@@ -71,7 +71,8 @@ Entrar a: `http://localhost:3000/administracion`.
 ### Gestión por Módulo
 1. **Noticias**: Crear, editar o borrar noticias. La imagen se optimiza y se guarda en `/data/imagenes/noticias`.
 2. **Manuales CITA**: Permite subir PDFs categorizados. El sistema crea las subcarpetas automáticamente.
-3. **Módulos SGI/RESPEL**: Actualizan directamente los bloques de código en los archivos HTML correspondientes.
+3. **Módulos de Archivos (SNIF/Provisión/Red)**: Gestión de documentos específicos de GIT y Talento Humano con carga directa al sistema de archivos.
+4. **Módulos SGI/RESPEL**: Actualizan directamente los bloques de código en los archivos HTML correspondientes.
 
 ---
 
@@ -96,6 +97,8 @@ node server.js
 | **Fase 4** | Documentación Maestra | Manuales técnicos y operativos. |
 | **Fase 5** | Migración a MongoDB | Persistencia escalable para Noticias y Agenda. |
 | **Fase 6** | Implementación CITA | CRUD completo para manuales técnicos CITA. |
+| **Fase 7** | Módulos de Archivos | CRUD para SNIF, Provisión de Empleos y Revisión de Red. |
+| **Fase 8** | Talento Humano y UX | Secciones de Convocatorias, Planes y ajuste de categorías. |
 
 ---
 
