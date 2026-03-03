@@ -101,6 +101,10 @@
                                 <path
                                     d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z" />
                             </svg> Revisi&oacute;n de Red</a></li>
+                    <li id="nav-snif"><a href="#"><svg viewBox="0 0 24 24">
+                                <path
+                                    d="M17 8C8 10 5.9 16.17 3.82 19.42L5.71 21l1-1.29C7.63 18.57 9 17 12 17c4 0 5.5-2.5 7-5 1.14-1.9 2-4 2-6 0-.88-.16-1.72-.42-2.5C19.79 4.5 18.5 5 17 5s-3 .82-3 2c0 1.1.9 2 2 2z" />
+                            </svg> SNIF</a></li>
                 </ul>
             </nav>
             <div class="admin-footer">
@@ -836,6 +840,39 @@
                         </form>
 
                         <div id="revisionRedItemsList" class="news-management-list">
+                            <!-- Items inyectados por JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SNIF Section -->
+                <div id="snifSection" class="admin-form-container hidden">
+                    <h2>Gesti&oacute;n &ndash; SNIF: Documentaci&oacute;n y Formatos</h2>
+                    <div id="snifManagementForm">
+                        <form id="snifForm" class="news-form"
+                            style="margin-bottom: 2rem; border-bottom: 1px solid #eee; padding-bottom: 2rem;">
+                            <div class="form-group">
+                                <label for="snifName">Nombre del Archivo / Documento</label>
+                                <input type="text" id="snifName" placeholder="Ej: Manual de Diligenciamiento SNIF 2023"
+                                    required>
+                            </div>
+                            <div class="form-group">
+                                <label for="snifFile">Archivo (PDF, Word, Excel, PPT, ZIP, Imagen)</label>
+                                <input type="file" id="snifFile"
+                                    accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png,.svg,.zip,.rar,.odt,.ods,.odp,.txt,.csv"
+                                    required>
+                                <small style="display:block; margin-top:0.3rem; color:#64748b;">
+                                    M&aacute;ximo 20 MB &middot; No se permiten .exe, .bat, .cmd, .js, .sh
+                                    &middot; Deja vac&iacute;o para conservar el archivo actual al editar.
+                                </small>
+                            </div>
+                            <div class="form-actions" id="snifFormActions">
+                                <button type="submit" class="btn-primary" id="snifSaveBtn">Subir Archivo</button>
+                                <div id="snifCancelContainer" style="display:inline-block;"></div>
+                            </div>
+                        </form>
+
+                        <div id="snifItemsList" class="news-management-list">
                             <!-- Items inyectados por JS -->
                         </div>
                     </div>

@@ -34,6 +34,7 @@ app.use('/api/manuales-sgi', require('./src/routes/manualesRoutes'));
 app.use('/api/cita', require('./src/routes/citaRoutes'));
 app.use('/api/sirh', require('./src/routes/sirhRoutes'));
 app.use('/api/revision-red', require('./src/routes/revisionRedRoutes'));
+app.use('/api/snif', require('./src/routes/snifRoutes'));
 
 
 app.get('/api/debug/error', (req, res) => {

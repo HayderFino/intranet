@@ -17,7 +17,8 @@ document.addEventListener('DOMContentLoaded', () => {
         vigilanciaControl: document.getElementById('vigilanciaControlSection'),
         cita: document.getElementById('citaSection'),
         sirh: document.getElementById('sirhSection'),
-        revisionRed: document.getElementById('revisionRedSection')
+        revisionRed: document.getElementById('revisionRedSection'),
+        snif: document.getElementById('snifSection')
     };
 
     const navItems = {
@@ -33,7 +34,8 @@ document.addEventListener('DOMContentLoaded', () => {
         vigilanciaControl: document.getElementById('nav-vigilancia-control'),
         cita: document.getElementById('nav-cita'),
         sirh: document.getElementById('nav-sirh'),
-        revisionRed: document.getElementById('nav-revision-red')
+        revisionRed: document.getElementById('nav-revision-red'),
+        snif: document.getElementById('nav-snif')
     };
 
     // --- Navigation Logic ---
@@ -110,6 +112,13 @@ document.addEventListener('DOMContentLoaded', () => {
         sections.revisionRed.classList.remove('hidden');
         navItems.revisionRed.classList.add('active');
         if (typeof RevisionRedAdmin !== 'undefined') RevisionRedAdmin.load();
+    };
+
+    navItems.snif.onclick = () => {
+        hideAll();
+        sections.snif.classList.remove('hidden');
+        navItems.snif.classList.add('active');
+        if (typeof SnifAdmin !== 'undefined') SnifAdmin.load();
     };
 
     // --- Procesos Misionales SGI (genérico) ---
@@ -1664,6 +1673,151 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('agendaForm').reset();
         };
     }
+
+    // --- SNIF Logic ---
+    const SnifAdmin = (() => {
+        const API = '/api/snif';
+        const MAX_SIZE_MB = 20;
+        const MAX_SIZE_BYTES = MAX_SIZE_MB * 1024 * 1024;
+        const FORBIDDEN_EXTS = ['.exe', '.bat', '.cmd', '.js', '.vbs', '.sh', '.ps1', '.msi', '.com'];
+
+        const elements = {
+            form: document.getElementById('snifForm'),
+            name: document.getElementById('snifName'),
+            file: document.getElementById('snifFile'),
+            saveBtn: document.getElementById('snifSaveBtn'),
+            list: document.getElementById('snifItemsList'),
+            editId: null,
+            cancelBtn: null
+        };
+
+        let items = [];
+
+        function init() {
+            if (!elements.form || !elements.list) return;
+
+            // Input oculto para ID en edición
+            let existingEditId = document.getElementById('snifEditId');
+            if (!existingEditId) {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.id = 'snifEditId';
+                elements.form.appendChild(input);
+                existingEditId = input;
+            }
+            elements.editId = existingEditId;
+
+            // Botón Cancelar Edición
+            const cancelContainer = document.getElementById('snifCancelContainer');
+            let existingCancelBtn = document.getElementById('snifCancelBtn');
+            if (cancelContainer && !existingCancelBtn) {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.id = 'snifCancelBtn';
+                btn.className = 'btn-secondary hidden';
+                btn.style.marginLeft = '0.5rem';
+                btn.innerText = 'Cancelar Edición';
+                cancelContainer.appendChild(btn);
+                existingCancelBtn = btn;
+                btn.onclick = resetForm;
+            }
+            elements.cancelBtn = existingCancelBtn;
+
+            elements.form.onsubmit = handleSubmit;
+            load();
+        }
+
+        async function load() {
+            if (!elements.list) return;
+            elements.list.innerHTML = '<p style="padding:1rem;">Cargando archivos SNIF...</p>';
+            try {
+                const res = await fetch(API);
+                items = await res.json();
+                render();
+            } catch (e) {
+                showToast('Error al cargar listado SNIF', 'error');
+            }
+        }
+
+        function render() {
+            if (items.length === 0) {
+                elements.list.innerHTML = '<p style="padding:1rem;">No hay archivos SNIF.</p>';
+                return;
+            }
+            elements.list.innerHTML = '';
+            items.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'news-manage-card';
+                card.innerHTML = `
+                    <div class="news-info">
+                        <div style="display:flex; align-items:center; gap:0.6rem; margin-bottom:0.3rem;">
+                            <span style="background:#e2e8f0; color:#475569; padding:2px 8px; border-radius:4px; font-size:0.7rem; font-weight:700;">${(item.type || 'PDF').toUpperCase()}</span>
+                        </div>
+                        <h4 style="margin:0;">${item.name}</h4>
+                    </div>
+                    <div class="card-actions">
+                        <a href="${item.href}" target="_blank" class="btn-secondary" style="text-decoration:none;">Descargar</a>
+                        <button class="btn-secondary btn-edit" data-id="${item.id}">Editar</button>
+                        <button class="btn-delete" data-id="${item.id}">Eliminar</button>
+                    </div>`;
+                elements.list.appendChild(card);
+            });
+            elements.list.querySelectorAll('.btn-edit').forEach(btn => btn.onclick = () => startEdit(items.find(i => i.id === btn.dataset.id)));
+            elements.list.querySelectorAll('.btn-delete').forEach(btn => btn.onclick = () => del(btn.dataset.id));
+        }
+
+        async function handleSubmit(e) {
+            e.preventDefault();
+            const id = elements.editId.value;
+            const file = elements.file.files[0];
+            if (!id && !file) return showToast('Selecciona un archivo', 'info');
+
+            showToast(id ? 'Actualizando...' : 'Subiendo...', 'info');
+            const fd = new FormData();
+            fd.append('name', elements.name.value);
+            if (file) fd.append('file', file);
+
+            try {
+                const res = await fetch(id ? `${API}/${id}` : API, { method: id ? 'PUT' : 'POST', body: fd });
+                if (res.ok) {
+                    showToast(id ? 'Actualizado' : 'Subido');
+                    resetForm();
+                    load();
+                } else showToast('Error al procesar', 'error');
+            } catch (err) { showToast('Error de red', 'error'); }
+        }
+
+        function startEdit(item) {
+            if (!item) return;
+            elements.editId.value = item.id;
+            elements.name.value = item.name;
+            elements.saveBtn.innerText = 'Actualizar';
+            if (elements.cancelBtn) elements.cancelBtn.classList.remove('hidden');
+            elements.file.required = false;
+            elements.form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function resetForm() {
+            elements.form.reset();
+            elements.editId.value = '';
+            elements.saveBtn.innerText = 'Subir Archivo';
+            if (elements.cancelBtn) elements.cancelBtn.classList.add('hidden');
+            elements.file.required = true;
+        }
+
+        async function del(id) {
+            if (!confirm('¿Eliminar archivo?')) return;
+            try {
+                const res = await fetch(`${API}/${id}`, { method: 'DELETE' });
+                if (res.ok) { showToast('Eliminado'); load(); }
+            } catch (err) { showToast('Error de red', 'error'); }
+        }
+
+        return { init, load };
+    })();
+
+    window.SnifAdmin = SnifAdmin;
+    if (document.getElementById('snifSection')) SnifAdmin.init();
 
     // --- CITA Logic ---
     // Moved to cita-admin.js for modularity and isolation.
