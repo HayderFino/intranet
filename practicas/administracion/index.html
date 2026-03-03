@@ -709,22 +709,23 @@
                                 <div class="form-group">
                                     <label for="citaCategory">Categoría</label>
                                     <select id="citaCategory" required>
-                                        <option value="guias liquidaciones">Guías - Liquidaciones</option>
-                                        <option value="guias permisos">Guías - Permisos y Trámites</option>
-                                        <option value="guias sancionatorias">Guías - Sancionatorio</option>
-                                        <option value="procedimientos permisos">Procedimientos - Permisos y Trámites
-                                        </option>
-                                        <option value="procedimientos sancionatorios">Procedimientos - Sancionatorios
+                                        <option value="GUÍAS - LIQUIDACIONES">Guías - Liquidaciones</option>
+                                        <option value="GUÍAS - PERMISOS Y TRÁMITES">Guías - Permisos y Trámites</option>
+                                        <option value="GUÍAS - SANCIONATORIO">Guías - Sancionatorio</option>
+                                        <option value="PROCEDIMIENTOS - PERMISOS Y TRÁMITES">Procedimientos - Permisos y
+                                            Trámites</option>
+                                        <option value="PROCEDIMIENTOS - SANCIONATORIOS">Procedimientos - Sancionatorios
                                         </option>
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="citaFile">Subir Archivo PDF</label>
-                                    <input type="file" id="citaFile" accept=".pdf" required>
+                                    <label for="citaFile">Archivo (PDF, Word, Excel, ZIP, Imagen)</label>
+                                    <input type="file" id="citaFile"
+                                        accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.png,.zip" required>
                                 </div>
                             </div>
 
-                            <div class="form-actions">
+                            <div class="form-actions" id="citaFormActions">
                                 <button type="submit" class="btn-primary" id="citaSaveBtn">Guardar Manual</button>
                             </div>
                         </form>
@@ -767,6 +768,7 @@
     <div id="toast" class="toast hidden">Noticia guardada con &eacute;xito!</div>
 
     <script src="admin-logic.js"></script>
+    <script src="cita-admin.js"></script>
 </body>
 
 </html>

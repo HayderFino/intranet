@@ -8,6 +8,7 @@ const upload = multer({ dest: 'uploads/' });
 
 router.get('/', CitaController.getAll);
 router.post('/', upload.single('file'), CitaController.create);
+router.put('/:id', upload.single('file'), CitaController.update);
 router.delete('/:id', CitaController.delete);
 
 module.exports = router;

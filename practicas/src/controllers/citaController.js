@@ -16,44 +16,76 @@ const CitaController = {
         try {
             const { name, category } = req.body;
             let fileUrl = '#';
+            let size = '0 KB';
+            let type = 'Desconocido';
 
             if (req.file) {
-                // Ensure unique filename to avoid overwrites
+                // Validation
+                const forbidden = ['.exe', '.bat', '.cmd', '.js', '.vbs', '.sh'];
+                const ext = path.extname(req.file.originalname).toLowerCase();
+                if (forbidden.includes(ext)) {
+                    fs.unlinkSync(req.file.path);
+                    return res.status(400).json({ message: 'Tipo de archivo no permitido por seguridad.' });
+                }
+
+                // Metadata
+                size = (req.file.size / 1024).toFixed(1) + ' KB';
+                if (req.file.size > 1024 * 1024) size = (req.file.size / (1024 * 1024)).toFixed(1) + ' MB';
+                type = ext.replace('.', '').toUpperCase();
+
                 const filename = `${Date.now()}-${req.file.originalname}`;
-
-                // Determine destination based on category
-                const categoryPaths = {
-                    'guias liquidaciones': 'data/menu header/git/manuales de usuario/cita/guias liquidaciones',
-                    'guias permisos': 'data/menu header/git/manuales de usuario/cita/guias permisos',
-                    'guias sancionatorias': 'data/menu header/git/manuales de usuario/cita/guias sancionatorias',
-                    'procedimientos permisos': 'data/menu header/git/manuales de usuario/cita/procedimientos permisos',
-                    'procedimientos sancionatorios': 'data/menu header/git/manuales de usuario/cita/procedimientos sancionatorios'
-                };
-
-                const relativeDest = categoryPaths[category] || 'data/menu header/git/manuales de usuario/cita';
+                const relativeDest = `data/menu header/git/manuales de usuario/cita/${category}`;
                 const destDir = path.join(__dirname, '../../', relativeDest);
 
-                if (!fs.existsSync(destDir)) {
-                    fs.mkdirSync(destDir, { recursive: true });
+                if (!fs.existsSync(destDir)) fs.mkdirSync(destDir, { recursive: true });
+
+                const finalPath = path.join(destDir, filename);
+                fs.renameSync(req.file.path, finalPath);
+                fileUrl = `../../../${relativeDest}/${filename}`;
+            }
+
+            const id = CitaModel.create({ name, category, fileUrl, size, type });
+            res.status(201).json({ id, message: 'Manual CITA creado con éxito' });
+        } catch (error) {
+            res.status(500).json({ message: 'Error al crear manual CITA', error: error.message });
+        }
+    },
+
+    update: (req, res) => {
+        try {
+            const { id } = req.params;
+            const { name, category } = req.body;
+            let updateData = { name, category };
+
+            if (req.file) {
+                const ext = path.extname(req.file.originalname).toLowerCase();
+                const forbidden = ['.exe', '.bat', '.cmd', '.js'];
+                if (forbidden.includes(ext)) {
+                    fs.unlinkSync(req.file.path);
+                    return res.status(400).json({ message: 'Archivo prohibido.' });
                 }
+
+                const size = (req.file.size / 1024).toFixed(1) + ' KB';
+                const type = ext.replace('.', '').toUpperCase();
+                const filename = `${Date.now()}-${req.file.originalname}`;
+                const relativeDest = `data/menu header/git/manuales de usuario/cita/${category}`;
+                const destDir = path.join(__dirname, '../../', relativeDest);
+
+                if (!fs.existsSync(destDir)) fs.mkdirSync(destDir, { recursive: true });
 
                 const finalPath = path.join(destDir, filename);
                 fs.renameSync(req.file.path, finalPath);
 
-                // Calculate relative path for HTML from the HTML file location
-                // cita.html is in header_menu/git/manuales_usuario/cita.html
-                // data is in ../../../data/...
-                fileUrl = `../../../${relativeDest}/${filename}`;
+                updateData.fileUrl = `../../../${relativeDest}/${filename}`;
+                updateData.size = size;
+                updateData.type = type;
             }
 
-            const id = CitaModel.create({ name, category, fileUrl });
-            if (id) {
-                res.status(201).json({ id, message: 'Manual CITA creado con éxito' });
-            } else {
-                res.status(400).json({ message: 'No se pudo crear el manual CITA. Categoría no encontrada?' });
-            }
+            const success = CitaModel.update(id, updateData);
+            if (success) res.json({ message: 'Manual actualizado con éxito' });
+            else res.status(404).json({ message: 'Manual no encontrado' });
         } catch (error) {
-            res.status(500).json({ message: 'Error al crear manual CITA', error: error.message });
+            res.status(500).json({ message: 'Error al actualizar', error: error.message });
         }
     },
 
@@ -61,11 +93,8 @@ const CitaController = {
         try {
             const { id } = req.params;
             const success = CitaModel.delete(id);
-            if (success) {
-                res.json({ message: 'Manual CITA eliminado con éxito' });
-            } else {
-                res.status(404).json({ message: 'Manual CITA no encontrado' });
-            }
+            if (success) res.json({ message: 'Manual CITA eliminado con éxito' });
+            else res.status(404).json({ message: 'Manual CITA no encontrado' });
         } catch (error) {
             res.status(500).json({ message: 'Error al eliminar manual CITA', error: error.message });
         }
