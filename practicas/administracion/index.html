@@ -105,6 +105,20 @@
                                 <path
                                     d="M17 8C8 10 5.9 16.17 3.82 19.42L5.71 21l1-1.29C7.63 18.57 9 17 12 17c4 0 5.5-2.5 7-5 1.14-1.9 2-4 2-6 0-.88-.16-1.72-.42-2.5C19.79 4.5 18.5 5 17 5s-3 .82-3 2c0 1.1.9 2 2 2z" />
                             </svg> SNIF</a></li>
+
+                    <span class="nav-group-title">Talento Humano</span>
+                    <li id="nav-manual-funciones"><a href="#"><svg viewBox="0 0 24 24">
+                                <path
+                                    d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
+                            </svg> Manual de Funciones</a></li>
+                    <li id="nav-plan-monitoreo"><a href="#"><svg viewBox="0 0 24 24">
+                                <path
+                                    d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zM7 10h2v7H7zm4-3h2v10h-2zm4 6h2v4h-2z" />
+                            </svg> Plan de Monitoreo SIGEP</a></li>
+                    <li id="nav-planes-talento"><a href="#"><svg viewBox="0 0 24 24">
+                                <path
+                                    d="M19 3h-4.18C14.4 1.84 13.3 1 12 1s-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z" />
+                            </svg> Planes de Talento Humano</a></li>
                 </ul>
             </nav>
             <div class="admin-footer">
@@ -878,6 +892,129 @@
                     </div>
                 </div>
 
+                <!-- Manual de Funciones y Competencias Section -->
+                <div id="manualFuncionesSection" class="admin-form-container hidden">
+                    <h2>Gesti&oacute;n &ndash; Manual de Funciones y Competencias</h2>
+                    <div id="manualFuncionesManagementForm">
+                        <form id="manualFuncionesForm" class="news-form"
+                            style="margin-bottom: 2rem; border-bottom: 1px solid #eee; padding-bottom: 2rem;">
+                            <div class="form-group">
+                                <label for="manualFuncionesName">Nombre del Documento</label>
+                                <input type="text" id="manualFuncionesName" placeholder="Ej: Resolución 0904 de 2016"
+                                    required>
+                            </div>
+                            <div class="form-group">
+                                <label for="manualFuncionesFile">Archivo (PDF, Word, Excel)</label>
+                                <input type="file" id="manualFuncionesFile" accept=".pdf,.doc,.docx,.xls,.xlsx"
+                                    required>
+                                <small style="display:block; margin-top:0.3rem; color:#64748b;">
+                                    M&aacute;ximo 20 MB &middot; Formatos permitidos: PDF, Word, Excel.
+                                </small>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn-primary" id="manualFuncionesSaveBtn">Subir
+                                    Manual</button>
+                                <div id="manualFuncionesCancelContainer" style="display:inline-block;"></div>
+                            </div>
+                        </form>
+
+                        <div id="manualFuncionesItemsList" class="news-management-list">
+                            <!-- Listado de manuales -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Plan de Monitoreo del SIGEP Section -->
+                <div id="planMonitoreoSection" class="admin-form-container hidden">
+                    <h2>Gesti&oacute;n &ndash; Plan de Monitoreo del SIGEP</h2>
+                    <div id="planMonitoreoManagementForm">
+                        <form id="planMonitoreoForm" class="news-form"
+                            style="margin-bottom: 2rem; border-bottom: 1px solid #eee; padding-bottom: 2rem;">
+                            <div class="form-group">
+                                <label for="planMonitoreoName">Nombre del Documento</label>
+                                <input type="text" id="planMonitoreoName" placeholder="Ej: Reporte Seguimiento 2024"
+                                    required>
+                            </div>
+                            <div class="form-group">
+                                <label for="planMonitoreoFile">Archivo (PDF, Word, Excel)</label>
+                                <input type="file" id="planMonitoreoFile" accept=".pdf,.doc,.docx,.xls,.xlsx" required>
+                                <small style="display:block; margin-top:0.3rem; color:#64748b;">
+                                    M&aacute;ximo 20 MB &middot; Formatos permitidos: PDF, Word, Excel.
+                                </small>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn-primary" id="planMonitoreoSaveBtn">Subir
+                                    Archivo</button>
+                                <div id="planMonitoreoCancelContainer" style="display:inline-block;"></div>
+                            </div>
+                        </form>
+
+                        <div id="planMonitoreoItemsList" class="news-management-list">
+                            <!-- Listado de archivos -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Planes de Talento Humano Section -->
+                <div id="planesTalentoSection" class="admin-form-container hidden">
+                    <h2>Gesti&oacute;n &ndash; Planes de Talento Humano</h2>
+                    <div id="planesTalentoManagement">
+                        <form id="planesTalentoForm" class="news-form"
+                            style="margin-bottom: 2rem; border-bottom: 1px solid #eee; padding-bottom: 2rem;">
+                            <div class="form-group">
+                                <label for="planesTalentoName">Nombre del Documento</label>
+                                <input type="text" id="planesTalentoName" placeholder="Ej: Plan Anual de Vacantes 2026"
+                                    required>
+                            </div>
+                            <div class="form-group">
+                                <label for="planesTalentoCategory">Categor&iacute;a (Carpeta)</label>
+                                <select id="planesTalentoCategory" required>
+                                    <option value="">Seleccione Categor&iacute;a...</option>
+                                    <option value="Plan Anual de Vacantes">Plan Anual de Vacantes</option>
+                                    <option value="Bienestar e Incentivos">Bienestar e Incentivos</option>
+                                    <option value="Previsión de Recurso Humano">Previsi&oacute;n de Recurso Humano
+                                    </option>
+                                    <option value="Plan Estratégico TH">Plan Estrat&eacute;gico TH</option>
+                                    <option value="Plan de Capacitación (PIC)">Plan de Capacitaci&oacute;n (PIC)
+                                    </option>
+                                    <option value="Resoluciones - 2026">Resoluciones - 2026</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="planesTalentoFile">Archivo (PDF, Word, Excel, PPT)</label>
+                                <input type="file" id="planesTalentoFile" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx"
+                                    required>
+                                <small style="display:block; margin-top:0.3rem; color:#64748b;">M&aacute;ximo 10
+                                    MB</small>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn-primary" id="planesTalentoSaveBtn">Subir
+                                    Documento</button>
+                                <div id="planesTalentoCancelContainer" style="display:inline-block;"></div>
+                            </div>
+                        </form>
+
+                        <div class="filter-controls"
+                            style="margin-bottom: 1.5rem; display: flex; gap: 1rem; align-items: center;">
+                            <label>Filtrar por Categor&iacute;a:</label>
+                            <select id="filterPlanesTalento"
+                                style="padding: 0.5rem; border-radius: 8px; border: 1px solid #ddd;">
+                                <option value="all">Todas las categor&iacute;as</option>
+                                <option value="Plan Anual de Vacantes">Plan Anual de Vacantes</option>
+                                <option value="Bienestar e Incentivos">Bienestar e Incentivos</option>
+                                <option value="Previsión de Recurso Humano">Previsi&oacute;n de Recurso Humano</option>
+                                <option value="Plan Estratégico TH">Plan Estrat&eacute;gico TH</option>
+                                <option value="Plan de Capacitación (PIC)">Plan de Capacitaci&oacute;n (PIC)</option>
+                                <option value="Resoluciones - 2026">Resoluciones - 2026</option>
+                            </select>
+                        </div>
+
+                        <div id="planesTalentoItemsList" class="news-management-list">
+                            <!-- Listado de archivos -->
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Preview Area -->
                 <div id="previewArea" class="preview-area hidden">
                     <h3>Vista Previa</h3>
@@ -896,6 +1033,9 @@
     <script src="cita-admin.js"></script>
     <script src="sirh-admin.js"></script>
     <script src="revision-red-admin.js"></script>
+    <script src="manual-funciones-admin.js"></script>
+    <script src="plan-monitoreo-admin.js"></script>
+    <script src="planes-talento-admin.js"></script>
 </body>
 
 </html>

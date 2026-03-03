@@ -35,6 +35,9 @@ app.use('/api/cita', require('./src/routes/citaRoutes'));
 app.use('/api/sirh', require('./src/routes/sirhRoutes'));
 app.use('/api/revision-red', require('./src/routes/revisionRedRoutes'));
 app.use('/api/snif', require('./src/routes/snifRoutes'));
+app.use('/api/manual-funciones', require('./src/routes/manualFuncionesRoutes'));
+app.use('/api/plan-monitoreo', require('./src/routes/planMonitoreoRoutes'));
+app.use('/api/planes-talento', require('./src/routes/planesTalentoRoutes'));
 
 
 app.get('/api/debug/error', (req, res) => {

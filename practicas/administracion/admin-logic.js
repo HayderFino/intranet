@@ -18,7 +18,10 @@ document.addEventListener('DOMContentLoaded', () => {
         cita: document.getElementById('citaSection'),
         sirh: document.getElementById('sirhSection'),
         revisionRed: document.getElementById('revisionRedSection'),
-        snif: document.getElementById('snifSection')
+        snif: document.getElementById('snifSection'),
+        manualFunciones: document.getElementById('manualFuncionesSection'),
+        planMonitoreo: document.getElementById('planMonitoreoSection'),
+        planesTalento: document.getElementById('planesTalentoSection')
     };
 
     const navItems = {
@@ -35,7 +38,10 @@ document.addEventListener('DOMContentLoaded', () => {
         cita: document.getElementById('nav-cita'),
         sirh: document.getElementById('nav-sirh'),
         revisionRed: document.getElementById('nav-revision-red'),
-        snif: document.getElementById('nav-snif')
+        snif: document.getElementById('nav-snif'),
+        manualFunciones: document.getElementById('nav-manual-funciones'),
+        planMonitoreo: document.getElementById('nav-plan-monitoreo'),
+        planesTalento: document.getElementById('nav-planes-talento')
     };
 
     // --- Navigation Logic ---
@@ -119,6 +125,27 @@ document.addEventListener('DOMContentLoaded', () => {
         sections.snif.classList.remove('hidden');
         navItems.snif.classList.add('active');
         if (typeof SnifAdmin !== 'undefined') SnifAdmin.load();
+    };
+
+    navItems.manualFunciones.onclick = () => {
+        hideAll();
+        sections.manualFunciones.classList.remove('hidden');
+        navItems.manualFunciones.classList.add('active');
+        if (typeof ManualFuncionesAdmin !== 'undefined') ManualFuncionesAdmin.load();
+    };
+
+    navItems.planMonitoreo.onclick = () => {
+        hideAll();
+        sections.planMonitoreo.classList.remove('hidden');
+        navItems.planMonitoreo.classList.add('active');
+        if (typeof PlanMonitoreoAdmin !== 'undefined') PlanMonitoreoAdmin.load();
+    };
+
+    navItems.planesTalento.onclick = () => {
+        hideAll();
+        sections.planesTalento.classList.remove('hidden');
+        navItems.planesTalento.classList.add('active');
+        if (typeof PlanesTalentoAdmin !== 'undefined') PlanesTalentoAdmin.load();
     };
 
     // --- Procesos Misionales SGI (genérico) ---
@@ -1823,6 +1850,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Moved to cita-admin.js for modularity and isolation.
 
     // --- Helper ---
+    window.showToast = showToast;
     function showToast(message, type = 'success') {
         toast.innerHTML = message;
         toast.style.backgroundColor = type === 'success' ? '#10b981' : (type === 'error' ? '#ef4444' : '#3b82f6');
