@@ -32,6 +32,8 @@ app.use('/api/boletines', require('./src/routes/boletinesRoutes'));
 app.use('/api/pcb', require('./src/routes/pcbRoutes'));
 app.use('/api/manuales-sgi', require('./src/routes/manualesRoutes'));
 app.use('/api/cita', require('./src/routes/citaRoutes'));
+app.use('/api/sirh', require('./src/routes/sirhRoutes'));
+app.use('/api/revision-red', require('./src/routes/revisionRedRoutes'));
 
 
 app.get('/api/debug/error', (req, res) => {

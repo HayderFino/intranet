@@ -93,6 +93,14 @@
                                 <path
                                     d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
                             </svg> CITA</a></li>
+                    <li id="nav-sirh"><a href="#"><svg viewBox="0 0 24 24">
+                                <path
+                                    d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-6 10H6v-2h8v2zm4-4H6v-2h12v2z" />
+                            </svg> SIRH</a></li>
+                    <li id="nav-revision-red"><a href="#"><svg viewBox="0 0 24 24">
+                                <path
+                                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z" />
+                            </svg> Revisi&oacute;n de Red</a></li>
                 </ul>
             </nav>
             <div class="admin-footer">
@@ -753,6 +761,86 @@
                     </div>
                 </div>
 
+                <!-- SIRH Section -->
+                <div id="sirhSection" class="admin-form-container hidden">
+                    <h2>Gestión de Manuales SIRH</h2>
+                    <div id="sirhManagementForm">
+                        <form id="sirhForm" class="news-form"
+                            style="margin-bottom: 2rem; border-bottom: 1px solid #eee; padding-bottom: 2rem;">
+                            <div class="form-group">
+                                <label for="sirhName">Nombre del Manual / Documento</label>
+                                <input type="text" id="sirhName" placeholder="Ej: Instructivo Registro de Fuentes"
+                                    required>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="sirhCategory">Clasificación</label>
+                                    <select id="sirhCategory" required>
+                                        <option value="Instructivos">Instructivos</option>
+                                        <option value="Documentos">Documentos</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="sirhFile">Archivo (PDF, Word, Excel, ZIP, Imagen)</label>
+                                    <input type="file" id="sirhFile"
+                                        accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.png,.zip" required>
+                                </div>
+                            </div>
+
+                            <div class="form-actions" id="sirhFormActions">
+                                <button type="submit" class="btn-primary" id="sirhSaveBtn">Guardar Archivo</button>
+                                <div id="sirhCancelContainer" style="display:inline-block;"></div>
+                            </div>
+                        </form>
+
+                        <div class="list-filter"
+                            style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1rem; background: #f8fafc; padding: 1rem; border-radius: 8px; border: 1px solid #e2e8f0;">
+                            <label for="sirhFilterCategory"
+                                style="font-weight: 600; color: #64748b; font-size: 0.9rem;">Filtrar por
+                                Clase:</label>
+                            <select id="sirhFilterCategory"
+                                style="flex: 1; max-width: 300px; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.9rem;">
+                                <option value="all">Todas las clases</option>
+                                <option value="Instructivos">Instructivos</option>
+                                <option value="Documentos">Documentos</option>
+                            </select>
+                        </div>
+
+                        <div id="sirhItemsList" class="news-management-list">
+                            <!-- Items inyectados por JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Revision Red Section -->
+                <div id="revisionRedSection" class="admin-form-container hidden">
+                    <h2>Gesti&oacute;n – Revisi&oacute;n de Red Primer Nivel</h2>
+                    <div id="revisionRedManagementForm">
+                        <form id="revisionRedForm" class="news-form"
+                            style="margin-bottom: 2rem; border-bottom: 1px solid #eee; padding-bottom: 2rem;">
+                            <div class="form-group">
+                                <label for="revisionRedName">Nombre del Archivo / Gu&iacute;a</label>
+                                <input type="text" id="revisionRedName" placeholder="Ej: Guía de Usuario Vélez"
+                                    required>
+                            </div>
+                            <div class="form-group">
+                                <label for="revisionRedFile">Archivo (PDF, Word, Excel, ZIP, Imagen)</label>
+                                <input type="file" id="revisionRedFile"
+                                    accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.png,.zip" required>
+                            </div>
+                            <div class="form-actions" id="revisionRedFormActions">
+                                <button type="submit" class="btn-primary" id="revisionRedSaveBtn">Subir Archivo</button>
+                                <div id="revisionRedCancelContainer" style="display:inline-block;"></div>
+                            </div>
+                        </form>
+
+                        <div id="revisionRedItemsList" class="news-management-list">
+                            <!-- Items inyectados por JS -->
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Preview Area -->
                 <div id="previewArea" class="preview-area hidden">
                     <h3>Vista Previa</h3>
@@ -769,6 +857,8 @@
 
     <script src="admin-logic.js"></script>
     <script src="cita-admin.js"></script>
+    <script src="sirh-admin.js"></script>
+    <script src="revision-red-admin.js"></script>
 </body>
 
 </html>

@@ -1,20 +1,20 @@
 /**
- * CITA Admin Module - Isolated CRUD logic
- * Path: /administracion/cita-admin.js
+ * SIRH Admin Module - Isolated CRUD logic
+ * Path: /administracion/sirh-admin.js
  */
 
-const CitaAdmin = (() => {
+const SirhAdmin = (() => {
     // --- Config & State ---
-    const API = '/api/cita';
+    const API = '/api/sirh';
     const elements = {
-        form: document.getElementById('citaForm'),
-        editId: null, // We'll create this if it doesn't exist
-        name: document.getElementById('citaName'),
-        category: document.getElementById('citaCategory'),
-        file: document.getElementById('citaFile'),
-        saveBtn: document.getElementById('citaSaveBtn'),
-        list: document.getElementById('citaItemsList'),
-        filter: document.getElementById('citaFilterCategory'),
+        form: document.getElementById('sirhForm'),
+        editId: null,
+        name: document.getElementById('sirhName'),
+        category: document.getElementById('sirhCategory'),
+        file: document.getElementById('sirhFile'),
+        saveBtn: document.getElementById('sirhSaveBtn'),
+        list: document.getElementById('sirhItemsList'),
+        filter: document.getElementById('sirhFilterCategory'),
         cancelBtn: null
     };
 
@@ -22,32 +22,33 @@ const CitaAdmin = (() => {
 
     // --- Initialization ---
     function init() {
-        console.log('CITAdmin initialized');
+        console.log('SIRHAdmin initialized');
 
         // Ensure hidden edit ID input exists
-        if (!document.getElementById('citaEditId')) {
+        if (!document.getElementById('sirhEditId')) {
             const input = document.createElement('input');
             input.type = 'hidden';
-            input.id = 'citaEditId';
+            input.id = 'sirhEditId';
             elements.form.appendChild(input);
             elements.editId = input;
         } else {
-            elements.editId = document.getElementById('citaEditId');
+            elements.editId = document.getElementById('sirhEditId');
         }
 
         // Ensure Cancel Edit button exists
-        if (!document.getElementById('citaCancelBtn')) {
+        const cancelContainer = document.getElementById('sirhCancelContainer');
+        if (cancelContainer && !document.getElementById('sirhCancelBtn')) {
             const btn = document.createElement('button');
             btn.type = 'button';
-            btn.id = 'citaCancelBtn';
+            btn.id = 'sirhCancelBtn';
             btn.className = 'btn-secondary hidden';
             btn.style.marginLeft = '0.5rem';
             btn.innerText = 'Cancelar Edición';
-            elements.form.querySelector('.form-actions').appendChild(btn);
+            cancelContainer.appendChild(btn);
             elements.cancelBtn = btn;
             btn.onclick = resetForm;
         } else {
-            elements.cancelBtn = document.getElementById('citaCancelBtn');
+            elements.cancelBtn = document.getElementById('sirhCancelBtn');
         }
 
         // Events
@@ -59,7 +60,7 @@ const CitaAdmin = (() => {
 
     // --- Core Actions ---
     async function load() {
-        elements.list.innerHTML = '<p style="padding:1rem;">Cargando manuales CITA...</p>';
+        elements.list.innerHTML = '<p style="padding:1rem;">Cargando manuales SIRH...</p>';
         try {
             const res = await fetch(API);
             items = await res.json();
@@ -76,7 +77,7 @@ const CitaAdmin = (() => {
         if (filtered.length === 0) {
             elements.list.innerHTML = `
                 <div style="padding: 3rem; text-align: center; color: #64748b; background: #f8fafc; border-radius: 12px; border: 2px dashed #e2e8f0;">
-                    <p>No se encontraron archivos en esta categoría.</p>
+                    <p>No se encontraron archivos en esta clasificación.</p>
                 </div>`;
             return;
         }
@@ -149,7 +150,7 @@ const CitaAdmin = (() => {
 
             const res = await fetch(url, options);
             if (res.ok) {
-                showNotify(id ? 'Manual actualizado' : 'Manual subido con éxito');
+                showNotify(id ? 'Archivo actualizado' : 'Archivo subido con éxito');
                 resetForm();
                 load();
             } else {
@@ -165,13 +166,11 @@ const CitaAdmin = (() => {
         if (!item) return;
         elements.editId.value = item.id;
         elements.name.value = item.name;
-        // Search category name in category mapping (it might be encoded or exact)
-        // We set it exactly as it is since we updated our select values
         elements.category.value = item.category;
 
-        elements.saveBtn.innerText = 'Actualizar Manual';
-        elements.cancelBtn.classList.remove('hidden');
-        elements.file.required = false; // Not required for update
+        elements.saveBtn.innerText = 'Actualizar Archivo';
+        if (elements.cancelBtn) elements.cancelBtn.classList.remove('hidden');
+        elements.file.required = false;
 
         elements.form.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
@@ -179,8 +178,8 @@ const CitaAdmin = (() => {
     function resetForm() {
         elements.form.reset();
         elements.editId.value = '';
-        elements.saveBtn.innerText = 'Guardar Manual';
-        elements.cancelBtn.classList.add('hidden');
+        elements.saveBtn.innerText = 'Guardar Archivo';
+        if (elements.cancelBtn) elements.cancelBtn.classList.add('hidden');
         elements.file.required = true;
     }
 
@@ -211,10 +210,9 @@ const CitaAdmin = (() => {
     return { init, load };
 })();
 
-// Auto-init for isolation
+// Auto-init
 document.addEventListener('DOMContentLoaded', () => {
-    // We wait a bit to ensure elements are present if they are dynamic (though they aren't here)
-    if (document.getElementById('citaSection')) {
-        CitaAdmin.init();
+    if (document.getElementById('sirhSection')) {
+        SirhAdmin.init();
     }
 });

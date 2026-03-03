@@ -15,7 +15,9 @@ document.addEventListener('DOMContentLoaded', () => {
         adminRecursos: document.getElementById('adminRecursosSection'),
         planeacionAmbiental: document.getElementById('planeacionAmbientalSection'),
         vigilanciaControl: document.getElementById('vigilanciaControlSection'),
-        cita: document.getElementById('citaSection')
+        cita: document.getElementById('citaSection'),
+        sirh: document.getElementById('sirhSection'),
+        revisionRed: document.getElementById('revisionRedSection')
     };
 
     const navItems = {
@@ -29,7 +31,9 @@ document.addEventListener('DOMContentLoaded', () => {
         adminRecursos: document.getElementById('nav-admin-recursos'),
         planeacionAmbiental: document.getElementById('nav-planeacion-ambiental'),
         vigilanciaControl: document.getElementById('nav-vigilancia-control'),
-        cita: document.getElementById('nav-cita')
+        cita: document.getElementById('nav-cita'),
+        sirh: document.getElementById('nav-sirh'),
+        revisionRed: document.getElementById('nav-revision-red')
     };
 
     // --- Navigation Logic ---
@@ -91,7 +95,21 @@ document.addEventListener('DOMContentLoaded', () => {
         hideAll();
         sections.cita.classList.remove('hidden');
         navItems.cita.classList.add('active');
-        loadCitaList();
+        if (typeof CitaAdmin !== 'undefined') CitaAdmin.load();
+    };
+
+    navItems.sirh.onclick = () => {
+        hideAll();
+        sections.sirh.classList.remove('hidden');
+        navItems.sirh.classList.add('active');
+        if (typeof SirhAdmin !== 'undefined') SirhAdmin.load();
+    };
+
+    navItems.revisionRed.onclick = () => {
+        hideAll();
+        sections.revisionRed.classList.remove('hidden');
+        navItems.revisionRed.classList.add('active');
+        if (typeof RevisionRedAdmin !== 'undefined') RevisionRedAdmin.load();
     };
 
     // --- Procesos Misionales SGI (genérico) ---
