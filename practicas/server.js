@@ -38,6 +38,8 @@ app.use('/api/snif', require('./src/routes/snifRoutes'));
 app.use('/api/manual-funciones', require('./src/routes/manualFuncionesRoutes'));
 app.use('/api/plan-monitoreo', require('./src/routes/planMonitoreoRoutes'));
 app.use('/api/planes-talento', require('./src/routes/planesTalentoRoutes'));
+app.use('/api/convocatorias', require('./src/routes/convocatoriasRoutes'));
+app.use('/api/estudios-tecnicos', require('./src/routes/estudiosTecnicosRoutes'));
 
 
 app.get('/api/debug/error', (req, res) => {

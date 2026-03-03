@@ -337,10 +337,11 @@ button {
     justify-content: space-between;
     align-items: center;
     padding: 1rem 1.5rem;
-    background-color: #f8fafc;
+    background-color: var(--admin-white);
     border: 1px solid var(--admin-border);
     border-radius: 0.75rem;
     transition: all 0.2s;
+    gap: 1.5rem;
 }
 
 .news-manage-card:hover {
@@ -348,9 +349,17 @@ button {
     background-color: var(--admin-bg);
 }
 
+.news-info {
+    flex: 1;
+    min-width: 0;
+}
+
 .news-info h4 {
     font-size: 1rem;
     margin-bottom: 0.25rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .news-info p {

@@ -21,7 +21,8 @@ document.addEventListener('DOMContentLoaded', () => {
         snif: document.getElementById('snifSection'),
         manualFunciones: document.getElementById('manualFuncionesSection'),
         planMonitoreo: document.getElementById('planMonitoreoSection'),
-        planesTalento: document.getElementById('planesTalentoSection')
+        planesTalento: document.getElementById('planesTalentoSection'),
+        convocatorias: document.getElementById('convocatoriasSection')
     };
 
     const navItems = {
@@ -41,7 +42,8 @@ document.addEventListener('DOMContentLoaded', () => {
         snif: document.getElementById('nav-snif'),
         manualFunciones: document.getElementById('nav-manual-funciones'),
         planMonitoreo: document.getElementById('nav-plan-monitoreo'),
-        planesTalento: document.getElementById('nav-planes-talento')
+        planesTalento: document.getElementById('nav-planes-talento'),
+        convocatorias: document.getElementById('nav-convocatorias')
     };
 
     // --- Navigation Logic ---
@@ -146,6 +148,13 @@ document.addEventListener('DOMContentLoaded', () => {
         sections.planesTalento.classList.remove('hidden');
         navItems.planesTalento.classList.add('active');
         if (typeof PlanesTalentoAdmin !== 'undefined') PlanesTalentoAdmin.load();
+    };
+
+    navItems.convocatorias.onclick = () => {
+        hideAll();
+        sections.convocatorias.classList.remove('hidden');
+        navItems.convocatorias.classList.add('active');
+        if (typeof ConvocatoriasAdmin !== 'undefined') ConvocatoriasAdmin.load();
     };
 
     // --- Procesos Misionales SGI (genérico) ---
