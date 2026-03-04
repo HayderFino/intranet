@@ -1356,7 +1356,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Stats Logic ---
     async function updateStats() {
         try {
-            const [newsR, agendaR, planeacionR, mejoraR, controlIR, respelR, empresasR, ruaR] = await Promise.all([
+            const [newsR, agendaR, planeacionR, mejoraR, controlIR, respelR, empresasR, ruaR, snifR, provisionR, convocatoriasR] = await Promise.all([
                 fetch('/api/news'),
                 fetch('/api/agenda'),
                 fetch('/api/sgi/planeacion'),
@@ -1364,7 +1364,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 fetch('/api/sgi/control-interno'),
                 fetch('/api/respel/documentos'),
                 fetch('/api/respel/empresas'),
-                fetch('/api/rua')
+                fetch('/api/rua'),
+                fetch('/api/snif'),
+                fetch('/api/provision-empleos'),
+                fetch('/api/convocatorias')
             ]);
 
             // Verificamos individualmente para no romper todo si falla una carga
@@ -1376,6 +1379,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const respel = respelR.ok ? await respelR.json() : [];
             const empresas = empresasR.ok ? await empresasR.json() : [];
             const rua = ruaR.ok ? await ruaR.json() : [];
+            const snif = snifR.ok ? await snifR.json() : [];
+            const provision = provisionR.ok ? await provisionR.json() : [];
+            const convocatorias = convocatoriasR.ok ? await convocatoriasR.json() : [];
 
             document.getElementById('stat-news-count').textContent = news.length || 0;
             document.getElementById('stat-agenda-count').textContent = agenda.length || 0;
@@ -1383,6 +1389,9 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('stat-respel-count').textContent = respel.length || 0;
             document.getElementById('stat-empresas-count').textContent = empresas.length || 0;
             document.getElementById('stat-rua-count').textContent = rua.length || 0;
+            document.getElementById('stat-snif-count').textContent = snif.length || 0;
+            document.getElementById('stat-provision-count').textContent = provision.length || 0;
+            document.getElementById('stat-convocatorias-count').textContent = convocatorias.length || 0;
             document.getElementById('stat-last-update').textContent = new Date().toLocaleDateString('es-ES', { day: '2-digit', month: 'short' });
         } catch (e) {
             console.error('Error updating stats', e);
