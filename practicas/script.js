@@ -129,14 +129,17 @@ document.addEventListener('DOMContentLoaded', () => {
                         news.forEach(item => {
                             const newsCard = document.createElement('div');
                             newsCard.className = 'card news-item dynamic-news';
+                            newsCard.style.cursor = 'pointer';
                             newsCard.innerHTML = `
-                                <img src="${item.imageUrl}" alt="${item.title}" class="news-image" style="width: 100%; border-radius: 1rem;">
+                                <img src="${item.imageUrl}" alt="${item.title}" class="news-image" style="width: 100%; border-radius: 1rem; height: 200px; object-fit: cover;">
                                 <div class="news-body" style="padding: 1.5rem;">
-                                    <h3 style="margin-top: 0;">${item.title}</h3>
-                                    <p style="font-size: 0.9rem; color: var(--text-light); margin-top: 0.5rem;">${item.description}</p>
+                                    <h3 style="margin-top: 0; font-size: 1.1rem; line-height: 1.4;">${item.title}</h3>
+                                    <p class="news-description-truncated" style="font-size: 0.9rem; color: var(--text-light); margin-top: 0.5rem;">${item.description}</p>
                                 </div>
                             `;
-                            newsGrid.appendChild(newsCard); // Usamos appendChild porque el modelo ya viene ordenado [reciente -> antiguo]
+
+                            newsCard.onclick = () => openNewsModal(item);
+                            newsGrid.appendChild(newsCard);
                         });
                     } else {
                         newsGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #64748b; padding: 2rem;">No hay noticias que mostrar en este momento.</p>';
@@ -338,3 +341,47 @@ document.addEventListener('DOMContentLoaded', () => {
 
     loadRecentActivity();
 });
+
+// --- Funciones de Noticias (Vista Expandida) ---
+window.openNewsModal = (item) => {
+    // Si no existe el overlay en el DOM lo creamos
+    let overlay = document.querySelector('.modal-overlay');
+    if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.className = 'modal-overlay';
+        overlay.innerHTML = `
+            <div class="modal-content">
+                <button class="modal-close" onclick="closeNewsModal()">&times;</button>
+                <div id="modal-news-data"></div>
+            </div>
+        `;
+        overlay.onclick = (e) => {
+            if (e.target === overlay) closeNewsModal();
+        };
+        document.body.appendChild(overlay);
+    }
+
+    const modalData = document.getElementById('modal-news-data');
+    modalData.innerHTML = `
+        <div style="width: 100%; background: #0f172a; border-radius: 1rem; margin-bottom: 2rem; display: flex; align-items: center; justify-content: center; overflow: hidden; height: 450px; box-shadow: var(--shadow);">
+            <img src="${item.imageUrl}" alt="${item.title}" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+        </div>
+        <span style="background: rgba(5, 150, 105, 0.1); color: var(--primary); padding: 4px 12px; border-radius: 99px; font-size: 0.8rem; font-weight: 600;">${item.category || 'Noticias'}</span>
+        <h2 style="margin: 1rem 0; font-size: 2rem; color: #0f172a; line-height: 1.2;">${item.title}</h2>
+        <div style="font-size: 1.1rem; color: #475569; line-height: 1.7; white-space: pre-wrap;">${item.description}</div>
+        <div style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #f1f5f9; font-size: 0.8rem; color: #94a3b8;">
+            Publicado el ${new Date(item.createdAt || Date.now()).toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric' })}
+        </div>
+    `;
+
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+};
+
+window.closeNewsModal = () => {
+    const overlay = document.querySelector('.modal-overlay');
+    if (overlay) {
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+};
