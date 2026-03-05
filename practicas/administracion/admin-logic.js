@@ -25,7 +25,9 @@ document.addEventListener('DOMContentLoaded', () => {
         convocatorias: document.getElementById('convocatoriasSection'),
         estudiosTecnicos: document.getElementById('estudiosTecnicosSection'),
         provisionEmpleos: document.getElementById('provisionEmpleosSection'),
-        banner: document.getElementById('bannerSection')
+        banner: document.getElementById('bannerSection'),
+        eventos: document.getElementById('eventosSection'),
+        directorio: document.getElementById('directorioSection')
     };
 
 
@@ -50,7 +52,9 @@ document.addEventListener('DOMContentLoaded', () => {
         convocatorias: document.getElementById('nav-convocatorias'),
         estudiosTecnicos: document.getElementById('nav-estudios-tecnicos'),
         provisionEmpleos: document.getElementById('nav-provision-empleos'),
-        banner: document.getElementById('nav-banner')
+        banner: document.getElementById('nav-banner'),
+        eventos: document.getElementById('nav-eventos'),
+        directorio: document.getElementById('nav-directorio')
     };
 
 
@@ -184,6 +188,20 @@ document.addEventListener('DOMContentLoaded', () => {
         sections.banner.classList.remove('hidden');
         navItems.banner.classList.add('active');
         if (typeof BannerAdmin !== 'undefined') BannerAdmin.load();
+    };
+
+    navItems.eventos.onclick = () => {
+        hideAll();
+        sections.eventos.classList.remove('hidden');
+        navItems.eventos.classList.add('active');
+        if (typeof EventosAdmin !== 'undefined') EventosAdmin.load();
+    };
+
+    navItems.directorio.onclick = () => {
+        hideAll();
+        sections.directorio.classList.remove('hidden');
+        navItems.directorio.classList.add('active');
+        if (typeof DirectorioAdmin !== 'undefined') DirectorioAdmin.load();
     };
 
 

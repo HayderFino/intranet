@@ -31,14 +31,16 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 router.get('/', BannerController.getAllBanners);
-router.post('/', BannerController.createBanner);
 router.put('/:id', BannerController.updateBanner);
 router.delete('/:id', BannerController.deleteBanner);
 
-// Upload endpoint for multiple files (image and document)
+// Upload endpoint MUST be registered before POST '/' to avoid route shadowing
 router.post('/upload', upload.fields([
     { name: 'image', maxCount: 1 },
     { name: 'file', maxCount: 1 }
 ]), BannerController.uploadFiles);
+
+// Create banner (after /upload to avoid shadowing)
+router.post('/', BannerController.createBanner);
 
 module.exports = router;

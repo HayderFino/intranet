@@ -45,6 +45,9 @@ app.use('/api/convocatorias', require('./src/routes/convocatoriasRoutes'));
 app.use('/api/estudios-tecnicos', require('./src/routes/estudiosTecnicosRoutes'));
 app.use('/api/provision-empleos', require('./src/routes/provisionEmpleosRoutes'));
 app.use('/api/banner', require('./src/routes/bannerRoutes'));
+app.use('/api/eventos', require('./src/routes/eventosRoutes'));
+app.use('/api/directorio', require('./src/routes/directorioRoutes'));
+
 
 
 

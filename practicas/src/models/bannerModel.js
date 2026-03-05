@@ -2,15 +2,28 @@ const fs = require('fs');
 const path = require('path');
 
 const BANNER_JSON_PATH = path.join(__dirname, '../../data/banner.json');
+// Raíz del proyecto (dos niveles arriba de src/models)
+const ROOT = path.join(__dirname, '../../');
+
+function deleteFileIfExists(relativeUrl) {
+    if (!relativeUrl) return;
+    // Las URLs llegan como "/data/menu header/index/..."
+    const absPath = path.join(ROOT, relativeUrl.replace(/^\//, ''));
+    try {
+        if (fs.existsSync(absPath)) {
+            fs.unlinkSync(absPath);
+            console.log(`🗑️  Archivo eliminado: ${absPath}`);
+        }
+    } catch (err) {
+        console.error(`❌ No se pudo eliminar ${absPath}:`, err.message);
+    }
+}
 
 const BannerModel = {
     getAll: () => {
         try {
-            if (!fs.existsSync(BANNER_JSON_PATH)) {
-                return [];
-            }
-            const data = fs.readFileSync(BANNER_JSON_PATH, 'utf8');
-            return JSON.parse(data);
+            if (!fs.existsSync(BANNER_JSON_PATH)) return [];
+            return JSON.parse(fs.readFileSync(BANNER_JSON_PATH, 'utf8'));
         } catch (error) {
             console.error('Error al leer banner.json:', error);
             return [];
@@ -34,7 +47,8 @@ const BannerModel = {
             title: data.title || '',
             description: data.description || '',
             imageUrl: data.imageUrl || '',
-            link: data.link || '#',
+            fileUrl: data.fileUrl || '',       // ← incluir desde creación
+            link: data.link || '',
             order: data.order || banners.length,
             createdAt: new Date().toISOString()
         };
@@ -56,14 +70,18 @@ const BannerModel = {
 
     delete: (id) => {
         const banners = BannerModel.getAll();
-        const initialLength = banners.length;
-        const filteredBanners = banners.filter(b => b.id !== id);
-        if (filteredBanners.length < initialLength) {
-            // Optional: delete actual image file if needed
-            BannerModel.saveAll(filteredBanners);
-            return true;
-        }
-        return false;
+        const banner = banners.find(b => b.id === id);
+        if (!banner) return false;
+
+        // Eliminar imagen de la carpeta
+        deleteFileIfExists(banner.imageUrl);
+
+        // Eliminar archivo asociado (PDF u otro documento)
+        deleteFileIfExists(banner.fileUrl);
+
+        const filtered = banners.filter(b => b.id !== id);
+        BannerModel.saveAll(filtered);
+        return true;
     }
 };
 

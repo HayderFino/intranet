@@ -29,7 +29,17 @@
                             </svg> Banner Pasarela
                         </a></li>
 
+                    <li id="nav-eventos"><a href="#"><svg viewBox="0 0 24 24">
+                                <path
+                                    d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z" />
+                            </svg> Agenda y Eventos
+                        </a></li>
 
+                    <li id="nav-directorio"><a href="#"><svg viewBox="0 0 24 24">
+                                <path
+                                    d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-8 2.75c1.24 0 2.25 1.01 2.25 2.25S13.24 11.25 12 11.25 9.75 10.24 9.75 9 10.76 6.75 12 6.75zM17 17H7v-.75c0-1.99 3.34-3 5-3s5 1.01 5 3V17z" />
+                            </svg> Directorio de Correos
+                        </a></li>
 
                     <span class="nav-group-title">NotiCAS</span>
                     <li id="nav-new-news"><a href="#"><svg viewBox="0 0 24 24">
@@ -287,6 +297,92 @@
                     </div>
                 </div>
 
+                <!-- ── SECCIÓN: Agenda y Eventos unificados ── -->
+                <div id="eventosSection" class="admin-form-container hidden">
+                    <h2>Agenda Institucional y Eventos</h2>
+                    <form id="eventoForm" class="news-form">
+                        <input type="hidden" id="eventoEditId">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="eventoTipo">Tipo de entrada *</label>
+                                <select id="eventoTipo" required>
+                                    <option value="Evento">&#128197; Evento</option>
+                                    <option value="Agenda">&#128203; Agenda</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="eventoFecha">Fecha *</label>
+                                <input type="date" id="eventoFecha" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="eventoTitulo">Título *</label>
+                                <input type="text" id="eventoTitulo" placeholder="Ej: Jornada de Reforestación"
+                                    required>
+                            </div>
+                            <div class="form-group">
+                                <label for="eventoLugar">Lugar</label>
+                                <input type="text" id="eventoLugar" placeholder="Ej: Auditorio CAS, San Gil">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="eventoDescripcion">Descripción</label>
+                                <textarea id="eventoDescripcion" rows="3" placeholder="Descripción breve..."></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="eventoAcento">Color de acento</label>
+                                <select id="eventoAcento">
+                                    <option value="">Verde (predeterminado)</option>
+                                    <option value="accent-blue">Azul</option>
+                                    <option value="accent-amber">Amarillo</option>
+                                    <option value="accent-violet">Violeta</option>
+                                    <option value="accent-rose">Rosa</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn-primary" id="eventoSaveBtn">Guardar</button>
+                            <button type="button" class="btn-secondary hidden" id="eventoCancelBtn">Cancelar</button>
+                        </div>
+                    </form>
+                    <div id="eventosList" class="news-management-list" style="margin-top:2rem;"></div>
+                </div>
+
+                <!-- ── SECCIÓN: Directorio de Correos ── -->
+                <div id="directorioSection" class="admin-form-container hidden">
+                    <h2>Directorio Institucional – Correos</h2>
+                    <form id="directorioForm" class="news-form">
+                        <input type="hidden" id="dirEditId">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="dirNombre">Nombre completo *</label>
+                                <input type="text" id="dirNombre" placeholder="Ej: María García López" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="dirCargo">Cargo *</label>
+                                <input type="text" id="dirCargo" placeholder="Ej: Profesional Ambiental" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="dirDependencia">Dependencia *</label>
+                                <input type="text" id="dirDependencia"
+                                    placeholder="Ej: Subdirección de Gestión Ambiental" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="dirCorreo">Correo institucional *</label>
+                                <input type="email" id="dirCorreo" placeholder="usuario@cas.gov.co" required>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn-primary" id="dirSaveBtn">Guardar Contacto</button>
+                            <button type="button" class="btn-secondary hidden" id="dirCancelBtn">Cancelar</button>
+                        </div>
+                    </form>
+                    <div id="directorioList" class="news-management-list" style="margin-top:2rem;"></div>
+                </div>
 
                 <div id="newsFormSection" class="admin-form-container hidden">
                     <h2>Subir Nueva Noticia</h2>
@@ -1264,6 +1360,8 @@
     <script src="estudios-tecnicos-admin.js"></script>
     <script src="provision-empleos-admin.js"></script>
     <script src="banner-admin.js"></script>
+    <script src="eventos-admin.js"></script>
+    <script src="directorio-admin.js"></script>
 </body>
 
 </html>

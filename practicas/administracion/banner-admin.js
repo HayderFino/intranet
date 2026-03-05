@@ -53,11 +53,12 @@ const BannerAdmin = {
         const imageFile = document.getElementById('bannerImage').files[0];
         const associatedFile = document.getElementById('bannerFile').files[0];
 
+        // Al crear, los data-* no existen → inicializamos en ''
         let imageUrl = form.dataset.currentImageUrl || '';
         let fileUrl = form.dataset.currentFileUrl || '';
 
         try {
-            // 1. Upload files if selected
+            // 1. Si hay imagen o archivo, subirlos primero
             if (imageFile || associatedFile) {
                 const formData = new FormData();
                 if (imageFile) formData.append('image', imageFile);
@@ -68,8 +69,13 @@ const BannerAdmin = {
                     method: 'POST',
                     body: formData
                 });
-                const uploadData = await uploadRes.json();
 
+                if (!uploadRes.ok) {
+                    showToast('Error al subir archivos', 'error');
+                    return;
+                }
+
+                const uploadData = await uploadRes.json();
                 if (uploadData.imageUrl) imageUrl = uploadData.imageUrl;
                 if (uploadData.fileUrl) fileUrl = uploadData.fileUrl;
             }
@@ -78,6 +84,7 @@ const BannerAdmin = {
                 showToast('Por favor sube una imagen para el banner', 'error');
                 return;
             }
+
 
             // 2. Save data
             const data = { title, link, order, imageUrl, fileUrl };
