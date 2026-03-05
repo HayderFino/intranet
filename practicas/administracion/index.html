@@ -41,6 +41,12 @@
                             </svg> Directorio de Correos
                         </a></li>
 
+                    <li id="nav-informe-gestion"><a href="#"><svg viewBox="0 0 24 24">
+                                <path
+                                    d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z" />
+                            </svg> Informe de Gesti&oacute;n
+                        </a></li>
+
                     <span class="nav-group-title">NotiCAS</span>
                     <li id="nav-new-news"><a href="#"><svg viewBox="0 0 24 24">
                                 <path d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2h6z" />
@@ -206,6 +212,10 @@
                             <div class="stat-label">Convocatorias</div>
                         </div>
                         <div class="stat-card">
+                            <div id="stat-informe-count" class="stat-value">--</div>
+                            <div class="stat-label">Informes de Gesti&oacute;n</div>
+                        </div>
+                        <div class="stat-card">
                             <div id="stat-last-update" class="stat-value" style="font-size: 1.2rem;">--</div>
                             <div class="stat-label">&Uacute;ltima Actividad</div>
                         </div>
@@ -240,6 +250,9 @@
                                 <button class="btn-secondary"
                                     onclick="document.getElementById('nav-revision-red').click()">+
                                     Revisi&oacute;n de Red</button>
+                                <button class="btn-secondary"
+                                    onclick="document.getElementById('nav-informe-gestion').click()">+
+                                    Informe Gesti&oacute;n</button>
                             </div>
                         </div>
                         <div class="admin-form-container" style="max-width: 100%;">
@@ -1341,6 +1354,43 @@
                             <!-- Content injected by JS -->
                         </div>
                     </div>
+                </div> <!-- Finaliza provisionEmpleosSection -->
+
+                <!-- Informe de Gestión Section -->
+                <div id="informeGestionSection" class="section hidden">
+                    <div class="admin-form-container">
+                        <h2>Gesti&oacute;n de Informes de Gesti&oacute;n</h2>
+                        <form id="informeGestionForm" class="news-form">
+                            <input type="hidden" id="informeGestionId">
+                            <div class="form-group">
+                                <label>T&iacute;tulo del Informe *</label>
+                                <input type="text" id="informeGestionTitle"
+                                    placeholder="Ej: Informe de Gesti&oacute;n 2025" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Descripci&oacute;n</label>
+                                <textarea id="informeGestionDescription" rows="3"
+                                    placeholder="Breve descripci&oacute;n del informe..."></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Archivo PDF *</label>
+                                <input type="file" id="informeGestionFile" accept=".pdf" required>
+                                <small style="display:block; margin-top:0.3rem; color:#64748b;">M&aacute;ximo 50
+                                    MB</small>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn-primary" id="informeGestionSaveBtn">Guardar
+                                    Informe</button>
+                                <button type="button" class="btn-secondary hidden"
+                                    id="informeGestionCancelBtn">Cancelar</button>
+                            </div>
+                        </form>
+
+                        <div id="informeGestionList" class="news-management-list">
+                            <!-- Listado de informes -->
+                        </div>
+                    </div>
+                </div>
             </section>
         </main>
     </div>
@@ -1362,6 +1412,7 @@
     <script src="banner-admin.js"></script>
     <script src="eventos-admin.js"></script>
     <script src="directorio-admin.js"></script>
+    <script src="informe-gestion-admin.js"></script>
 </body>
 
 </html>

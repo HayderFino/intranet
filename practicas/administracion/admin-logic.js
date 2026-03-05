@@ -27,7 +27,8 @@ document.addEventListener('DOMContentLoaded', () => {
         provisionEmpleos: document.getElementById('provisionEmpleosSection'),
         banner: document.getElementById('bannerSection'),
         eventos: document.getElementById('eventosSection'),
-        directorio: document.getElementById('directorioSection')
+        directorio: document.getElementById('directorioSection'),
+        informeGestion: document.getElementById('informeGestionSection')
     };
 
 
@@ -54,7 +55,8 @@ document.addEventListener('DOMContentLoaded', () => {
         provisionEmpleos: document.getElementById('nav-provision-empleos'),
         banner: document.getElementById('nav-banner'),
         eventos: document.getElementById('nav-eventos'),
-        directorio: document.getElementById('nav-directorio')
+        directorio: document.getElementById('nav-directorio'),
+        informeGestion: document.getElementById('nav-informe-gestion')
     };
 
 
@@ -202,6 +204,13 @@ document.addEventListener('DOMContentLoaded', () => {
         sections.directorio.classList.remove('hidden');
         navItems.directorio.classList.add('active');
         if (typeof DirectorioAdmin !== 'undefined') DirectorioAdmin.load();
+    };
+
+    navItems.informeGestion.onclick = () => {
+        hideAll();
+        sections.informeGestion.classList.remove('hidden');
+        navItems.informeGestion.classList.add('active');
+        if (typeof InformeGestionAdmin !== 'undefined') InformeGestionAdmin.load();
     };
 
 
@@ -1386,9 +1395,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Stats Logic ---
     async function updateStats() {
         try {
-            const [newsR, agendaR, planeacionR, mejoraR, controlIR, respelR, empresasR, ruaR, snifR, provisionR, convocatoriasR] = await Promise.all([
+            const [newsR, eventosR, planeacionR, mejoraR, controlIR, respelR, empresasR, ruaR, snifR, provisionR, convocatoriasR, informesR] = await Promise.all([
                 fetch('/api/news'),
-                fetch('/api/agenda'),
+                fetch('/api/eventos'),
                 fetch('/api/sgi/planeacion'),
                 fetch('/api/sgi/mejora'),
                 fetch('/api/sgi/control-interno'),
@@ -1397,12 +1406,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 fetch('/api/rua'),
                 fetch('/api/snif'),
                 fetch('/api/provision-empleos'),
-                fetch('/api/convocatorias')
+                fetch('/api/convocatorias'),
+                fetch('/api/informe-gestion')
             ]);
 
-            // Verificamos individualmente para no romper todo si falla una carga
             const news = newsR.ok ? await newsR.json() : [];
-            const agenda = agendaR.ok ? await agendaR.json() : [];
+            const eventos = eventosR.ok ? await eventosR.json() : [];
             const planeacion = planeacionR.ok ? await planeacionR.json() : [];
             const mejora = mejoraR.ok ? await mejoraR.json() : [];
             const controlI = controlIR.ok ? await controlIR.json() : [];
@@ -1412,17 +1421,24 @@ document.addEventListener('DOMContentLoaded', () => {
             const snif = snifR.ok ? await snifR.json() : [];
             const provision = provisionR.ok ? await provisionR.json() : [];
             const convocatorias = convocatoriasR.ok ? await convocatoriasR.json() : [];
+            const informes = informesR.ok ? await informesR.json() : [];
 
-            document.getElementById('stat-news-count').textContent = news.length || 0;
-            document.getElementById('stat-agenda-count').textContent = agenda.length || 0;
-            document.getElementById('stat-sgi-count').textContent = (planeacion.length || 0) + (mejora.length || 0) + (controlI.length || 0);
-            document.getElementById('stat-respel-count').textContent = respel.length || 0;
-            document.getElementById('stat-empresas-count').textContent = empresas.length || 0;
-            document.getElementById('stat-rua-count').textContent = rua.length || 0;
-            document.getElementById('stat-snif-count').textContent = snif.length || 0;
-            document.getElementById('stat-provision-count').textContent = provision.length || 0;
-            document.getElementById('stat-convocatorias-count').textContent = convocatorias.length || 0;
-            document.getElementById('stat-last-update').textContent = new Date().toLocaleDateString('es-ES', { day: '2-digit', month: 'short' });
+            const setStat = (id, val) => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = val || 0;
+            };
+
+            setStat('stat-news-count', news.length);
+            setStat('stat-agenda-count', eventos.length); // Ahora unificado
+            setStat('stat-sgi-count', (planeacion.length || 0) + (mejora.length || 0) + (controlI.length || 0));
+            setStat('stat-respel-count', respel.length);
+            setStat('stat-empresas-count', empresas.length);
+            setStat('stat-rua-count', rua.length);
+            setStat('stat-snif-count', snif.length);
+            setStat('stat-provision-count', provision.length);
+            setStat('stat-convocatorias-count', convocatorias.length);
+            setStat('stat-informe-count', informes.length);
+            setStat('stat-last-update', new Date().toLocaleDateString('es-ES', { day: '2-digit', month: 'short' }));
         } catch (e) {
             console.error('Error updating stats', e);
         }

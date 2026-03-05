@@ -26,6 +26,10 @@ app.use(express.static(path.join(__dirname, './')));
 app.use('/data', express.static(path.join(__dirname, 'data')));
 
 // API Routes
+app.get('/api/test-server', (req, res) => res.json({ status: 'ok', time: new Date() }));
+app.use('/api/informe-gestion', require('./src/routes/informeGestionRoutes'));
+console.log('✅ Rutas de servidor cargadas');
+
 app.use('/api/news', newsRoutes);
 app.use('/api/agenda', require('./src/routes/agendaRoutes'));
 app.use('/api/sgi', require('./src/routes/sgiRoutes'));
@@ -47,8 +51,6 @@ app.use('/api/provision-empleos', require('./src/routes/provisionEmpleosRoutes')
 app.use('/api/banner', require('./src/routes/bannerRoutes'));
 app.use('/api/eventos', require('./src/routes/eventosRoutes'));
 app.use('/api/directorio', require('./src/routes/directorioRoutes'));
-
-
 
 
 app.get('/api/debug/error', (req, res) => {

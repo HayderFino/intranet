@@ -208,20 +208,82 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!feedContainer) return;
 
         try {
-            // Fetch Agenda y CITA en paralelo
-            const [agendaRes, citaRes] = await Promise.all([
-                fetch('/api/agenda'),
-                fetch('/api/cita')
-            ]);
+            // Fetch múltiples fuentes en paralelo
+            const endpoints = [
+                { url: '/api/eventos', type: 'evento' },
+                { url: '/api/news', type: 'noticia' },
+                { url: '/api/informe-gestion', type: 'informe' },
+                { url: '/api/estudios-tecnicos', type: 'manual', cat: 'Estudio Técnico' },
+                { url: '/api/provision-empleos', type: 'manual', cat: 'Provisión Empleo' },
+                { url: '/api/convocatorias', type: 'manual', cat: 'Convocatoria' },
+                { url: '/api/plan-monitoreo', type: 'manual', cat: 'Plan Monitoreo' },
+                { url: '/api/planes-talento', type: 'manual', cat: 'Plan Talento' },
+                { url: '/api/manual-funciones', type: 'manual', cat: 'Manual Funciones' },
+                { url: '/api/cita', type: 'manual', cat: 'CITA' },
+                { url: '/api/sirh', type: 'manual', cat: 'SIRH' },
+                { url: '/api/snif', type: 'manual', cat: 'SNIF' },
+                { url: '/api/revision-red', type: 'manual', cat: 'REVISIÓN RED' }
+            ];
 
-            const agenda = await agendaRes.json();
-            const citas = await citaRes.json();
+            const responses = await Promise.all(
+                endpoints.map(e => fetch(e.url).then(res => res.json()).catch(() => []))
+            );
 
-            // Combinar y ordenar por fecha (más reciente primero)
-            const activity = [
-                ...agenda.map(item => ({ ...item, type: 'agenda' })),
-                ...citas.map(item => ({ ...item, type: 'cita' }))
-            ].sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+            // Combinar y enriquecer datos
+            let activity = [];
+            responses.forEach((data, index) => {
+                if (!Array.isArray(data)) return;
+
+                const type = endpoints[index].type;
+                const cat = endpoints[index].cat;
+
+                data.forEach(item => {
+                    // Normalizar campos para el feed
+                    let timestamp;
+                    if (item.createdAt) {
+                        timestamp = new Date(item.createdAt);
+                    } else if (item.id && !isNaN(item.id) && item.id.length > 10) {
+                        timestamp = new Date(parseInt(item.id));
+                    } else {
+                        // Legacy item (no createdAt and non-numeric long ID)
+                        timestamp = new Date("2024-01-01");
+                    }
+
+                    let normalized = {
+                        id: item.id || Date.now(),
+                        type: type,
+                        timestamp: timestamp,
+                        title: '',
+                        desc: '',
+                        icon: ''
+                    };
+
+                    const docIcon = '<svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>';
+
+                    if (type === 'evento') {
+                        normalized.title = (item.tipo || 'Evento') === 'Agenda' ? 'Nueva Agenda' : 'Nuevo Evento';
+                        normalized.desc = item.titulo || 'Sin título';
+                        normalized.icon = '<svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2zm-7 5h5v5h-5z"/></svg>';
+                    } else if (type === 'noticia') {
+                        normalized.title = 'Nueva Noticia';
+                        normalized.desc = item.title || 'Sin título';
+                        normalized.icon = '<svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 18H5V4h14v16zM7 7h10v2H7zm0 4h10v2H7zm0 4h7v2H7z"/></svg>';
+                    } else if (type === 'manual') {
+                        normalized.title = cat.startsWith('Manual') || cat.startsWith('REVISIÓN') || cat === 'CITA' || cat === 'SIRH' || cat === 'SNIF' ? `Manual ${cat}` : `Nuevo ${cat}`;
+                        normalized.desc = item.name || item.title || item.titulo || 'Documento cargado';
+                        normalized.icon = docIcon;
+                    } else if (type === 'informe') {
+                        normalized.title = 'Informe de Gestión';
+                        normalized.desc = item.title || 'Nuevo informe cargado';
+                        normalized.icon = docIcon;
+                    }
+
+                    activity.push(normalized);
+                });
+            });
+
+            // Ordenar por fecha (más reciente primero)
+            activity.sort((a, b) => b.timestamp - a.timestamp);
 
             if (activity.length === 0) {
                 feedContainer.innerHTML = '<p class="feed-placeholder">No hay actividad reciente.</p>';
@@ -229,31 +291,27 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             feedContainer.innerHTML = '';
-            activity.slice(0, 4).forEach(item => {
+            // Mostrar los últimos 6 movimientos
+            activity.slice(0, 6).forEach(item => {
                 const feedItem = document.createElement('div');
                 feedItem.className = 'feed-item';
 
-                let icon = '';
-                let title = '';
-                let desc = '';
-                let dateStr = new Date(item.fecha).toLocaleDateString();
-
-                if (item.type === 'agenda') {
-                    icon = '<svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2zm-7 5h5v5h-5z"/></svg>';
-                    title = 'Nuevo Evento en Agenda';
-                    desc = item.actividad || item.title;
-                } else {
-                    icon = '<svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>';
-                    title = 'Nuevo Manual Cargado';
-                    desc = `${item.titulo} (${item.categoria})`;
+                // Formatear fecha de forma amigable
+                let dateDisplay = 'Reciente';
+                if (!isNaN(item.timestamp)) {
+                    const now = new Date();
+                    const diffDays = Math.floor((now - item.timestamp) / (1000 * 60 * 60 * 24));
+                    if (diffDays === 0) dateDisplay = 'Hoy';
+                    else if (diffDays === 1) dateDisplay = 'Ayer';
+                    else dateDisplay = item.timestamp.toLocaleDateString();
                 }
 
                 feedItem.innerHTML = `
-                    <div class="feed-icon">${icon}</div>
+                    <div class="feed-icon">${item.icon}</div>
                     <div class="feed-content">
-                        <h4>${title}</h4>
-                        <p>${desc}</p>
-                        <span class="feed-date">${dateStr}</span>
+                        <h4>${item.title}</h4>
+                        <p>${item.desc}</p>
+                        <span class="feed-date">${dateDisplay}</span>
                     </div>
                 `;
                 feedContainer.appendChild(feedItem);
