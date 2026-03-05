@@ -74,8 +74,8 @@ const RespelController = {
         const folderName = section === 'documentos' ? 'Documentos de Referencia' : 'Empresas Gestoras Licenciadas por la CAS';
 
         // La URL debe ser relativa al archivo HTML (que está en herramientas/)
-        // El archivo se subió a practicas/data/Herramientas/Respel/...
-        // El HTML está en practicas/herramientas/
+        // El archivo se subió a intranet/data/Herramientas/Respel/...
+        // El HTML está en intranet/herramientas/
         // Así que la ruta desde el HTML sería: ../data/Herramientas/Respel/...
         const fileUrl = `../data/Herramientas/Respel/${folderName}/${req.file.filename}`;
 

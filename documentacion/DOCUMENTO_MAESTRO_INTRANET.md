@@ -31,7 +31,7 @@ El sistema ha evolucionado de un sitio estático a una aplicación web dinámica
 - **Automatización**: Scripts de PowerShell para la generación masiva de estructuras HTML.
 
 ### Estructura de Directorios Principal
-- `/practicas`: Directorio raíz de la aplicación activa.
+- `/intranet`: Directorio raíz de la aplicación activa.
   - `/src`: Lógica del servidor (Controladores, Modelos, Rutas).
   - `/data`: Repositorio central de activos (Imágenes, PDFs, Boletines).
   - `/administracion`: Panel de control unificado.
@@ -77,7 +77,7 @@ El portal utiliza un sistema de diseño "Premium" caracterizado por:
 
 ### Ejecución del Servidor
 ```bash
-cd [RUTA_DEL_PROYECTO]/practicas
+cd [RUTA_DEL_PROYECTO]/intranet
 node server.js
 ```
 *Asegúrese de que el servicio de MongoDB esté iniciado.*

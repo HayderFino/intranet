@@ -8,7 +8,7 @@ Las colecciones en la base de datos `intranet_cas` almacenan la información de:
 - **agenda**: Eventos institucionales.
 - **citas**: Metadatos de manuales técnicos.
 
-## 2. Directorio de Activos `/practicas/data`
+## 2. Directorio de Activos `/intranet/data`
 Contiene los archivos físicos que sirve el servidor:
 - `/imagenes/noticias/`: Fotos subidas desde el panel Admin.
 - `/uploads/`: Carpetas dinámicas para manuales y archivos:

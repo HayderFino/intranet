@@ -37,7 +37,7 @@ Se decidió implementar **MongoDB Server con Mongoose** por las siguientes razon
 
 ## 4. Estado Actual
 
-El proyecto utiliza **Mongoose** conectado a `mongodb://127.0.0.1:27017/intranet_cas`. Los modelos están centralizados en `practicas/src/models/`, permitiendo que si en el futuro se desea cambiar a otra base de datos, el impacto en la lógica sea mínimo.
+El proyecto utiliza **Mongoose** conectado a `mongodb://127.0.0.1:27017/intranet_cas`. Los modelos están centralizados en `intranet/src/models/`, permitiendo que si en el futuro se desea cambiar a otra base de datos, el impacto en la lógica sea mínimo.
 
 ---
 

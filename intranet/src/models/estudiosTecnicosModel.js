@@ -5,7 +5,7 @@ class EstudiosTecnicosModel {
     constructor() {
         this.htmlPath = path.join(__dirname, '../../header_menu/cas/estudios-tecnicos.html');
         // Usamos la ruta física exacta solicitada
-        this.baseDataDir = 'C:\\Users\\HAYDER\\Videos\\intranet\\practicas\\data\\menu header\\la cas\\talento humano\\Estudios Tecnicos';
+        this.baseDataDir = path.join(__dirname, '../../data/menu header/la cas/talento humano/Estudios Tecnicos');
 
         if (!fs.existsSync(this.baseDataDir)) {
             fs.mkdirSync(this.baseDataDir, { recursive: true });

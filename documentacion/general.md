@@ -4,7 +4,7 @@ Visión global de la estructura y el propósito de la **Intranet CAS**.
 
 ## Estructura del Repositorio
 
-- `practicas/`: Servidor Node.js y lógica de negocio.
+- `intranet/`: Servidor Node.js y lógica de negocio.
 - `documentacion/`: Repositorio central de manuales y guías técnicas.
 - `/data/`: Activos físicos (imágenes, manuales, PDFs).
 

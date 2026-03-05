@@ -29,9 +29,9 @@ Para poner en marcha la intranet en un servidor central dentro de la red, siga e
 *   **Git** (para control de versiones)
 
 ### 2. Instalación de Dependencias
-Navegue a la carpeta `practicas` y ejecute:
+Navegue a la carpeta `intranet` y ejecute:
 ```bash
-cd practicas
+cd intranet
 npm install
 ```
 
@@ -60,7 +60,7 @@ Los usuarios de la oficina **NO NECESITAN INSTALAR NADA**. Simplemente deben abr
 ## 📂 Estructura Principal del Proyecto
 
 *   `documentacion/`: Guías técnicas y manuales de arquitectura.
-*   `practicas/`: Núcleo del servidor (Backend Node.js).
+*   `intranet/`: Núcleo del servidor (Backend Node.js).
     *   `/src/models`: Modelos de datos (Mongoose para Noticias, Agenda y CITA; Lógica HTML para SGI/RESPEL).
     *   `/src/controllers`: Lógica de negocio y procesamiento de peticiones.
     *   `/src/routes`: Definición de rutas API REST.
@@ -73,5 +73,5 @@ Los usuarios de la oficina **NO NECESITAN INSTALAR NADA**. Simplemente deben abr
 Si estás contribuyendo al código o realizando pruebas:
 1. Asegúrate de tener una instancia de MongoDB activa localmente (`mongodb://127.0.0.1:27017/intranet_cas`).
 2. Realiza siempre un `npm install` tras descargar cambios.
-3. Prueba tus cambios ejecutando `node server.js` dentro de la carpeta `practicas`.
+3. Prueba tus cambios ejecutando `node server.js` dentro de la carpeta `intranet`.
 4. Todos los archivos de documentación deben actualizarse en la carpeta `documentacion/`.

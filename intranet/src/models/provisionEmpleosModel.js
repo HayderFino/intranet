@@ -5,7 +5,7 @@ class ProvisionEmpleosModel {
     constructor() {
         this.htmlPath = path.join(__dirname, '../../header_menu/cas/provision-empleos.html');
         // Ruta física solicitada
-        this.baseDataDir = 'C:\\Users\\HAYDER\\Videos\\intranet\\practicas\\data\\menu header\\la cas\\talento humano\\Provision de empleos';
+        this.baseDataDir = path.join(__dirname, '../../data/menu header/la cas/talento humano/Provision de empleos');
 
         if (!fs.existsSync(this.baseDataDir)) {
             fs.mkdirSync(this.baseDataDir, { recursive: true });

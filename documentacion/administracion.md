@@ -1,6 +1,6 @@
 # Panel de Administración
 
-Ubicado en `practicas/administracion`, este panel permite la gestión dinámica de los contenidos del portal mediante una API REST en Node.js conectada a MongoDB.
+Ubicado en `intranet/administracion`, este panel permite la gestión dinámica de los contenidos del portal mediante una API REST en Node.js conectada a MongoDB.
 
 ## Funciones Principales
 
@@ -40,7 +40,7 @@ Ubicado en `practicas/administracion`, este panel permite la gestión dinámica 
 ### Los datos no cargan o no se guardan
 1. **Verificar MongoDB**: Asegúrate de que el servicio de MongoDB (`mongod`) esté activo.
 2. **Verificar el Servidor**: Asegúrate de que el proceso `node server.js` esté corriendo.
-3. **Logs de Error**: Revisa el archivo `practicas/error_log.txt` para ver detalles técnicos de cualquier fallo.
+3. **Logs de Error**: Revisa el archivo `intranet/error_log.txt` para ver detalles técnicos de cualquier fallo.
 
 ## Acceso Local
 [http://localhost:3000/administracion](http://localhost:3000/administracion)

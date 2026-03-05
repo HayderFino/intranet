@@ -2,7 +2,7 @@
 
 > **Servidor:** `http://localhost:3000`  
 > **Panel Admin:** `http://localhost:3000/administracion`  
-> **Iniciado con:** `node server.js` desde `practicas/`
+> **Iniciado con:** `node server.js` desde `intranet/`
 
 ---
 
@@ -58,7 +58,7 @@ MongoDB (NoSQL)    Archivo HTML (Inyección)
 
 **Descripción:** Gestión de manuales técnicos CITA organizados por categorías.  
 **Almacenamiento:** MongoDB → colección `citas`  
-**Archivos:** `/practicas/data/uploads/citas/:categoria/`
+**Archivos:** `/intranet/data/uploads/citas/:categoria/`
 
 | Acción | Método | Endpoint |
 |--------|--------|----------|
@@ -100,7 +100,7 @@ MongoDB (NoSQL)    Archivo HTML (Inyección)
 ### 7. 📁 Módulos de Documentación (SNIF, Provisión, Revisión Red)
 
 **Descripción:** Gestión completa de archivos para módulos específicos de GIT y Talento Humano.  
-**Archivos:** `/practicas/data/uploads/[snif|provision_empleos|revision_red]/`  
+**Archivos:** `/intranet/data/uploads/[snif|provision_empleos|revision_red]/`  
 **Lógica:** JavaScript especializado (`snif-admin.js`, etc.) con persistencia en metadatos.
 
 | Módulo | Sección | Ruta de Carga |

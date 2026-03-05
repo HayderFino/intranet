@@ -21,12 +21,12 @@ El portal ha evolucionado significativamente hacia una aplicación robusta. Los 
 La organización del proyecto sigue estándares modernos:
 
 ### Directorio Raíz del Repositorio
-- `practicas/`: Código fuente de la aplicación.
+- `intranet/`: Código fuente de la aplicación.
 - `documentacion/`: Repositorio de manuales y documentos.
 
-### Directorio `/practicas` (Corazón de la Web)
+### Directorio `/intranet` (Corazón de la Web)
 ```text
-/practicas
+/intranet
 ├── /administracion     # Interfaz de gestión unificada.
 ├── /data               # Repositorio central de documentos y activos.
 │   ├── /imagenes       # Fotos de noticias y logos.
@@ -84,7 +84,7 @@ El sistema requiere **Node.js** y **MongoDB**. Librerías clave:
 
 ### Comando de Inicio
 ```powershell
-cd /intranet/practicas
+cd /intranet/intranet
 node server.js
 ```
 

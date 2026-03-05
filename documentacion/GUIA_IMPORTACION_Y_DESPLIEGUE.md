@@ -16,7 +16,7 @@ Antes de comenzar, asegúrate de tener instalado lo siguiente:
 
 ## 🛠️ Paso 1: Instalación de Dependencias
 
-Una vez descargado o clonado el proyecto, abre una terminal en la carpeta raíz (`/practicas`) y ejecuta:
+Una vez descargado o clonado el proyecto, abre una terminal en la carpeta raíz (`/intranet`) y ejecuta:
 
 ```bash
 npm install

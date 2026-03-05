@@ -4,7 +4,7 @@ const path = require('path');
 class InformeGestionModel {
     constructor() {
         this.htmlPath = path.join(__dirname, '../../header_menu/cas/informe-gestion.html');
-        this.baseDataDir = 'C:\\Users\\HAYDER\\Videos\\intranet\\practicas\\data\\menu header\\la cas\\Informe de Gestión';
+        this.baseDataDir = path.join(__dirname, '../../data/menu header/la cas/Informe de Gestión');
 
         if (!fs.existsSync(this.baseDataDir)) {
             fs.mkdirSync(this.baseDataDir, { recursive: true });

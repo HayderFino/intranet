@@ -2,7 +2,7 @@
 
 El backend del portal utiliza el patrón MVC para desacoplar la lógica de datos de la presentación, facilitando el mantenimiento y la escalabilidad.
 
-## Directorio `practicas/src`
+## Directorio `intranet/src`
 
 - **controllers/**: Contiene la lógica para procesar peticiones, validaciones y orquestar los modelos.
   - `newsController.js`: Gestión de noticias.
