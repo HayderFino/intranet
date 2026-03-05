@@ -96,6 +96,16 @@ async function loadDynamicBanner() {
 // --- Inicialización General ---
 document.addEventListener('DOMContentLoaded', () => {
 
+    // --- Lógica del botón Ingresar (Generalización para cualquier página) ---
+    const loginBtns = document.querySelectorAll('.btn-login');
+    loginBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            // Forzamos la redirección a la ruta raíz del servidor para que funcione desde subcarpetas
+            e.preventDefault();
+            window.location.href = '/administracion/login.html';
+        });
+    });
+
     // --- Lógica de Búsqueda Global (Header) ---
     const headerSearchInput = document.querySelector('.search-bar input');
     if (headerSearchInput) {
