@@ -41,17 +41,68 @@ function initCarousel() {
         dotsContainer.appendChild(dot);
     });
 
-    // Auto-play del carrusel cada 5s
+    // --- Auto-play del carrusel cada 5s
     setInterval(() => moveCarousel(1), 5000);
 }
+
+// --- Carga dinámica del Banner ---
+async function loadDynamicBanner() {
+    const bannerContainer = document.getElementById('banner-container');
+    if (!bannerContainer) return;
+
+    try {
+        const response = await fetch('/api/banner');
+        if (!response.ok) throw new Error('Error al obtener banners');
+        const banners = await response.json();
+
+        if (banners.length === 0) {
+            bannerContainer.style.display = 'none';
+            return;
+        }
+
+        // Estructura del Carousel (usando clases existentes en styles.css)
+        bannerContainer.innerHTML = `
+            <div class="carousel-container">
+                <div class="carousel-track" id="carouselTrack">
+                    ${banners.map(banner => {
+            const targetUrl = banner.fileUrl || banner.link || '#';
+            const hasLink = targetUrl !== '#';
+            return `
+                        <div class="carousel-slide">
+                            ${hasLink ? `<a href="${targetUrl}" target="_blank">` : ''}
+                                <img src="${banner.imageUrl}" alt="${banner.title}" title="${banner.title}">
+                            ${hasLink ? '</a>' : ''}
+                        </div>
+                    `}).join('')}
+                </div>
+
+                
+                <button class="carousel-btn btn-prev" onclick="moveCarousel(-1)">&#10094;</button>
+                <button class="carousel-btn btn-next" onclick="moveCarousel(1)">&#10095;</button>
+                
+                <div class="carousel-dots" id="carouselDots"></div>
+            </div>
+        `;
+
+        // Inicializar lógica de movimiento tras renderizar
+        initCarousel();
+    } catch (error) {
+        console.error('Error al cargar banner dinámico:', error);
+        bannerContainer.style.display = 'none';
+    }
+}
+
 
 // --- Inicialización General ---
 document.addEventListener('DOMContentLoaded', () => {
 
     // --- Carga dinámica de noticias ---
-    const newsGrids = [document.querySelector('.news-grid'), document.getElementById('noticas-grid'), document.getElementById('news-grid-main')];
+    const rawGrids = [document.querySelector('.news-grid'), document.getElementById('noticas-grid'), document.getElementById('news-grid-main')];
+    // Filtrar elementos duplicados o nulos
+    const newsGrids = [...new Set(rawGrids.filter(el => el !== null))];
 
     newsGrids.forEach(newsGrid => {
+
         if (newsGrid) {
             // Limpiar si hay placeholder o items previos
             newsGrid.innerHTML = '';
@@ -85,8 +136,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Inicializar carrusel si existe en la página
-    initCarousel();
+    // Cargar banner dinámico
+    loadDynamicBanner();
+
+    // Inicializar carrusel si existe en la página fijo (ahora redundante si es dinámico, pero seguro dejarlo)
+    // initCarousel(); // Se llama dentro de loadDynamicBanner
+
 
     // Activar nav link seleccionado
     const navLinks = document.querySelectorAll('.nav-links a');

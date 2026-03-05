@@ -23,6 +23,13 @@
                     <li class="active" id="nav-dashboard"><a href="#"><svg viewBox="0 0 24 24">
                                 <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z" />
                             </svg> Dashboard</a></li>
+                    <li id="nav-banner"><a href="#"><svg viewBox="0 0 24 24">
+                                <path
+                                    d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" />
+                            </svg> Banner Pasarela
+                        </a></li>
+
+
 
                     <span class="nav-group-title">NotiCAS</span>
                     <li id="nav-new-news"><a href="#"><svg viewBox="0 0 24 24">
@@ -236,6 +243,50 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Banner Section -->
+                <div id="bannerSection" class="admin-form-container hidden">
+                    <h2>Gestión de Banner Pasarela</h2>
+                    <form id="bannerForm" class="news-form"
+                        style="margin-bottom: 2rem; border-bottom: 1px solid #eee; padding-bottom: 2rem;">
+                        <input type="hidden" id="bannerEditId">
+                        <div class="form-group">
+                            <label for="bannerTitle">Título / Descripción</label>
+                            <input type="text" id="bannerTitle" placeholder="Ej: Bienvenidos a la Intranet" required>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="bannerLink">Enlace (Opcional)</label>
+                                <input type="text" id="bannerLink" placeholder="Ej: /noticias.html">
+                            </div>
+                            <div class="form-group">
+                                <label for="bannerOrder">Orden</label>
+                                <input type="number" id="bannerOrder" value="0" min="0">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="bannerImage">Subir Imagen del Banner</label>
+                                <input type="file" id="bannerImage" accept="image/*">
+                                <small style="color: #64748b;">Ruta: data/menu header/index/imagenes-banner</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="bannerFile">Subir Archivo Asociado (Opcional)</label>
+                                <input type="file" id="bannerFile" accept=".pdf,.doc,.docx,.xls,.xlsx">
+                                <small style="color: #64748b;">Ruta: data/menu header/index/archivos banner</small>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+
+                            <button type="submit" class="btn-primary" id="bannerSaveBtn">Guardar Banner</button>
+                            <button type="button" class="btn-secondary hidden" id="bannerCancelBtn">Cancelar</button>
+                        </div>
+                    </form>
+                    <div id="bannerList" class="news-management-list">
+                        <!-- Items inyectados por JS -->
+                    </div>
+                </div>
+
 
                 <div id="newsFormSection" class="admin-form-container hidden">
                     <h2>Subir Nueva Noticia</h2>
@@ -1205,12 +1256,14 @@
     <script src="cita-admin.js"></script>
     <script src="sirh-admin.js"></script>
     <script src="revision-red-admin.js"></script>
+    <script src="snif-admin.js"></script>
     <script src="manual-funciones-admin.js"></script>
     <script src="plan-monitoreo-admin.js"></script>
     <script src="planes-talento-admin.js"></script>
     <script src="convocatorias-admin.js"></script>
     <script src="estudios-tecnicos-admin.js"></script>
     <script src="provision-empleos-admin.js"></script>
+    <script src="banner-admin.js"></script>
 </body>
 
 </html>

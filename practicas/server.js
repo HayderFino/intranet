@@ -19,6 +19,9 @@ const newsRoutes = require('./src/routes/newsRoutes');
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+
+
 app.use(express.static(path.join(__dirname, './')));
 app.use('/data', express.static(path.join(__dirname, 'data')));
 
@@ -41,6 +44,8 @@ app.use('/api/planes-talento', require('./src/routes/planesTalentoRoutes'));
 app.use('/api/convocatorias', require('./src/routes/convocatoriasRoutes'));
 app.use('/api/estudios-tecnicos', require('./src/routes/estudiosTecnicosRoutes'));
 app.use('/api/provision-empleos', require('./src/routes/provisionEmpleosRoutes'));
+app.use('/api/banner', require('./src/routes/bannerRoutes'));
+
 
 
 app.get('/api/debug/error', (req, res) => {

@@ -24,8 +24,10 @@ document.addEventListener('DOMContentLoaded', () => {
         planesTalento: document.getElementById('planesTalentoSection'),
         convocatorias: document.getElementById('convocatoriasSection'),
         estudiosTecnicos: document.getElementById('estudiosTecnicosSection'),
-        provisionEmpleos: document.getElementById('provisionEmpleosSection')
+        provisionEmpleos: document.getElementById('provisionEmpleosSection'),
+        banner: document.getElementById('bannerSection')
     };
+
 
     const navItems = {
         dashboard: document.getElementById('nav-dashboard'),
@@ -47,8 +49,10 @@ document.addEventListener('DOMContentLoaded', () => {
         planesTalento: document.getElementById('nav-planes-talento'),
         convocatorias: document.getElementById('nav-convocatorias'),
         estudiosTecnicos: document.getElementById('nav-estudios-tecnicos'),
-        provisionEmpleos: document.getElementById('nav-provision-empleos')
+        provisionEmpleos: document.getElementById('nav-provision-empleos'),
+        banner: document.getElementById('nav-banner')
     };
+
 
     // --- Navigation Logic ---
     function hideAll() {
@@ -174,6 +178,14 @@ document.addEventListener('DOMContentLoaded', () => {
         navItems.provisionEmpleos.classList.add('active');
         if (typeof ProvisionEmpleosAdmin !== 'undefined') ProvisionEmpleosAdmin.load();
     };
+
+    navItems.banner.onclick = () => {
+        hideAll();
+        sections.banner.classList.remove('hidden');
+        navItems.banner.classList.add('active');
+        if (typeof BannerAdmin !== 'undefined') BannerAdmin.load();
+    };
+
 
     // --- Procesos Misionales SGI (genérico) ---
     // Config para las 3 secciones misionales
