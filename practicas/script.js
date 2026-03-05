@@ -96,6 +96,19 @@ async function loadDynamicBanner() {
 // --- Inicialización General ---
 document.addEventListener('DOMContentLoaded', () => {
 
+    // --- Lógica de Búsqueda Global (Header) ---
+    const headerSearchInput = document.querySelector('.search-bar input');
+    if (headerSearchInput) {
+        headerSearchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const query = headerSearchInput.value.trim();
+                if (query) {
+                    window.location.href = `/herramientas/busqueda.html?q=${encodeURIComponent(query)}`;
+                }
+            }
+        });
+    }
+
     // --- Carga dinámica de noticias ---
     const rawGrids = [document.querySelector('.news-grid'), document.getElementById('noticas-grid'), document.getElementById('news-grid-main')];
     // Filtrar elementos duplicados o nulos

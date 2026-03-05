@@ -51,6 +51,7 @@ app.use('/api/provision-empleos', require('./src/routes/provisionEmpleosRoutes')
 app.use('/api/banner', require('./src/routes/bannerRoutes'));
 app.use('/api/eventos', require('./src/routes/eventosRoutes'));
 app.use('/api/directorio', require('./src/routes/directorioRoutes'));
+app.use('/api/search', require('./src/routes/searchRoutes'));
 
 
 app.get('/api/debug/error', (req, res) => {
