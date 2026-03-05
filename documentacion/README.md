@@ -15,6 +15,7 @@ Toda la documentación detallada sobre el funcionamiento, arquitectura y adminis
 5.  **[Gestión de Datos](./documentacion/gestion_datos.md)**: Organización de archivos y activos (data).
 6.  **[Administración](./documentacion/administracion.md)**: Guía del panel de gestión (Noticias, Agenda, CITA, SNIF, Provisión de Empleos y Revisión de Red).
 7.  **[Herramientas](./documentacion/herramientas.md)**: Catálogo de utilidades y páginas especiales (RESPEL, RUA, PCB).
+8.  **[Importación y Despliegue](./documentacion/GUIA_IMPORTACION_Y_DESPLIEGUE.md)**: Guía paso a paso para clonar e instalar el sistema desde cero.
 
 ---
 

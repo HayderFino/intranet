@@ -10,7 +10,7 @@ Detalle técnico sobre el entorno, ejecución y mantenimiento de la **Intranet C
 - **NPM**: Manejador de paquetes.
 
 ### Pasos de Lanzamiento
-1. Abrir terminal en `c:\Users\HAYDER\Videos\intranet\practicas`.
+1. Abrir terminal en la carpeta `/practicas` del proyecto.
 2. Ejecutar `npm install` para instalar dependencias (`express`, `mongoose`, `multer`, `cors`).
 3. Iniciar el servicio de MongoDB en el servidor.
 4. Ejecutar `node server.js`.

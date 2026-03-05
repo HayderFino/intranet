@@ -77,7 +77,7 @@ El portal utiliza un sistema de diseño "Premium" caracterizado por:
 
 ### Ejecución del Servidor
 ```bash
-cd c:\Users\HAYDER\Videos\intranet\practicas
+cd [RUTA_DEL_PROYECTO]/practicas
 node server.js
 ```
 *Asegúrese de que el servicio de MongoDB esté iniciado.*

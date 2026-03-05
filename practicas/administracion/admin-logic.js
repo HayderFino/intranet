@@ -1,4 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Verificar sesión antes de cargar nada
+    checkSession();
+
     // Sync initial state
     loadNewsList();
 
@@ -28,7 +31,8 @@ document.addEventListener('DOMContentLoaded', () => {
         banner: document.getElementById('bannerSection'),
         eventos: document.getElementById('eventosSection'),
         directorio: document.getElementById('directorioSection'),
-        informeGestion: document.getElementById('informeGestionSection')
+        informeGestion: document.getElementById('informeGestionSection'),
+        users: document.getElementById('usersSection')
     };
 
 
@@ -56,20 +60,22 @@ document.addEventListener('DOMContentLoaded', () => {
         banner: document.getElementById('nav-banner'),
         eventos: document.getElementById('nav-eventos'),
         directorio: document.getElementById('nav-directorio'),
-        informeGestion: document.getElementById('nav-informe-gestion')
+        informeGestion: document.getElementById('nav-informe-gestion'),
+        users: document.getElementById('nav-users')
     };
 
 
     // --- Navigation Logic ---
     function hideAll() {
-        Object.values(sections).forEach(sec => sec.classList.add('hidden'));
-        Object.values(navItems).forEach(nav => nav.classList.remove('active'));
+        Object.values(sections).forEach(sec => sec && sec.classList.add('hidden'));
+        Object.values(navItems).forEach(nav => nav && nav.classList.remove('active'));
     }
 
     navItems.dashboard.onclick = () => { hideAll(); sections.dashboard.classList.remove('hidden'); navItems.dashboard.classList.add('active'); updateStats(); };
     navItems.newNews.onclick = () => { hideAll(); sections.newsForm.classList.remove('hidden'); navItems.newNews.classList.add('active'); };
     navItems.listNews.onclick = () => { hideAll(); sections.newsList.classList.remove('hidden'); navItems.listNews.classList.add('active'); loadNewsList(); };
     navItems.agenda.onclick = () => { hideAll(); sections.agenda.classList.remove('hidden'); navItems.agenda.classList.add('active'); loadAgendaList(); };
+    navItems.users.onclick = () => { hideAll(); sections.users.classList.remove('hidden'); navItems.users.classList.add('active'); if (window.UsersAdmin) window.UsersAdmin.init(); };
 
     navItems.sgi.onclick = () => {
         hideAll();
@@ -1930,6 +1936,158 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- CITA Logic ---
     // Moved to cita-admin.js for modularity and isolation.
+
+    // --- Autenticación y Sesión ---
+    async function checkSession() {
+        try {
+            const res = await fetch('/api/auth/check');
+            const data = await res.json();
+
+            if (data.success) {
+                const nameEl = document.getElementById('adminUserName');
+                const avatarEl = document.getElementById('adminAvatar');
+                if (nameEl) nameEl.textContent = data.user.displayName;
+                if (avatarEl) avatarEl.textContent = data.user.displayName[0].toUpperCase();
+
+                // Aplicar permisos
+                applyUserPermissions(data.user);
+            } else {
+                window.location.href = 'login.html';
+            }
+        } catch (err) {
+            console.error('Error al verificar sesión:', err);
+            window.location.href = 'login.html';
+        }
+    }
+
+    function applyUserPermissions(user) {
+        const p = user.permissions || {};
+        const isAdmin = user.role === 'superadmin';
+
+        // Mapeo completo y granular de selectores a permisos
+        const permissionMap = [
+            // General
+            { id: 'nav-dashboard', perm: true },
+            { id: 'nav-banner', perm: p.banner },
+            { id: 'nav-eventos', perm: p.eventos },
+            { id: 'nav-directorio', perm: p.correos },
+            { id: 'nav-informe-gestion', perm: p.informe_gestion },
+
+            // NotiCAS
+            { id: 'nav-new-news', perm: p.news },
+            { id: 'nav-list-news', perm: p.news },
+            { id: 'nav-agenda', perm: p.agenda_cas },
+
+            // SGI: Estratégicos
+            { id: 'nav-sgi', perm: p.sgi_planeacion },
+            { id: 'nav-mejora', perm: p.sgi_mejora },
+
+            // SGI: Misionales
+            { id: 'nav-admin-recursos', perm: p.sgi_recursos },
+            { id: 'nav-planeacion-ambiental', perm: p.sgi_ambiental },
+            { id: 'nav-vigilancia-control', perm: p.sgi_vigilancia },
+
+            // SGI: Seguimiento
+            { id: 'nav-control-interno', perm: p.sgi_control },
+            { id: 'nav-manuales-sgi', perm: p.sgi_manuales },
+
+            // Herramientas
+            { id: 'nav-respel', perm: p.respel },
+            { id: 'nav-rua', perm: p.rua },
+            { id: 'nav-boletines', perm: p.boletines_git },
+            { id: 'nav-pcb', perm: p.pcb },
+
+            // GIT
+            { id: 'nav-cita', perm: p.cita },
+            { id: 'nav-sirh', perm: p.sirh },
+            { id: 'nav-revision-red', perm: p.revision_red },
+            { id: 'nav-snif', perm: p.snif },
+
+            // Talento Humano
+            { id: 'nav-manual-funciones', perm: p.manual_funciones },
+            { id: 'nav-plan-monitoreo', perm: p.sigep },
+            { id: 'nav-planes-talento', perm: p.planes_talento },
+            { id: 'nav-convocatorias', perm: p.convocatorias },
+            { id: 'nav-estudios-tecnicos', perm: p.estudios_tecnicos },
+            { id: 'nav-provision-empleos', perm: p.provision_empleos },
+
+            // Seguridad
+            { id: 'nav-users', perm: p.users },
+            { id: 'nav-group-security', perm: p.users }
+        ];
+
+        permissionMap.forEach(item => {
+            const el = document.getElementById(item.id);
+            if (el) {
+                if (isAdmin || item.perm) {
+                    el.classList.remove('hidden');
+                } else {
+                    el.classList.add('hidden');
+                }
+            }
+        });
+
+        // Lógica para ocultar Títulos de Grupo si no hay hijos visibles
+        const groups = [
+            { id: 'nav-group-noticas', items: ['nav-new-news', 'nav-list-news', 'nav-agenda'] },
+            { id: 'nav-group-sgi-est', items: ['nav-sgi', 'nav-mejora'] },
+            { id: 'nav-group-sgi-mis', items: ['nav-admin-recursos', 'nav-planeacion-ambiental', 'nav-vigilancia-control'] },
+            { id: 'nav-group-sgi-seg', items: ['nav-control-interno', 'nav-manuales-sgi'] },
+            { id: 'nav-group-herramientas', items: ['nav-respel', 'nav-rua', 'nav-boletines', 'nav-pcb'] },
+            { id: 'nav-group-git', items: ['nav-cita', 'nav-sirh', 'nav-revision-red', 'nav-snif'] },
+            { id: 'nav-group-talento', items: ['nav-manual-funciones', 'nav-plan-monitoreo', 'nav-planes-talento', 'nav-convocatorias', 'nav-estudios-tecnicos', 'nav-provision-empleos'] }
+        ];
+
+        groups.forEach(group => {
+            const groupEl = document.getElementById(group.id);
+            if (groupEl) {
+                const hasVisibleItem = group.items.some(itemId => {
+                    const el = document.getElementById(itemId);
+                    return el && !el.classList.contains('hidden');
+                });
+                if (hasVisibleItem || isAdmin) {
+                    groupEl.classList.remove('hidden');
+                } else {
+                    groupEl.classList.add('hidden');
+                }
+            }
+        });
+
+        // Ocultar botones de acceso rápido en el dashboard
+        const dashboardButtons = document.querySelectorAll('#dashboardSection .btn-secondary');
+        dashboardButtons.forEach(btn => {
+            const text = btn.textContent.toLowerCase();
+            let show = isAdmin;
+
+            if (text.includes('noticia') && p.news) show = true;
+            if (text.includes('evento') && p.eventos) show = true;
+            if (text.includes('planeación') && p.sgi_planeacion) show = true;
+            if (text.includes('mejora') && p.sgi_mejora) show = true;
+            if (text.includes('snif') && p.snif) show = true;
+            if (text.includes('provisión') && p.provision_empleos) show = true;
+            if (text.includes('convocatorias') && p.convocatorias) show = true;
+            if (text.includes('planes') && p.planes_talento) show = true;
+            if (text.includes('revisión') && p.revision_red) show = true;
+            if (text.includes('informe') && p.informe_gestion) show = true;
+            if (text.includes('respel') && p.respel) show = true;
+
+            if (show) btn.classList.remove('hidden'); else btn.classList.add('hidden');
+        });
+    }
+
+    const btnLogout = document.getElementById('btnLogout');
+    if (btnLogout) {
+        btnLogout.onclick = async (e) => {
+            e.preventDefault();
+            try {
+                await fetch('/api/auth/logout');
+                window.location.href = 'login.html';
+            } catch (err) {
+                console.error('Error al cerrar sesión:', err);
+                window.location.href = 'login.html';
+            }
+        };
+    }
 
     // --- Helper ---
     window.showToast = showToast;

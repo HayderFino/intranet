@@ -4,8 +4,21 @@ const fs = require('fs');
 const cors = require('cors');
 const mongoose = require('mongoose');
 
+const session = require('express-session');
+
 const app = express();
 const PORT = 3000;
+
+// Configuración de Sesiones
+app.use(session({
+    secret: 'intranet_cas_secret_key_2024',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        secure: false, // true solo si usas HTTPS
+        maxAge: 24 * 60 * 60 * 1000 // 24 horas
+    }
+}));
 
 // Configuración de MongoDB
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/intranet_cas';
@@ -52,6 +65,8 @@ app.use('/api/banner', require('./src/routes/bannerRoutes'));
 app.use('/api/eventos', require('./src/routes/eventosRoutes'));
 app.use('/api/directorio', require('./src/routes/directorioRoutes'));
 app.use('/api/search', require('./src/routes/searchRoutes'));
+app.use('/api/auth', require('./src/routes/authRoutes'));
+app.use('/api/users', require('./src/routes/userRoutes'));
 
 
 app.get('/api/debug/error', (req, res) => {

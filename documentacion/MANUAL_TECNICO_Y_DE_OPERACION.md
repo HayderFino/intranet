@@ -84,7 +84,7 @@ El sistema requiere **Node.js** y **MongoDB**. Librerías clave:
 
 ### Comando de Inicio
 ```powershell
-cd c:\Users\HAYDER\Videos\intranet\practicas
+cd /intranet/practicas
 node server.js
 ```
 

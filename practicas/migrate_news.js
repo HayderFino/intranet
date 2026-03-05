@@ -1,8 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 
-const indexPath = 'c:/Users/HAYDER/Documents/intranet/intranet/practicas/index.html';
-const noticiasPath = 'c:/Users/HAYDER/Documents/intranet/intranet/practicas/data/noticias.json';
+const indexPath = path.join(__dirname, 'index.html');
+const noticiasPath = path.join(__dirname, 'data/noticias.json');
 
 if (!fs.existsSync(indexPath)) {
     console.error('index.html not found');
