@@ -1,4 +1,5 @@
 const SgiModel = require('../models/sgiModel');
+const UniversalCrawler = require('../models/universalCrawler');
 const path = require('path');
 const fs = require('fs');
 
@@ -36,6 +37,7 @@ const SgiController = {
         try {
             const id = SgiModel.create(section, name, category, fileUrl);
             if (id) {
+                UniversalCrawler.invalidate();
                 res.status(201).json({ message: 'Item creado con éxito.', id });
             } else {
                 res.status(404).json({ message: `Categoría "${category}" no encontrada en la página.` });
@@ -53,6 +55,7 @@ const SgiController = {
         try {
             const newId = SgiModel.update(section, id, name, category, fileUrl);
             if (newId) {
+                UniversalCrawler.invalidate();
                 res.status(200).json({ message: 'Documento actualizado.', id: newId });
             } else {
                 res.status(404).json({ message: 'No se pudo actualizar el documento.' });
@@ -68,6 +71,7 @@ const SgiController = {
         try {
             const deleted = SgiModel.delete(section, id);
             if (deleted) {
+                UniversalCrawler.invalidate();
                 res.status(200).json({ message: 'Item eliminado correctamente.' });
             } else {
                 res.status(404).json({ message: 'Item no encontrado.' });
@@ -92,6 +96,8 @@ const SgiController = {
         const fileUrl = `${baseDir}/${category}/${req.file.filename}`;
         console.log(`[Upload Success] section="${section}" category="${category}"`);
         console.log(`[Upload Success] fileUrl="${fileUrl}"`);
+        // Invalidar caché del buscador para que el nuevo archivo aparezca de inmediato
+        UniversalCrawler.invalidate();
         res.status(200).json({ fileUrl });
     }
 };

@@ -68,6 +68,25 @@ app.use('/api/search', require('./src/routes/searchRoutes'));
 app.use('/api/auth', require('./src/routes/authRoutes'));
 app.use('/api/users', require('./src/routes/userRoutes'));
 
+// ─────────────────────────────────────────────────────────────────────
+// Middleware: invalida el índice del buscador en cualquier escritura
+// (POST, PUT, DELETE) para que los nuevos archivos aparezcan al instante
+// ─────────────────────────────────────────────────────────────────────
+const UniversalCrawler = require('./src/models/universalCrawler');
+app.use('/api', (req, res, next) => {
+    if (['POST', 'PUT', 'DELETE'].includes(req.method)) {
+        const originalJson = res.json.bind(res);
+        res.json = (body) => {
+            // Invalidar solo si la respuesta fue exitosa (2xx)
+            if (res.statusCode >= 200 && res.statusCode < 300) {
+                UniversalCrawler.invalidate();
+            }
+            return originalJson(body);
+        };
+    }
+    next();
+});
+
 
 app.get('/api/debug/error', (req, res) => {
     const logPath = path.join(__dirname, 'error_log.txt');
