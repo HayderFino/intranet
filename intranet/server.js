@@ -89,7 +89,16 @@ app.use('/api', (req, res, next) => {
 });
 
 
-app.get('/api/debug/error', (req, res) => {
+// Middleware para asegurar endpoints sensibles
+const superadminOnly = (req, res, next) => {
+    if (req.session && req.session.role === 'superadmin') {
+        next();
+    } else {
+        res.status(403).json({ success: false, message: 'Acceso denegado. Se requiere ser Super Administrador.' });
+    }
+};
+
+app.get('/api/debug/error', superadminOnly, (req, res) => {
     const logPath = path.join(__dirname, 'error_log.txt');
     if (fs.existsSync(logPath)) {
         res.sendFile(logPath);
