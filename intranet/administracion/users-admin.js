@@ -29,6 +29,7 @@ const UsersAdmin = (() => {
             sgi_vigilancia: document.getElementById('perm-sgi_vigilancia'),
             sgi_control: document.getElementById('perm-sgi_control'),
             sgi_manuales: document.getElementById('perm-sgi_manuales'),
+            sgi_politicas: document.getElementById('perm-sgi_politicas'),
 
             // Herramientas
             respel: document.getElementById('perm-respel'),

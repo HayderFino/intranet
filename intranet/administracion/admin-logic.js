@@ -1410,7 +1410,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Stats Logic ---
     async function updateStats() {
         try {
-            const [newsR, eventosR, planeacionR, mejoraR, controlIR, respelR, empresasR, ruaR, snifR, provisionR, convocatoriasR, informesR] = await Promise.all([
+            const [newsR, eventosR, planeacionR, mejoraR, controlIR, respelR, empresasR, ruaR, snifR, provisionR, convocatoriasR, informesR, politicasR] = await Promise.all([
                 fetch('/api/news'),
                 fetch('/api/eventos'),
                 fetch('/api/sgi/planeacion'),
@@ -1422,7 +1422,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 fetch('/api/snif'),
                 fetch('/api/provision-empleos'),
                 fetch('/api/convocatorias'),
-                fetch('/api/informe-gestion')
+                fetch('/api/informe-gestion'),
+                fetch('/api/politicas-sgi')
             ]);
 
             const news = newsR.ok ? await newsR.json() : [];
@@ -1437,6 +1438,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const provision = provisionR.ok ? await provisionR.json() : [];
             const convocatorias = convocatoriasR.ok ? await convocatoriasR.json() : [];
             const informes = informesR.ok ? await informesR.json() : [];
+            const politicas = politicasR.ok ? await politicasR.json() : { items: [] };
 
             const setStat = (id, val) => {
                 const el = document.getElementById(id);
@@ -1445,7 +1447,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             setStat('stat-news-count', news.length);
             setStat('stat-agenda-count', eventos.length); // Ahora unificado
-            setStat('stat-sgi-count', (planeacion.length || 0) + (mejora.length || 0) + (controlI.length || 0));
+            setStat('stat-sgi-count', (planeacion.length || 0) + (mejora.length || 0) + (controlI.length || 0) + (politicas.items?.length || 0));
             setStat('stat-respel-count', respel.length);
             setStat('stat-empresas-count', empresas.length);
             setStat('stat-rua-count', rua.length);
@@ -1999,7 +2001,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // SGI: Seguimiento
             { id: 'nav-control-interno', perm: p.sgi_control },
             { id: 'nav-manuales-sgi', perm: p.sgi_manuales },
-            { id: 'nav-politicas-sgi', perm: p.sgi_manuales || p.sgi_politicas },
+            { id: 'nav-politicas-sgi', perm: p.sgi_politicas },
 
             // Herramientas
             { id: 'nav-respel', perm: p.respel },
