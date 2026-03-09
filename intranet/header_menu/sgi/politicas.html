@@ -69,6 +69,7 @@
         }
 
         .policy-content {
+            overflow-wrap: break-word;
             color: var(--text-main);
             line-height: 1.8;
             font-size: 0.95rem;
@@ -204,13 +205,15 @@
                                     class="submenu-arrow">&#9656;</span></a>
                             <div class="dropdown-content">
                                 <a href="../cas/manual-funciones.html">Manual de Funciones</a>
-                                <a href="https://www.cas.gov.co/not-found" target="_blank">Directorio de Funcionarios</a>
+                                <a href="https://www.cas.gov.co/not-found" target="_blank">Directorio de
+                                    Funcionarios</a>
                                 <a href="../cas/plan-monitoreo-sigep.html">Plan de monitoreo del SIGEP</a>
                                 <a href="../cas/planes.html">Planes</a>
                                 <a href="../cas/convocatorias.html">Convocatorias</a>
                                 <a href="../cas/estudios-tecnicos.html">Estudios T&eacute;cnicos</a>
                                 <a href="../cas/provision-empleos.html">Provisi&oacute;n de empleos</a>
-                                <a href="https://cas.delfineco.com/gdpagos_cas/" target="_blank">Desprendibles de Nomina</a>
+                                <a href="https://cas.delfineco.com/gdpagos_cas/" target="_blank">Desprendibles de
+                                    Nomina</a>
                             </div>
                         </div>
                         <a href="../../header_menu/cas/postalcas.html">PostalCAS</a>
@@ -280,24 +283,20 @@
                 <p>Marco normativo y compromisos institucionales para la excelencia en la gesti&oacute;n.</p>
             </section>
 
-            <div class="meta-info-bar">
-                <div class="meta-item">
-                    <span class="meta-label">Publicado:</span>
-                    <span class="meta-value">10 Diciembre 2015</span>
-                </div>
-                <div class="meta-item">
+            <div class="meta-item">
                     <span class="meta-label">Última actualización:</span>
-                    <span class="meta-value">14 Mayo 2025</span>
+                    <span class="meta-value" id="meta-actualizacion">14 Mayo 2025</span>
                 </div>
                 <div class="meta-item">
                     <span class="meta-label">Responsable:</span>
-                    <span class="meta-value">Direcci&oacute;n General - Coordinaci&oacute;n SGI</span>
+                    <span class="meta-value" id="meta-responsable">Direcci&oacute;n General - Coordinaci&oacute;n
+                        SGI</span>
                 </div>
             </div>
 
             <div class="policy-container">
                 <!-- Política de Calidad -->
-                <article class="policy-card policy-accent-blue">
+                <article class="policy-card policy-accent-blue" data-id="static-calidad">
                     <div class="policy-header">
                         <div class="policy-icon">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -325,10 +324,20 @@
                             accidentes de trabajo, enfermedades profesionales, los daños a la propiedad minimizando los
                             impactos negativos en todo nuestro entorno al realizar nuestras labores.</p>
                     </div>
+                    <div class="download-actions">
+                        <a href="#" class="btn-download">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path
+                                    d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5l5 5v11a2 2 0 01-2 2z"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                            Descargar Pol&iacute;tica
+                        </a>
+                    </div>
                 </article>
 
                 <!-- Política de Gestión Ambiental -->
-                <article class="policy-card policy-accent-green">
+                <article class="policy-card policy-accent-green" data-id="static-ambiental">
                     <div class="policy-header">
                         <div class="policy-icon">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -359,7 +368,7 @@
                 </article>
 
                 <!-- Política de Administración de Riesgos -->
-                <article class="policy-card policy-accent-orange">
+                <article class="policy-card policy-accent-orange" data-id="static-riesgos">
                     <div class="policy-header">
                         <div class="policy-icon">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -400,7 +409,7 @@
                 </article>
 
                 <!-- Política de Prevención de Farmacodependencia -->
-                <article class="policy-card policy-accent-red">
+                <article class="policy-card policy-accent-red" data-id="static-farmaco">
                     <div class="policy-header">
                         <div class="policy-icon">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -433,7 +442,7 @@
                 </article>
 
                 <!-- Política de Seguridad y Salud en el Trabajo -->
-                <article class="policy-card policy-accent-purple">
+                <article class="policy-card policy-accent-purple" data-id="static-sst">
                     <div class="policy-header">
                         <div class="policy-icon">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -470,7 +479,7 @@
                 </article>
 
                 <!-- Política de Seguridad Vial -->
-                <article class="policy-card policy-accent-teal">
+                <article class="policy-card policy-accent-teal" data-id="static-vial">
                     <div class="policy-header">
                         <div class="policy-icon">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -500,18 +509,19 @@
                         </a>
                     </div>
                 </article>
+            
+                <!-- BEGIN_POLITICAS_DOCS -->
+                
+                
+                
+                <!-- END_POLITICAS_DOCS -->
             </div>
         </div>
+
+
+        
     </main>
     <script src="../../script.js"></script>
 </body>
 
 </html>
-
-
-
-
-
-
-
-

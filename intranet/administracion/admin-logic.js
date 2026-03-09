@@ -32,6 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
         eventos: document.getElementById('eventosSection'),
         directorio: document.getElementById('directorioSection'),
         informeGestion: document.getElementById('informeGestionSection'),
+        politicasSgi: document.getElementById('politicasSgiSection'),
         users: document.getElementById('usersSection')
     };
 
@@ -61,6 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
         eventos: document.getElementById('nav-eventos'),
         directorio: document.getElementById('nav-directorio'),
         informeGestion: document.getElementById('nav-informe-gestion'),
+        politicasSgi: document.getElementById('nav-politicas-sgi'),
         users: document.getElementById('nav-users')
     };
 
@@ -217,6 +219,13 @@ document.addEventListener('DOMContentLoaded', () => {
         sections.informeGestion.classList.remove('hidden');
         navItems.informeGestion.classList.add('active');
         if (typeof InformeGestionAdmin !== 'undefined') InformeGestionAdmin.load();
+    };
+
+    navItems.politicasSgi.onclick = () => {
+        hideAll();
+        sections.politicasSgi.classList.remove('hidden');
+        navItems.politicasSgi.classList.add('active');
+        if (typeof PoliticasSgiAdmin !== 'undefined') PoliticasSgiAdmin.load();
     };
 
 
@@ -1990,6 +1999,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // SGI: Seguimiento
             { id: 'nav-control-interno', perm: p.sgi_control },
             { id: 'nav-manuales-sgi', perm: p.sgi_manuales },
+            { id: 'nav-politicas-sgi', perm: p.sgi_manuales || p.sgi_politicas },
 
             // Herramientas
             { id: 'nav-respel', perm: p.respel },
@@ -2032,7 +2042,7 @@ document.addEventListener('DOMContentLoaded', () => {
             { id: 'nav-group-noticas', items: ['nav-new-news', 'nav-list-news', 'nav-agenda'] },
             { id: 'nav-group-sgi-est', items: ['nav-sgi', 'nav-mejora'] },
             { id: 'nav-group-sgi-mis', items: ['nav-admin-recursos', 'nav-planeacion-ambiental', 'nav-vigilancia-control'] },
-            { id: 'nav-group-sgi-seg', items: ['nav-control-interno', 'nav-manuales-sgi'] },
+            { id: 'nav-group-sgi-seg', items: ['nav-control-interno', 'nav-manuales-sgi', 'nav-politicas-sgi'] },
             { id: 'nav-group-herramientas', items: ['nav-respel', 'nav-rua', 'nav-boletines', 'nav-pcb'] },
             { id: 'nav-group-git', items: ['nav-cita', 'nav-sirh', 'nav-revision-red', 'nav-snif'] },
             { id: 'nav-group-talento', items: ['nav-manual-funciones', 'nav-plan-monitoreo', 'nav-planes-talento', 'nav-convocatorias', 'nav-estudios-tecnicos', 'nav-provision-empleos'] }

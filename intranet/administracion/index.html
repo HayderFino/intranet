@@ -92,6 +92,11 @@
                                 <path
                                     d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z" />
                             </svg> Manuales SGI</a></li>
+                    <li id="nav-politicas-sgi"><a href="#"><svg viewBox="0 0 24 24">
+                                <path
+                                    d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.903 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.903 3.42 3.42 0 012.219 2.219 3.42 3.42 0 00.903 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.903 1.946 3.42 3.42 0 01-2.219 2.219 3.42 3.42 0 00-1.946.903 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.903 3.42 3.42 0 01-2.219-2.219 3.42 3.42 0 00-.903-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.903-1.946 3.42 3.42 0 012.219-2.219z"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                            </svg> Pol&iacute;ticas SGI</a></li>
 
                     <span class="nav-group-title" id="nav-group-herramientas">Herramientas</span>
                     <li id="nav-respel"><a href="#"><svg viewBox="0 0 24 24">
@@ -1577,6 +1582,49 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- ── SECCIÓN: Políticas Institucionales SGI ── -->
+                <div id="politicasSgiSection" class="section hidden">
+                    <div class="admin-form-container">
+                        <h2>Gestión — Políticas Institucionales SGI</h2>
+                        <p style="color:#64748b; font-size:0.88rem; margin-bottom:1.5rem;">
+                            Administra los documentos descargables que aparecen en la página de
+                            <a href="/header_menu/sgi/politicas.html" target="_blank"
+                                style="color:var(--primary);">Políticas del SGI</a>.
+                        </p>
+
+                        <form id="politicasSgiForm" class="news-form"
+                            style="margin-bottom:2rem; border-bottom:1px solid #eee; padding-bottom:2rem;">
+                            <input type="hidden" id="politicasSgiEditId">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="politicasSgiTitle">Título del Documento *</label>
+                                    <input type="text" id="politicasSgiTitle" placeholder="Ej: Política de Calidad 2025"
+                                        required>
+                                </div>
+                                <div class="form-group" style="flex: 2;">
+                                    <label for="politicasSgiCode">Descripción / Contenido *</label>
+                                    <textarea id="politicasSgiCode" placeholder="Ej: La Corporación se compromete a..."
+                                        required rows="3"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="politicasSgiFile">Archivo (PDF, Word, Excel, etc.)</label>
+                                <input type="file" id="politicasSgiFile" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx">
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn-primary" id="politicasSgiSaveBtn">Guardar
+                                    Documento</button>
+                                <button type="button" class="btn-secondary hidden" id="politicasSgiCancelBtn">Cancelar
+                                    Edición</button>
+                            </div>
+                        </form>
+
+                        <div id="politicasSgiList" class="news-management-list">
+                            <!-- Items inyectados por JS -->
+                        </div>
+                    </div>
+                </div>
             </section>
         </main>
     </div>
@@ -1600,6 +1648,7 @@
     <script src="eventos-admin.js"></script>
     <script src="directorio-admin.js"></script>
     <script src="informe-gestion-admin.js"></script>
+    <script src="politicas-sgi-admin.js"></script>
 </body>
 
 </html>
