@@ -30,8 +30,40 @@ mongoose.connect(MONGO_URI)
 const newsRoutes = require('./src/routes/newsRoutes');
 
 // Middleware
-app.use(cors());
+// Middleware
+const whitelist = ['http://localhost:3000', 'http://127.0.0.1:3000'];
+const corsOptions = {
+    origin: function (origin, callback) {
+        // Permitir solicitudes sin origen (como apps móviles o curl)
+        if (!origin) return callback(null, true);
+        if (whitelist.indexOf(origin) !== -1 || origin.includes('ngrok') || origin.includes('localtunnel')) {
+            callback(null, true);
+        } else {
+            callback(new Error('No permitido por CORS'));
+        }
+    },
+    credentials: true
+};
+app.use(cors(corsOptions));
 app.use(express.json());
+
+// ─────────────────────────────────────────────────────────────────────
+// Middleware: invalida el índice del buscador en cualquier escritura
+// (POST, PUT, DELETE) para que los nuevos archivos aparezcan al instante
+// ─────────────────────────────────────────────────────────────────────
+const UniversalCrawler = require('./src/models/universalCrawler');
+app.use('/api', (req, res, next) => {
+    if (['POST', 'PUT', 'DELETE'].includes(req.method)) {
+        const originalJson = res.json.bind(res);
+        res.json = (body) => {
+            if (res.statusCode >= 200 && res.statusCode < 300) {
+                UniversalCrawler.invalidate();
+            }
+            return originalJson(body);
+        };
+    }
+    next();
+});
 
 
 
@@ -69,24 +101,6 @@ app.use('/api/search', require('./src/routes/searchRoutes'));
 app.use('/api/auth', require('./src/routes/authRoutes'));
 app.use('/api/users', require('./src/routes/userRoutes'));
 
-// ─────────────────────────────────────────────────────────────────────
-// Middleware: invalida el índice del buscador en cualquier escritura
-// (POST, PUT, DELETE) para que los nuevos archivos aparezcan al instante
-// ─────────────────────────────────────────────────────────────────────
-const UniversalCrawler = require('./src/models/universalCrawler');
-app.use('/api', (req, res, next) => {
-    if (['POST', 'PUT', 'DELETE'].includes(req.method)) {
-        const originalJson = res.json.bind(res);
-        res.json = (body) => {
-            // Invalidar solo si la respuesta fue exitosa (2xx)
-            if (res.statusCode >= 200 && res.statusCode < 300) {
-                UniversalCrawler.invalidate();
-            }
-            return originalJson(body);
-        };
-    }
-    next();
-});
 
 
 // Middleware para asegurar endpoints sensibles
