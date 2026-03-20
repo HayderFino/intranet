@@ -40,7 +40,7 @@ window.EstudiosTecnicosAdmin = (() => {
         if (!els.list) return;
 
         if (items.length === 0) {
-            els.list.innerHTML = '<p style="padding:1.5rem; text-align:center; color:#64748b;">No hay estudios técnicos registrados.</p>';
+            els.list.innerHTML = '<p style="padding:1.5rem; text-align:center; col      8b;">No hay estudios técnicos registrados.</p>';
             return;
         }
 
