@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js",
-    "test": "node --test tests/integration.test.js"
+    "test": "jest",
+    "test:native": "node --test tests/integration.native_test.js"
   },
   "keywords": [],
   "author": "",
@@ -20,5 +21,9 @@
     "express-session": "^1.19.0",
     "mongoose": "^9.2.3",
     "multer": "^2.0.2"
+  },
+  "devDependencies": {
+    "jest": "^30.3.0",
+    "supertest": "^7.2.2"
   }
 }

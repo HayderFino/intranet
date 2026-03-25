@@ -4,12 +4,8 @@ const bcrypt = require("bcryptjs");
 const authController = {
   login: async (req, res) => {
     try {
-      const { username, password } = req.query; // Cambiado a query para simplicidad si se usa GET, pero debería ser POST en producción.
-      // Para cumplir con la solicitud del usuario de una "implementación controlada"
-      // apoyaremos tanto POST como query params por ahora si es necesario, pero usaremos req.body principalmente.
-
-      const loginUser = req.body.username || req.query.username;
-      const loginPass = req.body.password || req.query.password;
+      const loginUser = req.body.username;
+      const loginPass = req.body.password;
 
       if (!loginUser || !loginPass) {
         return res
