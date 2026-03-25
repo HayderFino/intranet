@@ -3,22 +3,7 @@ const UniversalCrawler = require("../models/universalCrawler");
 const path = require("path");
 const fs = require("fs");
 
-const DATA_CONFIG = {
-  // Procesos Estratégicos (relativo desde los HTML en header_menu/sgi/)
-  planeacion:
-    "../../data/menu header/sgi/Procesos Estratégicos/Planeación Estratégica",
-  mejora: "../../data/menu header/sgi/Procesos Estratégicos/mejora continua",
-  // Procesos Misionales
-  "admin-recursos":
-    "../../data/menu header/sgi/procesos misionales/Administración de la Oferta de Recursos Naturales Renovables disponibles, Educación Ambiental y Participación Ciudadana",
-  "planeacion-ambiental":
-    "../../data/menu header/sgi/procesos misionales/Planeación y Ordenamiento Ambiental",
-  "vigilancia-control":
-    "../../data/menu header/sgi/procesos misionales/Vigilancia, Seguimiento y Control Ambiental",
-  // Evaluación y Seguimiento
-  "control-interno":
-    "../../data/menu header/sgi/Evaluación y Seguimiento/Control interno",
-};
+const { sgiUploadPaths: DATA_CONFIG } = require("../config/sgiConfig");
 
 const SgiController = {
   getItems: (req, res) => {
@@ -104,7 +89,7 @@ const SgiController = {
     const baseDir = DATA_CONFIG[section] || DATA_CONFIG["planeacion"];
 
     // fileUrl relativa desde los HTML en header_menu/sgi/
-    const fileUrl = `${baseDir}/${category}/${req.file.filename}`;
+    const fileUrl = `../../${baseDir}/${category}/${req.file.filename}`;
     console.log(`[Upload Success] section="${section}" category="${category}"`);
     console.log(`[Upload Success] fileUrl="${fileUrl}"`);
     // Invalidar caché del buscador para que el nuevo archivo aparezca de inmediato
