@@ -214,7 +214,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function formatDate(dateStr) {
-    if (!dateStr || dateStr === "2024-01-01") return "";
+    if (!dateStr) return "";
     try {
       return new Date(dateStr + "T00:00:00").toLocaleDateString("es-ES", {
         day: "2-digit",

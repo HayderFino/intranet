@@ -630,7 +630,7 @@ const SearchController = {
                 href: "/header_menu/cas/noticas-cas.html",
                 date: item.createdAt
                   ? new Date(item.createdAt).toISOString().split("T")[0]
-                  : "2024-01-01",
+                  : null,
                 snippet: (item.description || "").substring(0, 150) + "...",
               });
             }
@@ -650,7 +650,7 @@ const SearchController = {
                 title: item.title,
                 type: "Informe de Gestión",
                 href: "/header_menu/cas/informe-gestion.html",
-                date: "2024-01-01",
+                date: null,
                 snippet: (item.description || "").substring(0, 150),
               });
             }
@@ -749,7 +749,7 @@ const SearchController = {
                   title: name,
                   type: mObj.type,
                   href: fileUrl || mObj.href,
-                  date: item.date || "2024-01-01",
+                  date: item.date || null,
                   snippet: desc || name,
                 });
               }
@@ -768,7 +768,7 @@ const SearchController = {
                 title: item.name,
                 type: item.sectionLabel,
                 href: item.fileUrl || "#",
-                date: "2024-01-01",
+                date: null,
                 snippet: `Categoría: ${item.category} — ${item.sectionLabel}`,
               });
             }
@@ -786,7 +786,7 @@ const SearchController = {
                 title: item.title,
                 type: "Agenda",
                 href: "/header_menu/cas/agenda.html",
-                date: item.date || "2024-01-01",
+                date: item.date || null,
                 snippet: item.description,
               });
             }
@@ -806,7 +806,7 @@ const SearchController = {
                 title: item.title,
                 type: item.type,
                 href: item.href,
-                date: "2024-01-01",
+                date: null,
                 snippet: item.snippet || item.category || item.type,
               });
             }
@@ -828,7 +828,7 @@ const SearchController = {
                 title: page.title,
                 type: page.type,
                 href: page.href,
-                date: "2024-01-01",
+                date: null,
                 snippet: page.snippet,
               });
             }
@@ -853,8 +853,8 @@ const SearchController = {
 
       // Ordenar: primero los que tienen fecha real, luego el resto
       filteredResults.sort((a, b) => {
-        if (a.date === "2024-01-01" && b.date !== "2024-01-01") return 1;
-        if (b.date === "2024-01-01" && a.date !== "2024-01-01") return -1;
+        if (a.date === null && b.date !== null) return 1;
+        if (b.date === null && a.date !== null) return -1;
         return new Date(b.date) - new Date(a.date);
       });
 

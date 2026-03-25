@@ -294,7 +294,7 @@ document.addEventListener("DOMContentLoaded", () => {
             timestamp = new Date(parseInt(item.id));
           } else {
             // Legacy item (no createdAt and non-numeric long ID)
-            timestamp = new Date("2024-01-01");
+            timestamp = null;
           }
 
           let normalized = {

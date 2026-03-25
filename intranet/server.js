@@ -90,6 +90,15 @@ app.use(express.json());
 const UniversalCrawler = require("./src/models/universalCrawler");
 app.use("/api", (req, res, next) => {
   if (["POST", "PUT", "DELETE"].includes(req.method)) {
+    // 1) Global Auth Middleware: Proteger todas las acciones mutables
+    if (!req.path.startsWith("/auth") && (!req.session || !req.session.userId)) {
+      return res.status(401).json({
+        success: false,
+        message: "Acceso denegado. Se requiere iniciar sesión como Administrador.",
+      });
+    }
+
+    // 2) Cache/Crawler invalidation injection
     const originalJson = res.json.bind(res);
     res.json = (body) => {
       if (res.statusCode >= 200 && res.statusCode < 300) {
