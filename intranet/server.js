@@ -150,13 +150,9 @@ app.use((err, req, res, next) => {
 
 app.get("/administrador", (req, res) => res.redirect("/administracion"));
 
-if (process.env.NODE_ENV !== "test") {
-  app.listen(PORT, () => {
-    console.log(`Servidor CAS corriendo en http://localhost:${PORT}`);
-    console.log(
-      `Panel de administración en http://localhost:${PORT}/administracion`,
-    );
-  });
-}
-
-module.exports = app;
+app.listen(PORT, () => {
+  console.log(`Servidor CAS corriendo en http://localhost:${PORT}`);
+  console.log(
+    `Panel de administración en http://localhost:${PORT}/administracion`,
+  );
+});

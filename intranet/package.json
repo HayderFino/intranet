@@ -6,8 +6,7 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js",
-    "test": "jest",
-    "test:health": "node test_health.js"
+    "test": "node test_health.js"
   },
   "keywords": [],
   "author": "",
@@ -21,11 +20,5 @@
     "express-session": "^1.19.0",
     "mongoose": "^9.2.3",
     "multer": "^2.0.2"
-  },
-  "devDependencies": {
-    "eslint": "^10.1.0",
-    "jest": "^30.3.0",
-    "prettier": "^3.8.1",
-    "supertest": "^7.2.2"
   }
 }
