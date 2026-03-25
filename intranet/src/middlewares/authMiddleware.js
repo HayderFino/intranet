@@ -1,6 +1,6 @@
 const UniversalCrawler = require("../models/universalCrawler");
 
-const mutableProtector = (req, res, next) => {
+const checkAuth = (req, res, next) => {
   if (["POST", "PUT", "DELETE"].includes(req.method)) {
     // 1) Global Auth Middleware: Proteger todas las acciones mutables
     if (
@@ -38,6 +38,6 @@ const superadminOnly = (req, res, next) => {
 };
 
 module.exports = {
-  mutableProtector,
+  checkAuth,
   superadminOnly,
 };

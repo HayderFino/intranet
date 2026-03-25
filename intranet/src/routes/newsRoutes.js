@@ -25,12 +25,12 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-const { mutableProtector } = require("../middlewares/authMiddleware");
+const { checkAuth } = require("../middlewares/authMiddleware");
 
 // Routes
 router.get("/", NewsController.getAllNews);
-router.post("/", mutableProtector, NewsController.createNews);
-router.delete("/:id", mutableProtector, NewsController.deleteNews);
-router.post("/upload", mutableProtector, upload.single("image"), NewsController.uploadImage);
+router.post("/", checkAuth, NewsController.createNews);
+router.delete("/:id", checkAuth, NewsController.deleteNews);
+router.post("/upload", checkAuth, upload.single("image"), NewsController.uploadImage);
 
 module.exports = router;

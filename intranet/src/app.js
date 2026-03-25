@@ -5,7 +5,7 @@ const session = require("express-session");
 
 // Custom modules
 const setupFsCache = require("./middlewares/fsCache");
-const { mutableProtector, superadminOnly } = require("./middlewares/authMiddleware");
+const { checkAuth, superadminOnly } = require("./middlewares/authMiddleware");
 const connectDB = require("./config/db");
 
 // Activar la caché in-memory del FileSystem para DB HTML locales
@@ -68,7 +68,7 @@ app.use("/data", express.static(path.join(rootDir, "data")));
 // --- RUTAS API ---
 
 // Muro de seguridad e invalidación para cualquier modificación a /api/*
-app.use("/api", mutableProtector);
+app.use("/api", checkAuth);
 
 app.get("/api/test-server", (req, res) =>
   res.json({ status: "ok", time: new Date() })
