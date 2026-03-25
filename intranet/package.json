@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js",
-    "test": "jest",
+    "test": "node ./node_modules/jest/bin/jest.js --forceExit",
     "test:native": "node --test tests/integration.native_test.js"
   },
   "keywords": [],

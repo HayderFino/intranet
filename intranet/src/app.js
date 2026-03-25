@@ -12,7 +12,9 @@ const connectDB = require("./config/db");
 setupFsCache();
 
 // Conectar a MongoDB
-connectDB();
+if (process.env.NODE_ENV !== "test") {
+  connectDB();
+}
 
 const app = express();
 
