@@ -26,7 +26,8 @@
   --glass-border: rgba(255, 255, 255, 0.3);
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-lg:
+    0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
 
   /* Borders & Radius */
   --border: #e2e8f0;
@@ -43,7 +44,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 body {
@@ -176,7 +177,7 @@ main {
   z-index: 200;
 }
 
-.dropdown:hover>.dropdown-content {
+.dropdown:hover > .dropdown-content {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
@@ -197,7 +198,7 @@ main {
 }
 
 /* Specific adjustment for right-aligned dropdowns to prevent overflow */
-.dropdown:nth-last-child(-n+3)>.dropdown-content {
+.dropdown:nth-last-child(-n + 3) > .dropdown-content {
   left: auto;
   right: 0;
 }
@@ -217,18 +218,18 @@ main {
   /* Ligera reducción para mayor fluidez */
 }
 
-.dropdown:nth-last-child(-n+3) .dropdown-submenu .dropdown-content {
+.dropdown:nth-last-child(-n + 3) .dropdown-submenu .dropdown-content {
   left: auto;
   right: 100%;
 }
 
-.dropdown-submenu:hover>.dropdown-content {
+.dropdown-submenu:hover > .dropdown-content {
   opacity: 1;
   visibility: visible;
   transform: none;
 }
 
-.dropdown-submenu:hover>a {
+.dropdown-submenu:hover > a {
   background: var(--primary);
   color: var(--white);
   padding-left: 1.5rem;
@@ -615,7 +616,9 @@ main {
   background: var(--white);
   border-radius: 1.5rem;
   overflow: hidden;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
 .carousel-track {

@@ -19,5 +19,9 @@
     "express-session": "^1.19.0",
     "mongoose": "^9.2.3",
     "multer": "^2.0.2"
+  },
+  "devDependencies": {
+    "eslint": "^10.1.0",
+    "prettier": "^3.8.1"
   }
 }
